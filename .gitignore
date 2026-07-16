@@ -1,0 +1,13 @@
+# dependencies (Render runs `npm install` itself)
+node_modules/
+
+# runtime data — created automatically on start, must NOT be committed
+data/*.json
+data/images/*
+
+# local tunnel logs
+tunnel.log
+*.log
+
+# OS files
+.DS_Store

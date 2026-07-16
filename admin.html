@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>PSAUx — Verification Dashboard</title>
+<style>
+  :root { --green:#0D422E; --green2:#0a6c3c; --gold:#B98900; --bg:#f4f6f5; --card:#fff; --line:#e3e8e5; --muted:#6b7a72; --red:#B3261E; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif; background:var(--bg); color:var(--green); }
+  header { background:var(--green); color:#fff; padding:18px 24px; display:flex; align-items:center; justify-content:space-between; }
+  header h1 { font-size:18px; margin:0; letter-spacing:.3px; }
+  header .live { font-size:12px; color:#bfe6cf; display:flex; align-items:center; gap:6px; }
+  .dot { width:8px; height:8px; border-radius:50%; background:#39d98a; animation:pulse 1.4s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+  .wrap { max-width:1000px; margin:0 auto; padding:20px 16px 60px; }
+  .stats { display:flex; gap:12px; margin-bottom:18px; flex-wrap:wrap; }
+  .stat { flex:1; min-width:120px; background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px 16px; }
+  .stat .n { font-size:26px; font-weight:800; }
+  .stat .l { font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; }
+  .chips { display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap; }
+  .chip { border:1px solid var(--line); background:var(--card); border-radius:20px; padding:6px 14px; font-size:13px; cursor:pointer; font-weight:600; color:var(--green); }
+  .chip.active { background:var(--green); color:#fff; border-color:var(--green); }
+  .row { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:14px; margin-bottom:12px; display:flex; gap:14px; align-items:center; }
+  .row img { width:64px; height:64px; border-radius:12px; object-fit:cover; background:#eef2f0; flex:none; }
+  .row .main { flex:1; min-width:0; }
+  .row .who { font-size:16px; font-weight:800; }
+  .row .sub { font-size:13px; color:var(--muted); margin-top:2px; }
+  .row .meta { font-family:"SF Mono",ui-monospace,monospace; font-size:12px; color:var(--green2); margin-top:4px; }
+  .site { display:inline-block; font-size:10px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; padding:2px 8px; border-radius:8px; background:rgba(10,108,60,.12); color:var(--green2); margin-right:6px; }
+  .badge { font-size:12px; font-weight:800; padding:6px 12px; border-radius:20px; white-space:nowrap; }
+  .ok { background:rgba(10,108,60,.14); color:var(--green2); }
+  .bad { background:rgba(179,38,30,.12); color:var(--red); }
+  .time { font-size:11px; color:var(--muted); margin-top:6px; }
+  .empty { text-align:center; color:var(--muted); padding:50px 0; }
+  footer { text-align:center; color:var(--muted); font-size:12px; padding:20px; }
+</style>
+</head>
+<body>
+  <header>
+    <h1>PSAUx — Verification Dashboard</h1>
+    <span class="live"><span class="dot"></span> Live · receiving from the app</span>
+  </header>
+  <div class="wrap">
+    <div class="stats" id="stats"></div>
+    <div class="chips" id="chips"></div>
+    <div id="list"></div>
+  </div>
+  <footer>Results are sent by the PSAUx app and stored on the verify API · auto-refreshes every few seconds</footer>
+
+<script>
+const SITES = ["tatawwu", "psaux", "gym"];
+const SITE_LABEL = { tatawwu:"Volunteering", psaux:"TASK", gym:"Gym" };
+let filter = "all";
+let all = [];
+
+async function load() {
+  const results = await Promise.all(SITES.map(async (s) => {
+    try {
+      const r = await fetch(`/api/${s}/submissions`);
+      const d = await r.json();
+      return (d.submissions || []).map((x) => ({ ...x, site: s }));
+    } catch { return []; }
+  }));
+  all = results.flat().sort((a, b) => (b.receivedAt || 0) - (a.receivedAt || 0));
+  render();
+}
+
+function timeAgo(t) {
+  if (!t) return "";
+  const m = Math.round((Date.now() - t) / 60000);
+  return m < 1 ? "just now" : m < 60 ? `${m} min ago` : `${Math.round(m / 60)} h ago`;
+}
+
+function detail(r) {
+  if (r.site === "tatawwu" && r.status === "approved") return `${r.type || "Volunteering"} · ${r.hours || 0} hrs${r.city ? " · " + r.city : ""}`;
+  if (r.site === "psaux" && r.status === "approved") return `TASK verified · ${r.qrHost || "sulitest.org"}`;
+  if (r.site === "gym" && r.status === "approved") return `Checked in · ${r.gym || ""}`;
+  return r.reason || "";
+}
+function code(r) {
+  if (r.code) return r.code;
+  if (r.token) return "TOKEN " + r.token;
+  if (r.qrHost) return r.qrHost;
+  return "";
+}
+
+function render() {
+  const rows = all.filter((r) => filter === "all" || r.site === filter);
+  const n = { total: all.length, approved: all.filter(r=>r.status==="approved").length,
+              rejected: all.filter(r=>r.status==="rejected").length,
+              users: new Set(all.map(r=>r.from)).size };
+  document.getElementById("stats").innerHTML = `
+    <div class="stat"><div class="n">${n.total}</div><div class="l">Submissions</div></div>
+    <div class="stat"><div class="n">${n.approved}</div><div class="l">Verified</div></div>
+    <div class="stat"><div class="n">${n.rejected}</div><div class="l">Rejected</div></div>
+    <div class="stat"><div class="n">${n.users}</div><div class="l">Users</div></div>`;
+
+  const counts = { all: all.length };
+  SITES.forEach(s => counts[s] = all.filter(r=>r.site===s).length);
+  document.getElementById("chips").innerHTML =
+    [["all","All"],...SITES.map(s=>[s,SITE_LABEL[s]])].map(([k,lbl]) =>
+      `<button class="chip ${k===filter?"active":""}" data-f="${k}">${lbl} · ${counts[k]||0}</button>`).join("");
+  document.querySelectorAll(".chip").forEach(b => b.onclick = () => { filter = b.dataset.f; render(); });
+
+  const list = document.getElementById("list");
+  if (!rows.length) { list.innerHTML = `<div class="empty">No submissions yet. Verify something in the app — it appears here with the user's name.</div>`; return; }
+  list.innerHTML = rows.map((r) => {
+    const ok = r.status === "approved";
+    return `<div class="row">
+      ${r.imageUrl ? `<img src="${r.imageUrl}" alt="" onerror="this.style.display='none'"/>` : `<div style="width:64px;height:64px;border-radius:12px;background:#eef2f0"></div>`}
+      <div class="main">
+        <div class="who">${escapeHtml(r.from || "app user")}</div>
+        <div class="sub"><span class="site">${SITE_LABEL[r.site]}</span>${escapeHtml(detail(r))}</div>
+        ${code(r) ? `<div class="meta">${escapeHtml(code(r))}</div>` : ""}
+        <div class="time">${timeAgo(r.receivedAt)}</div>
+      </div>
+      <span class="badge ${ok?"ok":"bad"}">${ok?"✓ Verified":"✕ Rejected"}</span>
+    </div>`;
+  }).join("");
+}
+
+function escapeHtml(s) { return String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c])); }
+
+load();
+setInterval(load, 4000);
+</script>
+</body>
+</html>

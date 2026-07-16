@@ -1,0 +1,15 @@
+# Render blueprint — deploys the PSAUX Verify API as a free web service.
+# On Render: New + → Blueprint → pick this repo → it reads this file.
+services:
+  - type: web
+    name: psaux-verify-api
+    runtime: node
+    plan: free
+    region: frankfurt      # closest free region to Saudi Arabia
+    buildCommand: npm install
+    startCommand: node server.js
+    healthCheckPath: /
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
