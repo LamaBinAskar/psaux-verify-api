@@ -30,6 +30,15 @@ const app = express();
 app.use(cors());
 app.use(express.json({ limit: "15mb" }));
 app.use("/images", express.static(IMG_DIR));
+
+// Serve the review-console website from the API itself, so the reviewer opens
+// http://localhost:4000/admin (same-origin) instead of the file:// page — the
+// browser blocks a file:// page from fetching http://localhost, which showed up
+// as "the dashboard opens but stays empty". Local dev only: the folder is not
+// present on the deployed server, which keeps its own bundled admin.html.
+const SITE_DIR = "/Users/ell/Desktop/PSAUxLONDON";
+const HAS_SITE = fs.existsSync(path.join(SITE_DIR, "admin.html"));
+if (HAS_SITE) app.use(express.static(SITE_DIR));
 const upload = multer({ limits: { fileSize: 12 * 1024 * 1024 } });
 
 // ---------- storage (one JSON file per site) ----------
@@ -184,8 +193,30 @@ app.post("/api/:site/review/:id", requireSite, (req, res) => {
   res.json(rec);
 });
 
+// Delete ONE submission (and its stored image) — used by the review console.
+app.delete("/api/:site/submissions/:id", requireSite, (req, res) => {
+  const store = loadStore(req.params.site);
+  const rec = store.find((r) => r.id === req.params.id);
+  if (!rec) return res.status(404).json({ error: "not found" });
+  if (rec.imageUrl) { try { fs.unlinkSync(path.join(IMG_DIR, path.basename(rec.imageUrl))); } catch (e) { /* ignore */ } }
+  saveStore(req.params.site, store.filter((r) => r.id !== req.params.id));
+  res.json({ ok: true, id: req.params.id });
+});
+
+// Delete ALL submissions for a site (and their images) — "clear data".
+app.delete("/api/:site/submissions", requireSite, (req, res) => {
+  const store = loadStore(req.params.site);
+  for (const rec of store) {
+    if (rec.imageUrl) { try { fs.unlinkSync(path.join(IMG_DIR, path.basename(rec.imageUrl))); } catch (e) { /* ignore */ } }
+  }
+  saveStore(req.params.site, []);
+  res.json({ ok: true, cleared: store.length });
+});
+
 // Live verification dashboard — shows every app submission with the user's name.
-app.get("/admin", (req, res) => res.sendFile(path.join(__dirname, "admin.html")));
+// Prefer the richer local console when present; fall back to the bundled one.
+app.get("/admin", (req, res) => res.sendFile(
+  HAS_SITE ? path.join(SITE_DIR, "admin.html") : path.join(__dirname, "admin.html")));
 
 // Simple docs at the root.
 app.get("/", (req, res) => {
