@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tatawwu — Certificate Review Console</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="container topbar-in">
+      <span>National register of volunteering certificates</span>
+      <span class="tb-muted">Demo · not an official government service</span>
+    </div>
+  </div>
+
+  <header class="nav">
+    <div class="container nav-in">
+      <a class="brand" href="#top">
+        <svg viewBox="0 0 40 40" width="30" height="30" aria-hidden="true">
+          <rect x="1" y="1" width="38" height="38" rx="8" fill="#0a6c3c"/>
+          <path d="M13 20.5 l4.5 4.5 L28 14" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="brand-text">Tatawwu <span class="brand-sub2">Review console</span></span>
+      </a>
+      <div class="nav-right">
+        <span class="live"><span class="live-dot"></span> Receiving from app</span>
+        <span class="demo-tag">DEMO</span>
+      </div>
+    </div>
+  </header>
+
+  <main id="top" class="container review">
+    <div class="review-head">
+      <div>
+        <h1>Incoming certificates</h1>
+        <p>Certificates sent from the mobile app are analysed automatically. Review the results below — no manual upload.</p>
+      </div>
+      <button class="btn btn-ghost" id="simBtn" title="Demo control — stands in for a certificate pushed from the app">
+        Simulate incoming from app
+      </button>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat"><span class="stat-n" id="stTotal">0</span><span class="stat-l">Received</span></div>
+      <div class="stat"><span class="stat-n" id="stOk">0</span><span class="stat-l">Verified</span></div>
+      <div class="stat"><span class="stat-n" id="stBad">0</span><span class="stat-l">Rejected</span></div>
+      <div class="stat"><span class="stat-n" id="stPending">0</span><span class="stat-l">Needs review</span></div>
+    </div>
+
+    <div class="toolbar">
+      <div class="chips" id="chips"></div>
+      <button class="linklike" id="clearBtn">Clear all</button>
+    </div>
+
+    <div class="inbox" id="inbox"></div>
+  </main>
+
+  <footer class="foot">
+    <div class="container foot-in">
+      <span>Tatawwu — certificate review console</span>
+      <span class="fine">Demo · not affiliated with any government entity · records are simulated</span>
+    </div>
+  </footer>
+
+  <script src="jsQR.js"></script>
+  <script src="samples.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

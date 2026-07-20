@@ -31,14 +31,14 @@ app.use(cors());
 app.use(express.json({ limit: "15mb" }));
 app.use("/images", express.static(IMG_DIR));
 
-// Serve the review-console website from the API itself, so the reviewer opens
-// http://localhost:4000/admin (same-origin) instead of the file:// page — the
-// browser blocks a file:// page from fetching http://localhost, which showed up
-// as "the dashboard opens but stays empty". Local dev only: the folder is not
-// present on the deployed server, which keeps its own bundled admin.html.
-const SITE_DIR = "/Users/ell/Desktop/PSAUxLONDON";
-const HAS_SITE = fs.existsSync(path.join(SITE_DIR, "admin.html"));
-if (HAS_SITE) app.use(express.static(SITE_DIR));
+// Serve the review consoles (admin + tatawwu) from the repo's public/ folder,
+// so they are LIVE on the deployed server (Render), reachable from any device —
+// not just as localhost/file:// pages. The consoles read this same API.
+//   /admin        → the PSAUx verify console (TASK / gym / certificates)
+//   /tatawwu/     → the volunteering review console
+const PUBLIC_DIR = path.join(__dirname, "public");
+const HAS_SITE = fs.existsSync(path.join(PUBLIC_DIR, "admin.html"));
+if (fs.existsSync(PUBLIC_DIR)) app.use(express.static(PUBLIC_DIR));
 const upload = multer({ limits: { fileSize: 12 * 1024 * 1024 } });
 
 // ---------- storage (one JSON file per site) ----------
@@ -214,9 +214,8 @@ app.delete("/api/:site/submissions", requireSite, (req, res) => {
 });
 
 // Live verification dashboard — shows every app submission with the user's name.
-// Prefer the richer local console when present; fall back to the bundled one.
 app.get("/admin", (req, res) => res.sendFile(
-  HAS_SITE ? path.join(SITE_DIR, "admin.html") : path.join(__dirname, "admin.html")));
+  path.join(HAS_SITE ? PUBLIC_DIR : __dirname, "admin.html")));
 
 // Simple docs at the root.
 app.get("/", (req, res) => {

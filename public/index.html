@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PSAUX London — TASK Certificate Validator</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ===== Navbar ===== -->
+  <header class="navbar">
+    <div class="container nav-inner">
+      <a class="brand" href="#home">
+        <svg class="brand-mark" viewBox="0 0 40 40" width="30" height="30" aria-hidden="true">
+          <path d="M20 20 L20 1 A19 19 0 0 1 36.4 29.5 Z" fill="#00c1a2"/>
+          <path d="M20 20 L36.4 29.5 A19 19 0 0 1 3.6 29.5 Z" fill="#ffd304"/>
+          <path d="M20 20 L3.6 29.5 A19 19 0 0 1 20 1 Z" fill="#bb7d4c"/>
+          <circle cx="20" cy="20" r="9.5" fill="#f9f4ee"/>
+          <path d="M15.5 20.5 l3.2 3.2 l6-6.8" fill="none" stroke="#2d3948" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="brand-text">PSAUX <strong>London</strong></span>
+      </a>
+      <nav class="nav-links">
+        <a href="#home">Home</a>
+        <a href="#about">About TASK</a>
+        <a href="#how">How it works</a>
+        <a href="admin.html" class="nav-cta">Review console</a>
+      </nav>
+      <span class="demo-badge">DEMO</span>
+    </div>
+  </header>
+
+  <!-- ===== Hero ===== -->
+  <section class="hero" id="home">
+    <div class="container hero-inner">
+      <div class="hero-copy">
+        <p class="hero-kicker">Sustainability knowledge, verified.</p>
+        <h1>Check the authenticity of any <span class="accent">TASK</span> certificate</h1>
+        <p class="hero-sub">
+          Certificate barcodes captured by the mobile app arrive here automatically and
+          are checked against the official TASK (The Assessment of Sustainability Knowledge)
+          register. Reviewers monitor the results in the console.
+        </p>
+        <div class="hero-actions">
+          <a href="admin.html" class="btn btn-primary">Open review console</a>
+          <a href="#how" class="btn btn-ghost">How it works</a>
+        </div>
+      </div>
+      <div class="hero-card">
+        <div class="cert-preview">
+          <div class="cert-ribbon">CERTIFIED</div>
+          <div class="cert-logo"><svg class='ic' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='9'/><path d='M3 12h18'/><path d='M12 3a15 15 0 0 1 0 18 15 15 0 0 1 0-18z'/></svg></div>
+          <h3>TASK Certificate</h3>
+          <p class="cert-name">Sarah Al-Amri</p>
+          <p class="cert-meta">Score 78 / 100 · Advanced level</p>
+          <p class="cert-id">ID: TASK-2026-0417</p>
+          <div class="cert-check"><svg class='ic' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20 6L9 17l-5-5'/></svg> Verified authentic</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Stats ===== -->
+  <section class="stats">
+    <div class="container stats-inner">
+      <div class="stat"><span class="stat-num" data-count="12480">0</span><span class="stat-label">Certificates verified</span></div>
+      <div class="stat"><span class="stat-num" data-count="97">0</span><span class="stat-label">% detection accuracy</span></div>
+      <div class="stat"><span class="stat-num" data-count="54">0</span><span class="stat-label">Partner universities</span></div>
+      <div class="stat"><span class="stat-num" data-count="132">0</span><span class="stat-label">Fakes detected</span></div>
+    </div>
+  </section>
+
+  <!-- ===== About ===== -->
+  <section class="about" id="about">
+    <div class="container">
+      <h2 class="section-title">What is a TASK certificate?</h2>
+      <p class="section-sub">
+        TASK — The Assessment of Sustainability Knowledge — is an international certificate
+        that measures a person's understanding of environmental, social and economic sustainability.
+        Employers and universities rely on it, which makes forged certificates a real problem.
+      </p>
+      <div class="cards">
+        <div class="card">
+          <div class="card-icon"><svg class='ic' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 4 2.5 9 12 14l9.5-5z'/><path d='M6.5 11.2V16c1.4 1.4 3.6 2.3 5.5 2.3s4.1-.9 5.5-2.3v-4.8'/></svg></div>
+          <h3>Recognised credential</h3>
+          <p>TASK scores are used in admissions and hiring around the world, so authenticity matters.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon"><svg class='ic' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='11' cy='11' r='7'/><path d='M21 21l-4-4'/></svg></div>
+          <h3>Fakes are rising</h3>
+          <p>Edited screenshots and forged PDFs are increasingly common. Manual review is slow and error-prone.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon"><svg class='ic' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='9'/><path d='M8.4 12.4l2.4 2.4 4.8-5.2'/></svg></div>
+          <h3>Instant validation</h3>
+          <p>Our validator cross-checks the certificate image and ID against the issuing registry in seconds.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== How it works ===== -->
+  <section class="how" id="how">
+    <div class="container">
+      <h2 class="section-title">How it works</h2>
+      <div class="steps">
+        <div class="step">
+          <span class="step-num">1</span>
+          <h3>App sends</h3>
+          <p>The member captures the barcode in the mobile app, which sends the image in.</p>
+        </div>
+        <div class="step">
+          <span class="step-num">2</span>
+          <h3>Analyse</h3>
+          <p>The barcode's QR code is decoded automatically from the received image.</p>
+        </div>
+        <div class="step">
+          <span class="step-num">3</span>
+          <h3>Cross-check</h3>
+          <p>The decoded link is matched against the official TASK issuing register.</p>
+        </div>
+        <div class="step">
+          <span class="step-num">4</span>
+          <h3>Review</h3>
+          <p>Reviewers monitor the verdicts — authentic or not — in the console.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Footer ===== -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <p><strong>PSAUX London</strong> — TASK Certificate Validator</p>
+      <p class="footer-note">
+        Demo prototype for educational purposes. Not affiliated with Sulitest or the official TASK programme.
+        All verification results on this site are simulated.
+      </p>
+    </div>
+  </footer>
+
+</body>
+</html>

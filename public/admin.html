@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin review — PSAUX London</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="container nav-inner">
+      <a class="brand" href="index.html">
+        <svg class="brand-mark" viewBox="0 0 40 40" width="30" height="30" aria-hidden="true">
+          <path d="M20 20 L20 1 A19 19 0 0 1 36.4 29.5 Z" fill="#00c1a2"/>
+          <path d="M20 20 L36.4 29.5 A19 19 0 0 1 3.6 29.5 Z" fill="#ffd304"/>
+          <path d="M20 20 L3.6 29.5 A19 19 0 0 1 20 1 Z" fill="#bb7d4c"/>
+          <circle cx="20" cy="20" r="9.5" fill="#f9f4ee"/>
+          <path d="M15.5 20.5 l3.2 3.2 l6-6.8" fill="none" stroke="#2d3948" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="brand-text">PSAUX <strong>London</strong></span>
+      </a>
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="admin.html" class="active">Review console</a>
+      </nav>
+      <span class="demo-badge">DEMO</span>
+    </div>
+  </header>
+
+  <!-- Passcode gate -->
+  <section class="verify" id="gate">
+    <div class="container verify-inner">
+      <div class="gate-card">
+        <div class="dz-icon"><svg class='ic' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='5' y='11' width='14' height='9' rx='2'/><path d='M8 11V8a4 4 0 0 1 8 0v3'/></svg></div>
+        <h2>Reviewer access</h2>
+        <p class="section-sub">Enter the admin passcode to open the review dashboard.</p>
+        <input type="password" id="passInput" placeholder="Passcode" />
+        <button class="btn btn-primary btn-big" id="passBtn" type="button">Enter</button>
+        <p class="form-hint">Demo passcode: <code>admin123</code></p>
+        <p class="gate-error hidden" id="gateError">Wrong passcode — try again.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dashboard -->
+  <section class="verify hidden" id="dashboard">
+    <div class="container verify-inner">
+      <div class="dash-topbar">
+        <div>
+          <h2 class="section-title">Review dashboard</h2>
+          <p class="section-sub">
+            Barcodes sent from the mobile app are decoded and checked automatically.
+            Monitor and review them below — no manual upload.
+          </p>
+        </div>
+        <button class="btn btn-outline" id="simBtn" type="button" title="Demo control — stands in for a barcode pushed from the app">Simulate incoming from app</button>
+      </div>
+
+      <div class="admin-stats">
+        <div class="astat"><span class="astat-num" id="stPending">0</span><span class="astat-label">Pending</span></div>
+        <div class="astat"><span class="astat-num" id="stApproved">0</span><span class="astat-label">Approved</span></div>
+        <div class="astat"><span class="astat-num" id="stRejected">0</span><span class="astat-label">Rejected</span></div>
+        <div class="astat"><span class="astat-num" id="stPoints">0</span><span class="astat-label">Points awarded</span></div>
+      </div>
+
+      <h3 class="subs-title"><svg class='ic' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='9'/><path d='M12 7v5l3 2'/></svg> Pending queue (borderline matches)</h3>
+      <div class="subs-list" id="pendingList"></div>
+
+      <h3 class="subs-title"><svg class='ic' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M3 7.5a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/></svg> Review history</h3>
+      <div class="subs-list" id="historyList"></div>
+
+      <div class="admin-tools">
+        <button class="btn btn-outline" id="resetBtn" type="button">Reset demo data</button>
+        <button class="btn btn-danger" id="clearBtn" type="button"><svg class='ic' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 7h16M10 7V5h4v2M6.5 7l.9 12h9.2l.9-12'/></svg> Delete all data</button>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <p><strong>PSAUX London</strong> — TASK Certificate Validator</p>
+      <p class="footer-note">Demo prototype — all data lives in this browser only.</p>
+    </div>
+  </footer>
+
+  <script src="jsQR.js"></script>
+  <script src="checker.js"></script>
+  <script src="samples.js"></script>
+  <script src="store.js"></script>
+  <script>
+    // ---- live bridge to the PSAUX Verify API (everything the app actually sent) ----
+    const API_BASE = (localStorage.getItem("verify_api_base") || "https://psaux-verify-api.onrender.com").replace(/\/+$/, "");
+    // Poll every site so TASK barcodes (psaux), volunteering certificates
+    // (tatawwu) and gym check-ins all land in this one console.
+    const API_SITES = ["psaux", "tatawwu", "gym"];
+    const POINTS_BY_SITE = { psaux: 50, tatawwu: 150, gym: 10 };
+    let apiSubs = [];
+    let apiOnline = false;
+
+    // One API record (server.js shape) -> a console submission. `site` is kept
+    // as `_site` so Approve / Reject / Delete hit the right site endpoint.
+    function mapApiRecord(r, site) {
+      const awarded = POINTS_BY_SITE[site] || (typeof AUTO_POINTS !== "undefined" ? AUTO_POINTS : 50);
+      // A meaningful label per site: TASK host, certificate type/code, or gym.
+      const label = r.qrHost || r.type || r.code || (site === "tatawwu" ? "certificate" : site);
+      return {
+        id: r.id,
+        _site: site,
+        user: r.from || "app-user",
+        barcodeImg: r.imageUrl ? API_BASE + r.imageUrl : "",
+        certImg: null,
+        note: "",
+        status: r.status === "approved" ? "approved" : (r.status === "rejected" ? "rejected" : "pending"),
+        auto: r.auto !== false,
+        similarity: null,
+        qrHost: label,
+        qrText: r.qrText || null,
+        points: r.status === "approved" ? awarded : 0,
+        reason: r.reason || "",
+        createdAt: r.receivedAt || Date.now(),
+        reviewedAt: r.reviewedAt || r.receivedAt || Date.now(),
+        _api: true,
+      };
+    }
+
+    // Merge API + local demo submissions, API first, de-duped by id.
+    function mergedSubs() {
+      const seen = new Set(), out = [];
+      for (const s of [...apiSubs, ...getSubmissions()]) { if (seen.has(s.id)) continue; seen.add(s.id); out.push(s); }
+      return out;
+    }
+
+    async function pollApi() {
+      try {
+        const perSite = await Promise.all(API_SITES.map(async (site) => {
+          const res = await fetch(`${API_BASE}/api/${site}/submissions`, { cache: "no-store" });
+          if (!res.ok) throw new Error(`${site} ${res.status}`);
+          const data = await res.json();
+          return (data.submissions || []).map((r) => mapApiRecord(r, site));
+        }));
+        apiSubs = perSite.flat().sort((a, b) => b.createdAt - a.createdAt);
+        apiOnline = true;
+      } catch { apiOnline = false; }
+      if (dashboard && !dashboard.classList.contains("hidden")) render();
+    }
+
+    // ---- Passcode gate (demo only — not real security) ----
+    const gate = document.getElementById("gate");
+    const dashboard = document.getElementById("dashboard");
+    const passInput = document.getElementById("passInput");
+    const passBtn = document.getElementById("passBtn");
+    const gateError = document.getElementById("gateError");
+
+    function unlock() {
+      gate.classList.add("hidden");
+      dashboard.classList.remove("hidden");
+      render();
+    }
+    if (sessionStorage.getItem("psaux_admin") === "1") unlock();
+
+    passBtn.addEventListener("click", tryPass);
+    passInput.addEventListener("keydown", (e) => { if (e.key === "Enter") tryPass(); });
+    function tryPass() {
+      if (passInput.value === "admin123") {
+        sessionStorage.setItem("psaux_admin", "1");
+        unlock();
+      } else {
+        gateError.classList.remove("hidden");
+      }
+    }
+
+    // ---- Dashboard ----
+    const pendingList = document.getElementById("pendingList");
+    const historyList = document.getElementById("historyList");
+    const POINT_OPTIONS = [10, 25, 50, 100];
+
+    function render() {
+      const all = mergedSubs();
+      const pending = all.filter((s) => s.status === "pending");
+      const reviewed = all.filter((s) => s.status !== "pending");
+
+      document.getElementById("stPending").textContent = pending.length;
+      document.getElementById("stApproved").textContent = all.filter((s) => s.status === "approved").length;
+      document.getElementById("stRejected").textContent = all.filter((s) => s.status === "rejected").length;
+      document.getElementById("stPoints").textContent =
+        all.filter((s) => s.status === "approved").reduce((sum, s) => sum + s.points, 0).toLocaleString();
+
+      pendingList.innerHTML = pending.length ? pending.map(pendingCard).join("")
+        : `<p class="empty-note">No pending submissions — the queue is clear <svg class='ic' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='9' r='4.5'/><path d='M9 12.5l-2 8.5 5-3 5 3-2-8.5'/></svg></p>`;
+
+      historyList.innerHTML = reviewed.length ? reviewed.map(historyCard).join("")
+        : '<p class="empty-note">Nothing reviewed yet.</p>';
+    }
+
+    function thumbs(s) {
+      return `
+        <div class="thumb-pair">
+          <img src="${s.barcodeImg}" alt="barcode" title="Barcode — click to open" onclick="window.open(this.src)" />
+          ${s.certImg ? `<img src="${s.certImg}" alt="certificate" title="Certificate — click to open" onclick="window.open(this.src)" />` : ""}
+        </div>`;
+    }
+
+    function pendingCard(s) {
+      const opts = POINT_OPTIONS.map((p) =>
+        `<option value="${p}" ${p === 50 ? "selected" : ""}>${p} points</option>`).join("");
+      return `
+        <div class="sub-card">
+          ${thumbs(s)}
+          <div class="sub-info">
+            <div class="sub-top">
+              <span class="sub-user">@${s.user}</span>
+              ${s.qrHost ? `<span class="sim-chip"><svg class='ic' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M9.5 14.5l5-5'/><path d='M11 6.5l1-1a4 4 0 0 1 5.7 5.7l-1 1'/><path d='M13 17.5l-1 1a4 4 0 0 1-5.7-5.7l1-1'/></svg> ${s.qrHost}</span>` : ""}
+              ${s.similarity != null ? `<span class="sim-chip">cert ${pct(s.similarity)}</span>` : ""}
+              <span class="sub-time">${timeAgo(s.createdAt)}</span>
+            </div>
+            ${s.note ? `<p class="sub-note">${s.note}</p>` : ""}
+            <div class="review-actions">
+              <select class="points-select" id="pts-${s.id}">${opts}</select>
+              <button class="btn btn-primary" onclick="approve('${s.id}')"><svg class='ic' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20 6L9 17l-5-5'/></svg> Approve</button>
+              <button class="btn btn-danger" onclick="reject('${s.id}')"><svg class='ic' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M18 6L6 18M6 6l12 12'/></svg> Reject</button>
+              <button class="btn btn-outline btn-del" onclick="deleteSub('${s.id}')" title="Delete this record"><svg class='ic' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 7h16M10 7V5h4v2M6.5 7l.9 12h9.2l.9-12'/></svg> Delete</button>
+            </div>
+          </div>
+        </div>`;
+    }
+
+    function historyCard(s) {
+      const ok = s.status === "approved";
+      return `
+        <div class="sub-card sub-card-muted">
+          ${thumbs(s)}
+          <div class="sub-info">
+            <div class="sub-top">
+              <span class="sub-user">@${s.user}</span>
+              <span class="status ${ok ? "st-approved" : "st-rejected"}">
+                ${ok ? `<svg class='ic' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='9'/><path d='M8.4 12.4l2.4 2.4 4.8-5.2'/></svg> Approved · +${s.points} pts` : "<svg class='ic' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='9'/><path d='M9 9l6 6M15 9l-6 6'/></svg> Rejected"}
+              </span>
+              ${s.qrHost ? `<span class="sim-chip"><svg class='ic' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M9.5 14.5l5-5'/><path d='M11 6.5l1-1a4 4 0 0 1 5.7 5.7l-1 1'/><path d='M13 17.5l-1 1a4 4 0 0 1-5.7-5.7l1-1'/></svg> ${s.qrHost}</span>` : ""}
+              ${s.similarity != null ? `<span class="sim-chip">cert ${pct(s.similarity)}</span>` : ""}
+              ${s.auto ? `<span class="auto-badge"><svg class='ic' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='4.5' y='8' width='15' height='11' rx='2.5'/><path d='M12 4v4M8.5 4h7'/><circle cx='9.5' cy='13' r='1.1' fill='currentColor' stroke='none'/><circle cx='14.5' cy='13' r='1.1' fill='currentColor' stroke='none'/></svg> auto</span>` : `<span class="auto-badge"><svg class='ic' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='8.5' r='3.8'/><path d='M4.5 20a7.5 7.5 0 0 1 15 0'/></svg> manual</span>`}
+              <span class="sub-time">${timeAgo(s.reviewedAt)}</span>
+            </div>
+            ${!ok && s.reason ? `<p class="sub-reason">Reason: ${s.reason}</p>` : ""}
+            <div class="review-actions">
+              <button class="btn btn-outline btn-del" onclick="deleteSub('${s.id}')" title="Delete this record"><svg class='ic' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 7h16M10 7V5h4v2M6.5 7l.9 12h9.2l.9-12'/></svg> Delete</button>
+            </div>
+          </div>
+        </div>`;
+    }
+
+    function deleteSub(id) {
+      if (!confirm("Delete this record permanently? This cannot be undone.")) return;
+      const rec = apiSubs.find((s) => s.id === id);
+      if (rec) {
+        apiSubs = apiSubs.filter((s) => s.id !== id);
+        fetch(`${API_BASE}/api/${rec._site}/submissions/${id}`, { method: "DELETE" }).finally(pollApi);
+        render();
+        return;
+      }
+      deleteSubmission(id);
+      render();
+    }
+
+    function approve(id) {
+      const points = parseInt(document.getElementById("pts-" + id).value, 10);
+      reviewSubmission(id, { status: "approved", points });
+      render();
+    }
+
+    function reject(id) {
+      const reason = prompt("Reason for rejection (shown to the user):", "Image appears edited or unreadable.");
+      if (reason === null) return;
+      reviewSubmission(id, { status: "rejected", reason });
+      render();
+    }
+
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      if (confirm("Reset all demo submissions and points?")) {
+        resetDemoData();
+        render();
+      }
+    });
+
+    document.getElementById("clearBtn").addEventListener("click", () => {
+      if (!confirm("Delete ALL submissions and points permanently (local demo + from the app)? This cannot be undone.")) return;
+      clearAllData();
+      apiSubs = [];
+      Promise.all(API_SITES.map((site) =>
+        fetch(`${API_BASE}/api/${site}/submissions`, { method: "DELETE" }).catch(() => {})
+      )).finally(pollApi);
+      render();
+    });
+
+    // ---- receive a barcode image "from the app" and analyse it (real QR decode) ----
+    let simIdx = 0;
+    async function receiveFromApp(sample) {
+      // Send the sample barcode to the verify API — the exact path the app uses.
+      try {
+        const res = await fetch(`${API_BASE}/api/psaux/ingest`, {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ image: sample.image, from: sample.from }),
+        });
+        if (!res.ok) throw new Error(res.status);
+        await pollApi();
+        return;
+      } catch (_) {
+        // API unreachable — fall back to the local demo path.
+        const r = await autoCheck(sample.image);
+        addSubmission({
+          user: sample.from, barcodeImg: sample.image, certImg: null,
+          note: "", status: r.verdict, auto: true,
+          qrHost: r.qrHost, qrText: r.qrText, points: AUTO_POINTS,
+          reason: r.verdict === "rejected" ? r.failReason : "",
+        });
+        render();
+      }
+    }
+    document.getElementById("simBtn").addEventListener("click", () => {
+      const s = APP_SAMPLES[simIdx % APP_SAMPLES.length];
+      simIdx++;
+      receiveFromApp(s);
+    });
+
+    onDBChange(render);
+
+    // Start reading real app uploads from the verify API (live).
+    pollApi();
+    setInterval(pollApi, 4000);
+  </script>
+</body>
+</html>
