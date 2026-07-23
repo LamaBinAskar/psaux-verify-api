@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PSAUx — Live Leaderboard</title>
+<style>
+  :root{
+    --green:#0F5A3E; --green-d:#083525; --gold:#C9A227; --gold-d:#AF8D11;
+    --ink:#08251a; --paper:#f4f2ea;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  html,body{height:100%}
+  body{
+    background:radial-gradient(120% 120% at 50% 0%, #12694a 0%, var(--green) 40%, var(--green-d) 100%);
+    color:#fff; min-height:100vh; overflow-x:hidden;
+  }
+  .wrap{max-width:1100px;margin:0 auto;padding:32px 28px 48px;min-height:100vh;display:flex;flex-direction:column}
+  /* header */
+  header{display:flex;align-items:center;justify-content:space-between;margin-bottom:26px}
+  .brand{display:flex;align-items:center;gap:14px}
+  .emblem{width:54px;height:54px;border-radius:14px;background:linear-gradient(135deg,var(--gold),var(--gold-d));
+    display:flex;align-items:center;justify-content:center;font-size:30px;box-shadow:0 8px 24px rgba(0,0,0,.35)}
+  .brand h1{font-size:15px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.7);font-weight:700}
+  .brand h2{font-size:30px;font-weight:900;line-height:1.05;background:linear-gradient(90deg,#fff,#ffe9a8);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .live{display:flex;align-items:center;gap:9px;background:rgba(255,255,255,.12);padding:9px 15px;border-radius:30px;font-weight:700;font-size:14px}
+  .dot{width:11px;height:11px;border-radius:50%;background:#4be08a;box-shadow:0 0 0 0 rgba(75,224,138,.7);animation:pulse 1.6s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(75,224,138,.6)}70%{box-shadow:0 0 0 14px rgba(75,224,138,0)}100%{box-shadow:0 0 0 0 rgba(75,224,138,0)}}
+
+  /* podium */
+  .podium{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;align-items:end;margin:10px 0 26px}
+  .col{display:flex;flex-direction:column;align-items:center}
+  .ava{border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;color:#08251a;border:4px solid;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+  .name{font-weight:800;margin-top:10px;font-size:19px;text-align:center;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .pts{font-family:'JetBrains Mono',ui-monospace,monospace;color:#ffe9a8;font-weight:800;font-size:16px;margin-top:2px}
+  .stand{width:100%;border-radius:16px 16px 0 0;margin-top:12px;display:flex;align-items:flex-start;justify-content:center;color:#fff;font-weight:900;padding-top:12px}
+  .rank-num{font-size:44px}
+  .crown{font-size:30px;margin-bottom:4px}
+
+  /* list */
+  .list{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:22px;padding:10px;backdrop-filter:blur(4px)}
+  .row{display:flex;align-items:center;gap:16px;padding:14px 18px;border-radius:16px;transition:background .3s}
+  .row+.row{margin-top:4px}
+  .row:hover{background:rgba(255,255,255,.05)}
+  .r-rank{width:44px;font-weight:900;font-size:22px;text-align:center;color:rgba(255,255,255,.65)}
+  .r-ava{width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:19px;color:#ffe9a8;flex:0 0 auto}
+  .r-name{flex:1;min-width:0}
+  .r-name b{font-size:20px;font-weight:800;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .r-name span{font-size:13px;color:rgba(255,255,255,.55);font-weight:600}
+  .r-pts{font-family:'JetBrains Mono',ui-monospace,monospace;font-weight:900;font-size:24px;color:#ffe9a8}
+  .r-pts small{font-size:13px;color:rgba(255,255,255,.6);font-weight:700;margin-left:4px}
+  .medal .r-rank{color:transparent;position:relative}
+  .medal .r-rank::after{content:attr(data-m);position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:26px}
+
+  footer{margin-top:auto;padding-top:26px;text-align:center;color:rgba(255,255,255,.6);font-size:14px;font-weight:600}
+  .state{text-align:center;padding:60px 20px;color:rgba(255,255,255,.8);font-size:18px;font-weight:700}
+  .state small{display:block;margin-top:10px;font-weight:500;font-size:14px;color:rgba(255,255,255,.55);max-width:520px;margin-left:auto;margin-right:auto}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="emblem">🏆</div>
+      <div>
+        <h1>Prince Sattam University · Sustainability</h1>
+        <h2>Live Leaderboard</h2>
+      </div>
+    </div>
+    <div class="live"><span class="dot"></span> LIVE</div>
+  </header>
+
+  <div id="podium" class="podium" style="display:none"></div>
+  <div id="list" class="list"></div>
+  <div id="state" class="state">Connecting to the campus leaderboard…</div>
+
+  <footer>Earn Eco-points at any PSAUx recycling station, in the app, and by volunteering. Updates in real time.</footer>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getFirestore, collection, query, orderBy, limit, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+  // psaux-26 project. (Firebase web apiKeys are public identifiers.)
+  const firebaseConfig = {
+    apiKey: "AIzaSyDTZ4COIWrzmXZtC9uAsAUCNwHALOquvMM",
+    authDomain: "psaux-26.firebaseapp.com",
+    projectId: "psaux-26",
+    storageBucket: "psaux-26.firebasestorage.app",
+    messagingSenderId: "138559961961",
+    appId: "1:138559961961:android:2a04b8a7e4e6af6eb21bf8"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  // Best-effort: if Anonymous Auth is enabled, this satisfies auth-gated rules.
+  try { await signInAnonymously(getAuth(app)); } catch (e) { /* rules may allow public read */ }
+
+  const COLORS = ["#C9A227", "#9AA6A0", "#B07B4F"]; // gold / silver / bronze
+  const MEDALS = ["🥇", "🥈", "🥉"];
+  const HEIGHTS = [150, 190, 120];
+  const initial = n => (n || "?").trim().charAt(0).toUpperCase() || "?";
+  const first = n => (n || "Explorer").trim().split(" ")[0];
+
+  function render(rows) {
+    document.getElementById("state").style.display = rows.length ? "none" : "block";
+    if (!rows.length) { document.getElementById("state").textContent = "No players yet — be the first to earn Eco-points!"; return; }
+
+    // Podium (top 3) in visual order: 2nd, 1st, 3rd
+    const top = rows.slice(0, 3);
+    const order = [top[1], top[0], top[2]];
+    const podium = document.getElementById("podium");
+    podium.style.display = top.length ? "grid" : "none";
+    podium.innerHTML = order.map((r, i) => {
+      if (!r) return "<div></div>";
+      const place = i === 1 ? 1 : (i === 0 ? 2 : 3);
+      const c = COLORS[place - 1], big = place === 1;
+      const size = big ? 96 : 78;
+      return `<div class="col">
+        ${big ? '<div class="crown">👑</div>' : ''}
+        <div class="ava" style="width:${size}px;height:${size}px;font-size:${big?38:30}px;background:${c}33;border-color:${c}">${initial(r.name)}</div>
+        <div class="name">${escapeHtml(first(r.name))}</div>
+        <div class="pts">${(r.points||0).toLocaleString()} pts</div>
+        <div class="stand" style="height:${HEIGHTS[place-1]}px;background:linear-gradient(180deg,${c}dd,${c}66)"><span class="rank-num">${place}</span></div>
+      </div>`;
+    }).join("");
+
+    // Full list
+    document.getElementById("list").innerHTML = rows.map((r, i) => {
+      const rank = i + 1, medal = rank <= 3;
+      return `<div class="row ${medal ? 'medal' : ''}">
+        <div class="r-rank" ${medal ? `data-m="${MEDALS[rank-1]}"` : ''}>${rank}</div>
+        <div class="r-ava">${initial(r.name)}</div>
+        <div class="r-name"><b>${escapeHtml(r.name || 'Explorer')}</b><span>${escapeHtml(r.level || 'Explorer')}</span></div>
+        <div class="r-pts">${(r.points||0).toLocaleString()}<small>pts</small></div>
+      </div>`;
+    }).join("");
+  }
+
+  function escapeHtml(s){return (s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+
+  const q = query(collection(db, "users"), orderBy("points", "desc"), limit(15));
+  onSnapshot(q, snap => render(snap.docs.map(d => d.data())), err => {
+    const s = document.getElementById("state");
+    s.style.display = "block";
+    s.innerHTML = "Couldn't load the leaderboard.<small>The station display needs read access to the <b>users</b> collection. In Firebase, either enable <b>Anonymous Authentication</b>, or add a Firestore rule allowing read on <code>users</code>. (" + escapeHtml(err.code || err.message || "error") + ")</small>";
+    console.error(err);
+  });
+</script>
+</body>
+</html>

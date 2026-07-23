@@ -217,6 +217,9 @@ app.delete("/api/:site/submissions", requireSite, (req, res) => {
 app.get("/admin", (req, res) => res.sendFile(
   path.join(HAS_SITE ? PUBLIC_DIR : __dirname, "admin.html")));
 
+// Big-screen live leaderboard for the recycling station (reads Firestore).
+app.get("/leaderboard", (req, res) => res.sendFile(path.join(PUBLIC_DIR, "leaderboard.html")));
+
 // Simple docs at the root.
 app.get("/", (req, res) => {
   res.json({
