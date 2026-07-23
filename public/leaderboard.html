@@ -27,14 +27,10 @@
   .fs:hover{background:rgba(255,255,255,.2)}
   .updated{position:absolute;top:88px;right:30px;font-size:12px;color:rgba(255,255,255,.45);font-weight:600}
 
-  /* main split */
   .main{display:grid;grid-template-columns:0.82fr 1.18fr;gap:22px;flex:1;min-height:0}
   @media (max-width:820px){.main{grid-template-columns:1fr}}
 
-  /* champion spotlight */
-  .champ{position:relative;border-radius:26px;padding:26px 24px;overflow:hidden;
-    background:linear-gradient(160deg,rgba(231,195,73,.28),rgba(201,162,39,.08));
-    border:1px solid rgba(231,195,73,.4);box-shadow:0 20px 50px rgba(0,0,0,.35);display:flex;flex-direction:column;align-items:center;text-align:center;justify-content:center}
+  .champ{position:relative;border-radius:26px;padding:26px 24px;overflow:hidden;background:linear-gradient(160deg,rgba(231,195,73,.28),rgba(201,162,39,.08));border:1px solid rgba(231,195,73,.4);box-shadow:0 20px 50px rgba(0,0,0,.35);display:flex;flex-direction:column;align-items:center;text-align:center;justify-content:center}
   .champ::after{content:"";position:absolute;inset:0;background:radial-gradient(60% 40% at 50% 0%,rgba(231,195,73,.35),transparent 70%);pointer-events:none}
   .champ .lead{position:relative;font-size:12px;letter-spacing:3px;font-weight:800;color:#ffe9a8;text-transform:uppercase}
   .champ .crown{position:relative;font-size:40px;margin:4px 0 8px;filter:drop-shadow(0 4px 10px rgba(0,0,0,.35));animation:bob 2.6s ease-in-out infinite}
@@ -47,9 +43,8 @@
   .champ .pl{position:relative;font-size:13px;color:rgba(255,255,255,.7);font-weight:700;letter-spacing:1px;margin-top:4px}
 
   .right{display:flex;flex-direction:column;min-height:0}
-  /* slim stat bar */
   .stats{display:flex;gap:12px;margin-bottom:14px}
-  .stat{flex:1;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-radius:16px;padding:12px 14px;display:flex;align-items:center;gap:11px}
+  .stat{flex:1;min-width:0;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-radius:16px;padding:12px 14px;display:flex;align-items:center;gap:11px}
   .stat .ic{font-size:22px}
   .stat .v{font-size:23px;font-weight:900;line-height:1;font-variant-numeric:tabular-nums}
   .stat .l{font-size:11px;color:rgba(255,255,255,.6);font-weight:600;margin-top:2px}
@@ -83,7 +78,7 @@
   .toast{background:linear-gradient(90deg,var(--gold),var(--gold-d));color:#3a2e00;font-weight:900;font-size:18px;padding:13px 22px;border-radius:30px;box-shadow:0 12px 34px rgba(0,0,0,.35);animation:tpop .35s cubic-bezier(.2,1.3,.4,1),tout .4s ease 3.4s forwards}
   @keyframes tpop{from{opacity:0;transform:translateY(-14px) scale(.9)}to{opacity:1;transform:none}}
   @keyframes tout{to{opacity:0;transform:translateY(-14px) scale(.96)}}
-  @media (max-width:820px){.brand h2{font-size:26px}.updated{display:none}.champ{padding:20px}.champ .ava{width:104px;height:104px;font-size:42px}.champ .nm{font-size:28px}.champ .pt{font-size:42px}footer{flex-direction:column}}
+  @media (max-width:820px){.brand h2{font-size:26px}.updated{display:none}.champ{padding:20px}.champ .ava{width:104px;height:104px;font-size:42px}.champ .nm{font-size:28px}.champ .pt{font-size:42px}.stats{flex-wrap:wrap}.stat{flex:1 1 44%}footer{flex-direction:column}}
 </style>
 </head>
 <body>
@@ -106,7 +101,6 @@
       <div class="list" id="list"><div class="cap">RANKING</div></div>
     </div>
   </div>
-
   <div id="state" class="state">Connecting to the campus leaderboard…</div>
 
   <footer>
@@ -115,17 +109,13 @@
   </footer>
 </div>
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { getFirestore, collection, query, orderBy, limit, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-  import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-  const firebaseConfig={apiKey:"AIzaSyDTZ4COIWrzmXZtC9uAsAUCNwHALOquvMM",authDomain:"psaux-26.firebaseapp.com",projectId:"psaux-26",storageBucket:"psaux-26.firebasestorage.app",messagingSenderId:"138559961961",appId:"1:138559961961:android:2a04b8a7e4e6af6eb21bf8"};
-  const app=initializeApp(firebaseConfig),db=getFirestore(app);
-  try{await signInAnonymously(getAuth(app));}catch(e){}
-
-  const CO2_PER_POINT=0.05,MEDALS=["🥇","🥈","🥉"];
+<script>
+  // ── Reads Firestore over plain REST (no realtime SDK / no CDN) so it works on
+  //    any network Google is reachable from; polls every few seconds. ──
+  const KEY="AIzaSyDTZ4COIWrzmXZtC9uAsAUCNwHALOquvMM", PROJECT="psaux-26";
+  const CO2_PER_POINT=0.05, MEDALS=["🥇","🥈","🥉"], POLL_MS=4000;
   const PAL=[["#2E9E6B","#1c6e49"],["#1E8E7E","#125e55"],["#D99A00","#a37200"],["#CB6B3A","#9c4d26"],["#6C4FBF","#4a3388"],["#0A97D9","#0a6ea0"],["#C0397B","#8e2359"],["#3E7C3A","#2a5a27"],["#0f8a8a","#0a5f5f"],["#B0842E","#7d5d18"]];
-  let prevPoints={},prevRank={},firstLoad=true,lastUpdate=0,prevLeader=null;
+  let prevPoints={},prevRank={},firstLoad=true,lastUpdate=0,prevLeader=null,idToken=null,fails=0;
 
   const el=id=>document.getElementById(id);
   const initial=n=>((n||"?").trim().charAt(0)||"?").toUpperCase();
@@ -145,9 +135,8 @@
   function loop(){ctx.clearRect(0,0,cvs.width,cvs.height);parts.forEach(p=>{p.vy+=p.g;p.x+=p.vx;p.y+=p.vy;p.rot+=p.vr;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot);ctx.fillStyle=p.c;ctx.fillRect(-p.s/2,-p.s/2,p.s,p.s*.62);ctx.restore();});parts=parts.filter(p=>p.y<cvs.height+30);if(parts.length)raf=requestAnimationFrame(loop);else{raf=null;ctx.clearRect(0,0,cvs.width,cvs.height);}}
 
   function render(rows){
-    el("state").style.display=rows.length?"none":"block";
-    if(!rows.length){el("state").textContent="No players yet — be the first to earn Eco-points!";return;}
-    el("main").style.display="grid";
+    if(!rows.length){el("state").style.display="block";el("main").style.display="none";el("state").textContent="No players yet — be the first to earn Eco-points!";return;}
+    el("state").style.display="none";el("main").style.display="grid";
 
     if(!firstLoad){
       let earned=false;
@@ -156,14 +145,12 @@
       if(rows[0]&&prevLeader&&rows[0].uid!==prevLeader){toast(`👑 ${first(rows[0].name)} takes the lead!`);burst(150);}
     }
 
-    // champion spotlight (#1)
     const c=rows[0];
     el("champ").innerHTML=`<div class="lead">🏆 Campus Leader</div><div class="crown">👑</div>
       <div class="ava" style="background:${grad(c.name)}">${initial(c.name)}</div>
       <div class="nm">${esc(c.name||"Explorer")}</div>${tierPill(c.points||0)}
       <div class="pt">${fmt(c.points)}</div><div class="pl">ECO-POINTS</div>`;
 
-    // stats
     const total=rows.reduce((a,r)=>a+(r.points||0),0);
     el("stats").innerHTML=`
       <div class="stat"><div class="ic">👥</div><div><div class="v" id="s1">0</div><div class="l">Competing</div></div></div>
@@ -171,11 +158,10 @@
       <div class="stat"><div class="ic">🌍</div><div><div class="v" id="s3">0</div><div class="l">kg CO₂ (est.)</div></div></div>`;
     animateNum(el("s1"),rows.length);animateNum(el("s2"),total);animateNum(el("s3"),Math.round(total*CO2_PER_POINT));
 
-    // ranking list (from #2 down)
     const rest=rows.slice(1);
-    el("list").innerHTML='<div class="cap">RANKING</div>'+ (rest.length?rest.map((r,i)=>{
+    el("list").innerHTML='<div class="cap">RANKING</div>'+(rest.length?rest.map((r,i)=>{
       const rank=i+2,medal=rank<=3,grew=!firstLoad&&prevPoints[r.uid]!=null&&r.points>prevPoints[r.uid];
-      const gap=rows[i].points-r.points; // person directly above
+      const gap=rows[i].points-r.points;
       return `<div class="row ${grew?'flash':''}">
         <div class="r-rank">${medal?`<span class="m">${MEDALS[rank-1]}</span>`:rank}</div>
         <div class="r-move">${moveBadge(r.uid,rank)}</div>
@@ -184,23 +170,42 @@
           <div class="r-sub">▲ ${fmt(gap)} pts to overtake ${esc(first(rows[i].name))}</div></div>
         <div class="r-pts">${fmt(r.points)}<small>pts</small></div>
       </div>`;
-    }).join("") : '<div class="r-sub" style="padding:16px">Only the leader so far — be the next to join!</div>');
+    }).join(""):'<div class="r-sub" style="padding:16px">Only the leader so far — be the next to join!</div>');
 
     prevPoints={};prevRank={};rows.forEach((r,i)=>{prevPoints[r.uid]=r.points;prevRank[r.uid]=i+1;});
     prevLeader=rows[0]?rows[0].uid:null;firstLoad=false;lastUpdate=Date.now();el("updated").textContent="Updated just now";
   }
 
+  // ---- data: anonymous auth + Firestore REST (polled) ----
+  async function auth(){
+    const r=await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${KEY}`,{method:"POST",headers:{"Content-Type":"application/json"},body:'{"returnSecureToken":true}'});
+    if(!r.ok) throw new Error("auth "+r.status);
+    idToken=(await r.json()).idToken;
+  }
+  function parseDoc(d){const f=d.fields||{};const S=k=>(f[k]&&f[k].stringValue)||"";const N=k=>f[k]?parseInt(f[k].integerValue||Math.round(f[k].doubleValue||0)):0;return{uid:(d.name||"").split("/").pop(),name:S("name"),points:N("points"),level:S("level")};}
+  async function fetchUsers(){
+    if(!idToken) await auth();
+    const url=`https://firestore.googleapis.com/v1/projects/${PROJECT}/databases/(default)/documents/users?pageSize=100`;
+    let r=await fetch(url,{headers:{Authorization:"Bearer "+idToken}});
+    if(r.status===401){await auth();r=await fetch(url,{headers:{Authorization:"Bearer "+idToken}});}
+    if(!r.ok) throw new Error("read "+r.status);
+    const rows=((await r.json()).documents||[]).map(parseDoc);
+    rows.sort((a,b)=>(b.points||0)-(a.points||0));
+    return rows.slice(0,20);
+  }
+  async function tick(){
+    try{ render(await fetchUsers()); fails=0; }
+    catch(e){ fails++; console.error(e);
+      if(firstLoad||fails>=3){ el("main").style.display="none"; const s=el("state"); s.style.display="block";
+        s.innerHTML="Couldn't reach the leaderboard.<small>Check the network connection. If it persists, confirm Firestore allows reading <b>users</b> for signed-in clients. ("+esc(e.message||"error")+")</small>"; }
+    }
+  }
+  tick(); setInterval(tick,POLL_MS);
+
   setInterval(()=>{if(!lastUpdate)return;const s=Math.floor((Date.now()-lastUpdate)/1000);el("updated").textContent=s<3?"Updated just now":(s<60?`Updated ${s}s ago`:`Updated ${Math.floor(s/60)}m ago`);},1000);
   el("fs").onclick=()=>{const d=document.documentElement;if(document.fullscreenElement)document.exitFullscreen();else d.requestFullscreen&&d.requestFullscreen();};
   const here=encodeURIComponent(location.href.split('#')[0]);
   el("qr").innerHTML=`<img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&margin=0&data=${here}" alt="QR" onerror="this.parentNode.style.display='none'"><div class="t"><b>Scan to view</b><br>on your phone</div>`;
-
-  const q=query(collection(db,"users"),orderBy("points","desc"),limit(20));
-  onSnapshot(q,snap=>render(snap.docs.map(d=>({uid:d.id,...d.data()}))),err=>{
-    const s=el("state");s.style.display="block";
-    s.innerHTML="Couldn't load the leaderboard.<small>The station display needs read access to the <b>users</b> collection. Enable <b>Anonymous Authentication</b> and allow read on <code>users</code> for signed-in clients. ("+esc(err.code||err.message||"error")+")</small>";
-    console.error(err);
-  });
 </script>
 </body>
 </html>
