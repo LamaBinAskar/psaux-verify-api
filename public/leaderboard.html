@@ -5,56 +5,70 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>PSAUx — Eco Champions Leaderboard</title>
 <style>
-  :root{--green:#0F5A3E;--green-l:#12694a;--green-d:#062a1d;--gold:#E7C349;--gold-d:#C9A227;--ink-2:rgba(255,255,255,.62);--ink-3:rgba(255,255,255,.42)}
-  *{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  :root{--green:#0F5A3E;--green-d:#062a1d;--gold:#E7C349;--gold-d:#C9A227;--ink-2:rgba(255,255,255,.62);--ink-3:rgba(255,255,255,.42);
+    --card:rgba(255,255,255,.065);--card-b:rgba(255,255,255,.14);--r:22px}
+  *{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans Arabic",Helvetica,Arial,sans-serif}
   html,body{height:100%}
-  body{background:radial-gradient(130% 120% at 50% -10%,#17805a 0%,var(--green) 42%,var(--green-d) 100%);color:#fff;min-height:100vh;overflow-x:hidden}
-  body::before{content:"";position:fixed;inset:-40%;background:radial-gradient(40% 30% at 18% 18%,rgba(231,195,73,.10),transparent 60%),radial-gradient(40% 30% at 82% 26%,rgba(255,255,255,.06),transparent 60%);animation:drift 22s ease-in-out infinite alternate;z-index:0}
-  @keyframes drift{to{transform:translate3d(4%,3%,0) rotate(3deg)}}
+  body{background:#07100c;color:#fff;min-height:100vh;overflow-x:hidden}
+  .bg{position:fixed;inset:0;z-index:0;background:radial-gradient(120% 110% at 50% -10%,#17805a 0%,var(--green) 45%,var(--green-d) 100%)}
+  .bg::before,.bg::after{content:"";position:absolute;width:56vmax;height:56vmax;border-radius:50%;filter:blur(70px);opacity:.5}
+  .bg::before{background:radial-gradient(circle,rgba(231,195,73,.16),transparent 62%);top:-18vmax;inset-inline-start:-12vmax;animation:blob1 26s ease-in-out infinite alternate}
+  .bg::after{background:radial-gradient(circle,rgba(84,229,154,.13),transparent 62%);bottom:-22vmax;inset-inline-end:-14vmax;animation:blob2 31s ease-in-out infinite alternate}
+  @keyframes blob1{to{transform:translate(9vmax,7vmax) scale(1.15)}}
+  @keyframes blob2{to{transform:translate(-8vmax,-6vmax) scale(1.12)}}
   #leaves{position:fixed;inset:0;z-index:0;pointer-events:none}
-  #confetti{position:fixed;inset:0;z-index:40;pointer-events:none}
-  .wrap{position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:24px 30px 26px;min-height:100vh;display:flex;flex-direction:column}
+  #confetti{position:fixed;inset:0;z-index:60;pointer-events:none}
+  .wrap{position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:22px 28px 24px;min-height:100vh;display:flex;flex-direction:column}
 
-  header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}
-  .brand{display:flex;align-items:center;gap:15px}
-  .brand img{height:58px;filter:drop-shadow(0 6px 16px rgba(0,0,0,.4))}
-  .brand .k{font-size:11.5px;letter-spacing:3px;text-transform:uppercase;color:var(--ink-2);font-weight:700}
-  .brand h2{font-size:31px;font-weight:900;line-height:1.05;background:linear-gradient(90deg,#fff,#ffe9a8);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-  .brand .ar{font-size:13.5px;color:var(--ink-2);font-weight:700;margin-top:2px}
-  .hright{display:flex;align-items:center;gap:10px}
-  .pill{display:inline-flex;align-items:center;gap:9px;background:rgba(255,255,255,.12);padding:9px 15px;border-radius:30px;font-weight:800;font-size:14px;letter-spacing:1px}
-  .clock{font-variant-numeric:tabular-nums;letter-spacing:.5px}
-  .dot{width:11px;height:11px;border-radius:50%;background:#54e59a;box-shadow:0 0 0 0 rgba(84,229,154,.7);animation:pulse 1.6s infinite}
-  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(84,229,154,.6)}70%{box-shadow:0 0 0 15px rgba(84,229,154,0)}100%{box-shadow:0 0 0 0 rgba(84,229,154,0)}}
-  .fs{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.12);border:none;color:#fff;font-size:18px;cursor:pointer}
-  .fs:hover{background:rgba(255,255,255,.2)}
-  .updated{position:absolute;top:86px;right:30px;font-size:12px;color:var(--ink-3);font-weight:600}
+  .card{background:var(--card);border:1px solid var(--card-b);border-radius:var(--r);backdrop-filter:blur(16px) saturate(1.25);-webkit-backdrop-filter:blur(16px) saturate(1.25);box-shadow:0 18px 44px rgba(0,0,0,.30)}
 
-  .main{display:grid;grid-template-columns:1.2fr .95fr;gap:22px;flex:1;min-height:0}
+  /* ── header ── */
+  header{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:16px}
+  .brand{display:flex;align-items:center;gap:14px;min-width:0}
+  .brand img{height:54px;filter:drop-shadow(0 6px 16px rgba(0,0,0,.4))}
+  .brand .k{font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--ink-2);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  [dir=rtl] .brand .k{letter-spacing:0}
+  .brand h2{font-size:30px;font-weight:900;line-height:1.06;background:linear-gradient(90deg,#fff,#ffe9a8);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap}
+  .hright{display:flex;align-items:center;gap:9px;flex:0 0 auto}
+  .pill{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.13);padding:9px 14px;border-radius:30px;font-weight:800;font-size:13.5px;letter-spacing:.5px}
+  .clock{font-variant-numeric:tabular-nums}
+  .dot{width:10px;height:10px;border-radius:50%;background:#54e59a;box-shadow:0 0 0 0 rgba(84,229,154,.7);animation:pulse 1.6s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(84,229,154,.6)}70%{box-shadow:0 0 0 14px rgba(84,229,154,0)}100%{box-shadow:0 0 0 0 rgba(84,229,154,0)}}
+  .ctrl{height:40px;border-radius:30px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.13);color:#fff;font-size:13.5px;font-weight:800;cursor:pointer;padding:0 14px;transition:transform .15s,background .15s}
+  .ctrl:hover{background:rgba(255,255,255,.2);transform:translateY(-1px)}
+  .ctrl:active{transform:scale(.96)}
+  .ctrl.icon{width:40px;padding:0;font-size:17px}
+  .updated{position:absolute;top:84px;inset-inline-end:28px;font-size:12px;color:var(--ink-3);font-weight:600}
+
+  .main{display:grid;grid-template-columns:1.2fr .95fr;gap:20px;flex:1;min-height:0}
   @media (max-width:900px){.main{grid-template-columns:1fr}}
 
-  /* ── Podium ── */
+  /* ── podium ── */
   .arena{display:flex;flex-direction:column;min-height:0}
-  .podium{flex:1;display:flex;align-items:flex-end;justify-content:center;gap:18px;padding:12px 8px 0;min-height:0}
-  .pod{display:flex;flex-direction:column;align-items:center;text-align:center;width:31%;min-width:0}
-  .pod .p-crown{font-size:34px;margin-bottom:2px;filter:drop-shadow(0 4px 10px rgba(0,0,0,.35));animation:bob 2.6s ease-in-out infinite}
+  .podium{flex:1;display:flex;align-items:flex-end;justify-content:center;gap:16px;padding:14px 14px 0;min-height:0}
+  .pod{display:flex;flex-direction:column;align-items:center;text-align:center;width:31%;min-width:0;cursor:pointer;transition:transform .2s}
+  .pod:hover{transform:translateY(-4px)}
+  .pod:active{transform:scale(.97)}
+  .pod .p-crown{font-size:32px;margin-bottom:2px;filter:drop-shadow(0 4px 10px rgba(0,0,0,.35));animation:bob 2.6s ease-in-out infinite}
   @keyframes bob{50%{transform:translateY(-7px)}}
-  .p-ava{width:86px;height:86px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:34px;font-weight:900;color:#fff;border:4px solid rgba(255,255,255,.85);box-shadow:0 12px 30px rgba(0,0,0,.4);margin-bottom:9px}
-  .p1 .p-ava{width:112px;height:112px;font-size:46px;border-color:var(--gold);box-shadow:0 0 0 6px rgba(231,195,73,.25),0 14px 36px rgba(0,0,0,.45);animation:glow 2.6s ease-in-out infinite}
-  @keyframes glow{50%{box-shadow:0 0 0 12px rgba(231,195,73,.14),0 14px 36px rgba(0,0,0,.45)}}
-  .p-nm{font-size:19px;font-weight:900;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .p1 .p-nm{font-size:24px}
-  .tier{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:800;padding:3px 10px;border-radius:20px;margin-top:5px}
-  .p-pts{font-size:27px;font-weight:900;color:#ffe9a8;margin:7px 0 10px;line-height:1;font-variant-numeric:tabular-nums}
-  .p1 .p-pts{font-size:36px}
+  .p-ava{position:relative;width:82px;height:82px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:900;color:#fff;border:3px solid rgba(255,255,255,.85);box-shadow:0 12px 30px rgba(0,0,0,.4);margin-bottom:9px}
+  .p1 .p-ava{width:110px;height:110px;font-size:44px;border:none}
+  .ring{position:absolute;inset:-7px;border-radius:50%;background:conic-gradient(from 0deg,var(--gold),#54e59a,var(--gold-d),#ffe9a8,var(--gold));animation:spin 5s linear infinite;z-index:-1}
+  .ring::after{content:"";position:absolute;inset:4px;border-radius:50%;background:var(--green)}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .p-nm{font-size:18px;font-weight:900;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .p1 .p-nm{font-size:23px}
+  .tier{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:800;padding:3px 10px;border-radius:20px;margin-top:5px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .p-pts{font-size:26px;font-weight:900;color:#ffe9a8;margin:7px 0 10px;line-height:1;font-variant-numeric:tabular-nums}
+  .p1 .p-pts{font-size:35px}
   .p-pts small{font-size:12px;color:var(--ink-2);font-weight:700}
-  .p-tied{font-size:11.5px;font-weight:800;color:#ffe9a8;margin:-6px 0 8px}
-  .p-block{position:relative;width:100%;border-radius:14px 14px 0 0;overflow:hidden;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.05));border:1px solid rgba(255,255,255,.18);border-bottom:none}
-  .p1 .p-block{height:132px;background:linear-gradient(180deg,rgba(231,195,73,.42),rgba(201,162,39,.10));border-color:rgba(231,195,73,.5)}
-  .p2 .p-block{height:96px;background:linear-gradient(180deg,rgba(210,220,235,.30),rgba(210,220,235,.06))}
-  .p3 .p-block{height:76px;background:linear-gradient(180deg,rgba(205,137,80,.32),rgba(205,137,80,.07))}
-  .p-block span{font-size:44px;font-weight:900;color:rgba(255,255,255,.5);font-variant-numeric:tabular-nums}
-  .p1 .p-block span{font-size:58px;color:rgba(255,255,255,.65)}
+  .p-tied{font-size:11px;font-weight:800;color:#ffe9a8;margin:-6px 0 8px}
+  .p-block{position:relative;width:100%;border-radius:16px 16px 0 0;overflow:hidden;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,rgba(255,255,255,.15),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.16);border-bottom:none;backdrop-filter:blur(8px)}
+  .p1 .p-block{height:128px;background:linear-gradient(180deg,rgba(231,195,73,.40),rgba(201,162,39,.08));border-color:rgba(231,195,73,.45)}
+  .p2 .p-block{height:92px;background:linear-gradient(180deg,rgba(210,220,235,.28),rgba(210,220,235,.05))}
+  .p3 .p-block{height:72px;background:linear-gradient(180deg,rgba(205,137,80,.30),rgba(205,137,80,.06))}
+  .p-block span{font-size:42px;font-weight:900;color:rgba(255,255,255,.5);font-variant-numeric:tabular-nums}
+  .p1 .p-block span{font-size:56px;color:rgba(255,255,255,.65)}
   .p1 .p-block::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.35) 50%,transparent 70%);transform:translateX(-120%);animation:shine 5.5s ease-in-out infinite}
   @keyframes shine{12%{transform:translateX(120%)}100%{transform:translateX(120%)}}
   .rise .p-block{animation:rise .8s cubic-bezier(.2,1.1,.35,1) backwards;transform-origin:bottom}
@@ -63,55 +77,96 @@
   @keyframes fadeup{from{opacity:0;transform:translateY(10px)}}
   .floor{height:10px;border-radius:3px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent);margin:0 6px}
 
-  .stats{display:flex;gap:12px;margin-top:14px}
-  .stat{flex:1;min-width:0;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-radius:16px;padding:12px 14px;display:flex;align-items:center;gap:11px}
-  .stat .ic{font-size:22px}
-  .stat .v{font-size:23px;font-weight:900;line-height:1;font-variant-numeric:tabular-nums}
-  .stat .l{font-size:11px;color:var(--ink-2);font-weight:600;margin-top:2px}
+  .stats{display:flex;gap:11px;margin-top:13px}
+  .stat{flex:1;min-width:0;padding:12px 14px;display:flex;align-items:center;gap:11px;border-radius:18px}
+  .stat .ic{width:40px;height:40px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:20px;background:rgba(255,255,255,.09);flex:0 0 auto}
+  .stat .v{font-size:22px;font-weight:900;line-height:1;font-variant-numeric:tabular-nums}
+  .stat .l{font-size:10.5px;color:var(--ink-2);font-weight:700;margin-top:3px;letter-spacing:.3px}
 
-  /* ── Chase list ── */
-  .list{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.13);border-radius:20px;padding:8px;overflow:auto;min-height:0;display:flex;flex-direction:column}
-  .list .cap{font-size:11px;letter-spacing:2px;font-weight:800;color:rgba(255,255,255,.5);padding:8px 14px 6px;display:flex;justify-content:space-between}
-  .row{display:flex;align-items:center;gap:13px;padding:11px 14px;border-radius:14px}
-  .row+.row{margin-top:2px}
+  /* ── ranking list ── */
+  .list{padding:10px;overflow:hidden;min-height:0;display:flex;flex-direction:column}
+  .cap{display:flex;align-items:center;gap:10px;padding:4px 6px 10px}
+  .cap .tt{font-size:11px;letter-spacing:2px;font-weight:800;color:rgba(255,255,255,.5)}
+  [dir=rtl] .cap .tt{letter-spacing:0}
+  .search{flex:1;display:flex;align-items:center;gap:8px;background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:8px 12px;transition:border-color .2s}
+  .search:focus-within{border-color:rgba(231,195,73,.6)}
+  .search input{flex:1;min-width:0;background:none;border:none;outline:none;color:#fff;font-size:14px;font-weight:600}
+  .search input::placeholder{color:var(--ink-3)}
+  #rows{overflow:auto;flex:1;min-height:0}
+  .row{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:16px;cursor:pointer;transition:background .15s,transform .15s;border:1px solid transparent}
+  .row:hover{background:rgba(255,255,255,.07);transform:translateY(-1px)}
+  .row:active{transform:scale(.99)}
+  .row+.row{margin-top:3px}
   .row.flash{animation:flash 2.4s ease-out}
+  .row.hit{border-color:rgba(231,195,73,.55);background:rgba(231,195,73,.08)}
   @keyframes flash{0%{background:rgba(231,195,73,.5)}100%{background:transparent}}
-  .r-rank{width:30px;text-align:center;font-weight:900;font-size:19px;color:rgba(255,255,255,.55);font-variant-numeric:tabular-nums}
-  .r-move{width:28px;font-size:12.5px;font-weight:800;text-align:center}
+  .r-rank{width:30px;text-align:center;font-weight:900;font-size:18px;color:rgba(255,255,255,.55);font-variant-numeric:tabular-nums;flex:0 0 auto}
+  .r-rank .m{font-size:21px}
+  .r-move{width:26px;font-size:12px;font-weight:800;text-align:center;flex:0 0 auto}
   .up{color:#54e59a}.down{color:#ff8f8f}.same{color:rgba(255,255,255,.28)}.newp{color:var(--gold)}
-  .r-ava{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:18px;color:#fff;flex:0 0 auto;box-shadow:0 4px 12px rgba(0,0,0,.25)}
+  .r-ava{width:44px;height:44px;border-radius:15px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:18px;color:#fff;flex:0 0 auto;box-shadow:0 4px 12px rgba(0,0,0,.25)}
   .r-main{flex:1;min-width:0}
   .r-top{display:flex;align-items:center;gap:8px;min-width:0}
-  .r-top b{font-size:17.5px;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .r-ago{font-size:11px;color:var(--ink-3);font-weight:600;white-space:nowrap}
+  .r-top b{font-size:17px;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .r-ago{font-size:10.5px;color:var(--ink-3);font-weight:600;white-space:nowrap}
   .meter{height:6px;border-radius:4px;background:rgba(255,255,255,.12);margin:7px 0 5px;overflow:hidden}
-  .meter i{display:block;height:100%;border-radius:4px;transition:width .8s cubic-bezier(.2,.9,.3,1)}
+  .meter i{display:block;height:100%;border-radius:4px;transition:width .8s cubic-bezier(.2,.9,.3,1);box-shadow:0 0 8px rgba(255,255,255,.15)}
   .r-sub{font-size:11.5px;color:rgba(255,255,255,.55);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .r-pts{font-weight:900;font-size:21px;color:#ffe9a8;font-variant-numeric:tabular-nums}
-  .r-pts small{font-size:11px;color:var(--ink-3);font-weight:700;margin-left:3px}
-  .list .empty{padding:26px 16px;text-align:center;color:var(--ink-2);font-weight:600;font-size:14px}
+  .r-pts{font-weight:900;font-size:20px;color:#ffe9a8;font-variant-numeric:tabular-nums;flex:0 0 auto}
+  .r-pts small{font-size:11px;color:var(--ink-3);font-weight:700;margin-inline-start:3px}
+  .empty{padding:26px 16px;text-align:center;color:var(--ink-2);font-weight:600;font-size:14px}
 
-  footer{margin-top:16px;display:flex;align-items:center;justify-content:space-between;gap:16px;color:var(--ink-2);font-size:13.5px;font-weight:600}
+  /* ── player sheet ── */
+  #ov{position:fixed;inset:0;z-index:50;background:rgba(4,12,8,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:none;align-items:flex-end;justify-content:center}
+  #ov.open{display:flex}
+  .sheet{width:100%;max-width:560px;background:linear-gradient(180deg,#0d4530,#083424);border:1px solid rgba(255,255,255,.16);border-bottom:none;border-radius:26px 26px 0 0;padding:22px 24px 28px;box-shadow:0 -20px 60px rgba(0,0,0,.5);animation:sheetup .32s cubic-bezier(.2,1.05,.35,1)}
+  @keyframes sheetup{from{transform:translateY(60px);opacity:0}}
+  @media (min-width:900px){#ov{align-items:center}.sheet{border-radius:26px;border-bottom:1px solid rgba(255,255,255,.16);animation:sheetpop .28s cubic-bezier(.2,1.1,.35,1)}@keyframes sheetpop{from{transform:scale(.94);opacity:0}}}
+  .sh-top{display:flex;align-items:center;gap:15px}
+  .sh-ava{width:72px;height:72px;border-radius:24px;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:900;flex:0 0 auto;box-shadow:0 10px 26px rgba(0,0,0,.35)}
+  .sh-id{flex:1;min-width:0}
+  .sh-id b{font-size:23px;font-weight:900;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .sh-x{width:36px;height:36px;border-radius:50%;border:none;background:rgba(255,255,255,.12);color:#fff;font-size:15px;cursor:pointer;flex:0 0 auto}
+  .sh-x:hover{background:rgba(255,255,255,.22)}
+  .sh-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0}
+  .sh-cell{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:11px 12px;text-align:center}
+  .sh-cell .v{font-size:20px;font-weight:900;font-variant-numeric:tabular-nums}
+  .sh-cell .l{font-size:10.5px;color:var(--ink-2);font-weight:700;margin-top:3px}
+  .sh-cap{font-size:11px;letter-spacing:1.5px;font-weight:800;color:rgba(255,255,255,.5);margin-bottom:9px}
+  [dir=rtl] .sh-cap{letter-spacing:0}
+  .lad{display:flex;gap:5px}
+  .lad-seg{flex:1;text-align:center}
+  .lad-seg .bar{height:7px;border-radius:4px;background:rgba(255,255,255,.12);overflow:hidden}
+  .lad-seg .bar i{display:block;height:100%;border-radius:4px}
+  .lad-seg .e{font-size:15px;margin-top:5px;opacity:.45}
+  .lad-seg.done .e,.lad-seg.cur .e{opacity:1}
+  .lad-seg.cur .e{transform:scale(1.25);display:inline-block}
+  .sh-next{margin-top:13px;font-size:13px;font-weight:700;color:var(--ink-2)}
+  .sh-next b{color:#ffe9a8}
+
+  /* ── footer ── */
+  footer{margin-top:15px;display:flex;align-items:center;justify-content:space-between;gap:16px;color:var(--ink-2);font-size:13.5px;font-weight:600}
   .ticker{flex:1;min-width:0;font-size:15px;font-weight:800;color:#fff;opacity:0;transition:opacity .35s}
   .ticker.show{opacity:1}
   .ticker small{font-weight:600;color:var(--ink-3)}
-  .qr{display:flex;align-items:center;gap:11px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:8px 12px}
-  .qr img{width:58px;height:58px;border-radius:8px;background:#fff;padding:4px}
+  .qr{display:flex;align-items:center;gap:11px;background:var(--card);border:1px solid var(--card-b);border-radius:16px;padding:8px 12px}
+  .qr img{width:56px;height:56px;border-radius:8px;background:#fff;padding:4px}
   .qr .t{font-size:12px;line-height:1.3}.qr .t b{color:#ffe9a8;font-size:13px}
   .state{text-align:center;padding:70px 20px;color:rgba(255,255,255,.85);font-size:19px;font-weight:700}
   .state small{display:block;margin-top:12px;font-weight:500;font-size:14px;color:rgba(255,255,255,.55);max-width:560px;margin:12px auto 0;line-height:1.5}
 
-  #toasts{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:50;display:flex;flex-direction:column;gap:10px;align-items:center;pointer-events:none}
+  #toasts{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:70;display:flex;flex-direction:column;gap:10px;align-items:center;pointer-events:none}
   .toast{background:linear-gradient(90deg,var(--gold),var(--gold-d));color:#3a2e00;font-weight:900;font-size:18px;padding:13px 22px;border-radius:30px;box-shadow:0 12px 34px rgba(0,0,0,.35);animation:tpop .35s cubic-bezier(.2,1.3,.4,1),tout .4s ease 3.4s forwards}
   @keyframes tpop{from{opacity:0;transform:translateY(-14px) scale(.9)}to{opacity:1;transform:none}}
   @keyframes tout{to{opacity:0;transform:translateY(-14px) scale(.96)}}
 
   @media (max-width:900px){
-    .brand h2{font-size:24px}.brand .ar{font-size:12px}.clock{display:none}.updated{display:none}
-    .podium{gap:10px}.p-ava{width:64px;height:64px;font-size:26px}.p1 .p-ava{width:84px;height:84px;font-size:34px}
-    .p-nm{font-size:15px}.p1 .p-nm{font-size:19px}.p-pts{font-size:21px}.p1 .p-pts{font-size:27px}
-    .p1 .p-block{height:96px}.p2 .p-block{height:70px}.p3 .p-block{height:56px}
+    .brand h2{font-size:23px}.brand .k{font-size:9.5px}.clock{display:none}.updated{display:none}
+    .podium{gap:10px}.p-ava{width:62px;height:62px;font-size:24px}.p1 .p-ava{width:82px;height:82px;font-size:32px}
+    .p-nm{font-size:14px}.p1 .p-nm{font-size:18px}.p-pts{font-size:20px}.p1 .p-pts{font-size:26px}
+    .p1 .p-block{height:92px}.p2 .p-block{height:66px}.p3 .p-block{height:52px}
     .stats{flex-wrap:wrap}.stat{flex:1 1 44%}footer{flex-direction:column}
+    .sh-grid{grid-template-columns:repeat(3,1fr)}
   }
   @media (prefers-reduced-motion: reduce){
     *,*::before,*::after{animation:none!important;transition:none!important}
@@ -119,6 +174,7 @@
 </style>
 </head>
 <body>
+<div class="bg"></div>
 <canvas id="leaves"></canvas>
 <canvas id="confetti"></canvas>
 <div id="toasts"></div>
@@ -127,16 +183,16 @@
   <header>
     <div class="brand">
       <img src="/emblem.png" alt="PSAUx" onerror="this.style.display='none'"/>
-      <div>
-        <div class="k">Prince Sattam University · Sustainability</div>
-        <h2>Eco Champions</h2>
-        <div class="ar">لوحة صدارة الاستدامة · مباشر</div>
+      <div style="min-width:0">
+        <div class="k" id="h-kicker"></div>
+        <h2 id="h-title"></h2>
       </div>
     </div>
     <div class="hright">
       <div class="pill clock" id="clock"></div>
-      <div class="pill"><span class="dot"></span> LIVE</div>
-      <button class="fs" id="fs" title="Fullscreen">⛶</button>
+      <div class="pill"><span class="dot"></span> <span id="h-live"></span></div>
+      <button class="ctrl" id="lang"></button>
+      <button class="ctrl icon" id="fs" title="Fullscreen">⛶</button>
     </div>
   </header>
 
@@ -146,15 +202,23 @@
       <div class="floor"></div>
       <div class="stats" id="stats"></div>
     </div>
-    <div class="list" id="list"></div>
+    <div class="list card">
+      <div class="cap">
+        <span class="tt" id="l-cap"></span>
+        <label class="search">🔍<input id="q" autocomplete="off"/></label>
+      </div>
+      <div id="rows"></div>
+    </div>
   </div>
-  <div id="state" class="state">Connecting to the campus leaderboard…</div>
+  <div id="state" class="state"></div>
 
   <footer>
-    <div class="ticker show" id="ticker">⚡ Earn Eco-points at any PSAUx station, in the app, and by volunteering.</div>
-    <div class="qr" id="qr"></div>
+    <div class="ticker show" id="ticker"></div>
+    <div class="qr card" id="qr"></div>
   </footer>
 </div>
+
+<div id="ov"><div class="sheet" id="sheet"></div></div>
 
 <script>
   // ── Reads Firestore over plain REST (no realtime SDK / no CDN) so it works on
@@ -162,19 +226,62 @@
   const KEY="AIzaSyDTZ4COIWrzmXZtC9uAsAUCNwHALOquvMM", PROJECT="psaux-26";
   const CO2_PER_POINT=0.05, POLL_MS=4000;
   const PAL=[["#2E9E6B","#1c6e49"],["#1E8E7E","#125e55"],["#D99A00","#a37200"],["#CB6B3A","#9c4d26"],["#6C4FBF","#4a3388"],["#0A97D9","#0a6ea0"],["#C0397B","#8e2359"],["#3E7C3A","#2a5a27"],["#0f8a8a","#0a5f5f"],["#B0842E","#7d5d18"]];
-  const TIERS=[{min:0,n:"Active Contributor",e:"🌱",c:"#7bd66a"},{min:500,n:"Green Achiever",e:"🍃",c:"#35c7b0"},{min:1500,n:"Sustainability Advocate",e:"🌿",c:"#3fb984"},{min:3000,n:"Campus Changemaker",e:"🌍",c:"#57b8e8"},{min:5000,n:"PSAUx Champion",e:"🏅",c:"#E7C349"},{min:8000,n:"Sustainability Legend",e:"💎",c:"#b388ff"}];
-  let prevPoints={},prevRank={},firstLoad=true,booted=false,lastSig="",lastUpdate=0,prevLeader=null,idToken=null,fails=0,tickerData=[],tickIdx=0;
+  const TIERS=[
+    {min:0,n:"Active Contributor",ar:"المساهم النشط",e:"🌱",c:"#7bd66a"},
+    {min:500,n:"Green Achiever",ar:"المنجز الأخضر",e:"🍃",c:"#35c7b0"},
+    {min:1500,n:"Sustainability Advocate",ar:"مناصر الاستدامة",e:"🌿",c:"#3fb984"},
+    {min:3000,n:"Campus Changemaker",ar:"صانع التغيير",e:"🌍",c:"#57b8e8"},
+    {min:5000,n:"PSAUx Champion",ar:"بطل PSAUx",e:"🏅",c:"#E7C349"},
+    {min:8000,n:"Sustainability Legend",ar:"أسطورة الاستدامة",e:"💎",c:"#b388ff"}];
+
+  const I18N={
+    en:{kicker:"Prince Sattam University · Sustainability",title:"Eco Champions",live:"LIVE",cap:"THE RANKING",searchPh:"Find a player…",
+      competing:"Competing",totalPts:"Total Eco-points",co2:"kg CO₂ saved (est.)",pts:"pts",leaderTag:"👑 Campus leader",
+      tiedLeader:"🤝 tied with the leader",tiedWith:n=>`🤝 tied with ${n}`,catchUp:(g,n)=>`▲ ${g} to catch ${n}`,
+      toNext:(p,t)=>`${p} pts → ${t.n} ${t.e}`,maxTier:"💎 Top tier — Sustainability Legend",
+      agoNow:"active now",agoM:m=>`active ${m}m ago`,agoH:h=>`active ${h}h ago`,agoD:d=>`active ${d}d ago`,
+      connecting:"Connecting to the campus leaderboard…",noPlayers:"No players yet — be the first to earn Eco-points!",
+      allPodium:"🏆 Everyone's on the podium — scan the QR and join the chase!",noMatch:"No player matches your search.",
+      cantReach:"Couldn't reach the leaderboard.",cantReachSub:"Check the network connection. If it persists, confirm Firestore allows reading <b>users</b> for signed-in clients.",
+      updatedNow:"Updated just now",updatedS:s=>`Updated ${s}s ago`,updatedM:m=>`Updated ${m}m ago`,
+      scanB:"Scan to view",scanS:"on your phone",rank:"Rank",points:"Eco-points",lastActive:"Last active",journey:"LEVEL JOURNEY",nextLv:"Next level",
+      earnedT:(n,p)=>`🎉 ${n} earned +${p} pts!`,leadT:n=>`👑 ${n} takes the lead!`,
+      ticker:kg=>["⚡ Earn Eco-points at any PSAUx station, in the app, and by volunteering.",
+        `🌍 Together the campus has saved ≈ ${kg.kg} kg of CO₂ <small>· est.</small>`,
+        `📱 That's the clean energy of ≈ ${kg.ph} phone charges`,`🚗 Or ≈ ${kg.km} km NOT driven by car`,
+        `🌳 Equal to ≈ ${kg.tr} days of one tree at work for the campus`,"♻️ Every bottle counts — scan, sort, climb the board!"]},
+    ar:{kicker:"جامعة الأمير سطام بن عبدالعزيز · الاستدامة",title:"أبطال البيئة",live:"مباشر",cap:"الترتيب",searchPh:"ابحث عن لاعب…",
+      competing:"مشارِك",totalPts:"مجموع النقاط البيئية",co2:"كجم CO₂ موفَّرة (تقديري)",pts:"نقطة",leaderTag:"👑 متصدر الحرم الجامعي",
+      tiedLeader:"🤝 تعادل مع المتصدر",tiedWith:n=>`🤝 تعادل مع ${n}`,catchUp:(g,n)=>`▲ ${g} للحاق بـ ${n}`,
+      toNext:(p,t)=>`${p} نقطة → ${t.ar} ${t.e}`,maxTier:"💎 أعلى مستوى — أسطورة الاستدامة",
+      agoNow:"نشط الآن",agoM:m=>`نشط قبل ${m} د`,agoH:h=>`نشط قبل ${h} س`,agoD:d=>`نشط قبل ${d} يوم`,
+      connecting:"جارٍ الاتصال بلوحة الصدارة…",noPlayers:"لا يوجد لاعبون بعد — كن أول من يكسب النقاط البيئية!",
+      allPodium:"🏆 الجميع على المنصة — امسح رمز QR وانضم للسباق!",noMatch:"لا يوجد لاعب بهذا الاسم.",
+      cantReach:"تعذّر الوصول إلى لوحة الصدارة.",cantReachSub:"تحقق من اتصال الشبكة. إذا استمرت المشكلة تأكد من صلاحيات القراءة في Firestore.",
+      updatedNow:"حُدِّثت الآن",updatedS:s=>`حُدِّثت قبل ${s} ث`,updatedM:m=>`حُدِّثت قبل ${m} د`,
+      scanB:"امسح للعرض",scanS:"على هاتفك",rank:"المركز",points:"النقاط البيئية",lastActive:"آخر نشاط",journey:"رحلة المستويات",nextLv:"المستوى التالي",
+      earnedT:(n,p)=>`🎉 ${n} كسب +${p} نقطة!`,leadT:n=>`👑 ${n} في الصدارة!`,
+      ticker:kg=>["⚡ اكسب النقاط البيئية من محطات PSAUx ومن التطبيق وبالتطوع.",
+        `🌍 وفّر الحرم الجامعي معاً ≈ ${kg.kg} كجم من CO₂ <small>· تقديري</small>`,
+        `📱 ما يعادل طاقة ≈ ${kg.ph} شحنة هاتف نظيفة`,`🚗 أو ≈ ${kg.km} كم لم تُقطع بالسيارة`,
+        `🌳 أي ≈ ${kg.tr} يوماً من عمل شجرة واحدة للحرم`,"♻️ كل عبوة تُحتسب — امسح وصنّف وتصدّر اللوحة!"]}};
+  let lang="en";try{lang=localStorage.getItem("psaux_lang")||"en";}catch(e){}
+  const T=()=>I18N[lang];
+  const tname=t=>lang==="ar"?t.ar:t.n;
+
+  let prevPoints={},prevRank={},firstLoad=true,booted=false,lastSig="",lastUpdate=0,prevLeader=null,idToken=null,fails=0;
+  let lastRows=[],query="",tickerData=[],tickIdx=0,sheetUid=null;
 
   const el=id=>document.getElementById(id);
   const initial=n=>((n||"?").trim().charAt(0)||"?").toUpperCase();
-  const first=n=>(n||"Explorer").trim().split(" ")[0];
+  const first=n=>(n||"?").trim().split(" ")[0];
   const esc=s=>(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
   const fmt=n=>(n||0).toLocaleString("en-US");
   function grad(name){let h=0;const s=(name||"?");for(let i=0;i<s.length;i++)h=(h*33+s.charCodeAt(i))>>>0;const p=PAL[h%PAL.length];return `linear-gradient(135deg,${p[0]},${p[1]})`;}
   function tier(p){let t=TIERS[0];for(const x of TIERS)if(p>=x.min)t=x;return t;}
-  function tierPill(p){const t=tier(p);return `<span class="tier" style="background:${t.c}26;color:${t.c}">${t.e} ${t.n}</span>`;}
-  function progress(p){const i=TIERS.findIndex(t=>p<t.min);if(i<0)return{pct:100,label:"💎 Top tier — Sustainability Legend"};const lo=TIERS[i-1].min,hi=TIERS[i].min;return{pct:Math.max(4,Math.round((p-lo)/(hi-lo)*100)),label:`${fmt(hi-p)} pts → ${TIERS[i].n} ${TIERS[i].e}`};}
-  function ago(iso){if(!iso)return"";const s=(Date.now()-Date.parse(iso))/1e3;if(!(s>=0))return"";if(s<90)return"active now";if(s<3600)return`active ${Math.floor(s/60)}m ago`;if(s<86400)return`active ${Math.floor(s/3600)}h ago`;return`active ${Math.floor(s/86400)}d ago`;}
+  function tierPill(p){const t=tier(p);return `<span class="tier" style="background:${t.c}26;color:${t.c}">${t.e} ${tname(t)}</span>`;}
+  function progress(p){const i=TIERS.findIndex(t=>p<t.min);if(i<0)return{pct:100,label:T().maxTier};const lo=TIERS[i-1].min,hi=TIERS[i].min;return{pct:Math.max(4,Math.round((p-lo)/(hi-lo)*100)),label:T().toNext(fmt(hi-p),TIERS[i])};}
+  function ago(iso){if(!iso)return"";const s=(Date.now()-Date.parse(iso))/1e3;if(!(s>=0))return"";if(s<90)return T().agoNow;if(s<3600)return T().agoM(Math.floor(s/60));if(s<86400)return T().agoH(Math.floor(s/3600));return T().agoD(Math.floor(s/86400));}
   function animateNum(node,to){if(!node)return;const from=parseInt((node.textContent||"0").replace(/,/g,""))||0;if(from===to){node.textContent=fmt(to);return;}const t0=performance.now();(function s(t){const k=Math.min(1,(t-t0)/650);node.textContent=fmt(Math.round(from+(to-from)*(1-Math.pow(1-k,3))));if(k<1)requestAnimationFrame(s);})(t0);}
   function toast(m){const d=document.createElement("div");d.className="toast";d.textContent=m;el("toasts").appendChild(d);setTimeout(()=>d.remove(),4000);}
   function moveBadge(uid,rank){const p=prevRank[uid];if(p==null)return firstLoad?'<span class="same">·</span>':'<span class="newp">NEW</span>';if(p>rank)return `<span class="up">▲${p-rank}</span>`;if(p<rank)return `<span class="down">▼${rank-p}</span>`;return '<span class="same">·</span>';}
@@ -194,69 +301,131 @@
     (function lloop(t){lctx.clearRect(0,0,lv.width,lv.height);leaves.forEach(p=>{p.y+=p.sp;p.x+=Math.sin(t/1600+p.ph)*.35;p.rot+=p.vr;if(p.y>lv.height+20){p.y=-20;p.x=Math.random()*lv.width;}lctx.save();lctx.translate(p.x,p.y);lctx.rotate(p.rot);lctx.fillStyle=p.c;lctx.beginPath();lctx.ellipse(0,0,p.s,p.s*.42,0,0,6.29);lctx.fill();lctx.restore();});requestAnimationFrame(lloop);})(0);
   }
 
+  // ── static chrome (re-applied on language switch) ──
+  function chrome(){
+    document.documentElement.lang=lang;document.documentElement.dir=lang==="ar"?"rtl":"ltr";
+    el("h-kicker").textContent=T().kicker;el("h-title").textContent=T().title;el("h-live").textContent=T().live;
+    el("lang").textContent=lang==="ar"?"English":"العربية";
+    el("l-cap").textContent=T().cap;el("q").placeholder=T().searchPh;
+    if(!booted){el("state").textContent=T().connecting;el("ticker").innerHTML=T().ticker({kg:"0",ph:"0",km:"0",tr:"0"})[0];}
+    const here=encodeURIComponent(location.href.split('#')[0]);
+    el("qr").innerHTML=`<img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&margin=0&data=${here}" alt="QR" onerror="this.parentNode.style.display='none'"><div class="t"><b>${T().scanB}</b><br>${T().scanS}</div>`;
+  }
+
   // ── render ──
   function podSlot(rows,rank,rise){
     const r=rows[rank-1];if(!r)return"";
     const tied=rank>1&&r.points===rows[0].points;
-    return `<div class="pod p${rank}${rise?' rise':''}">
+    return `<div class="pod p${rank}${rise?' rise':''}" data-uid="${esc(r.uid)}">
       ${rank===1?'<div class="p-crown">👑</div>':''}
-      <div class="p-ava" style="background:${grad(r.name)}">${initial(r.name)}</div>
-      <div class="p-nm">${esc(r.name||"Explorer")}</div>
+      <div class="p-ava" style="background:${grad(r.name)}">${rank===1?'<div class="ring"></div>':''}<span style="position:relative">${initial(r.name)}</span></div>
+      <div class="p-nm">${esc(r.name||"—")}</div>
       <div>${tierPill(r.points||0)}</div>
-      <div class="p-pts">${fmt(r.points)}<small> pts</small></div>
-      ${tied?'<div class="p-tied">🤝 tied with the leader</div>':''}
+      <div class="p-pts">${fmt(r.points)}<small> ${T().pts}</small></div>
+      ${tied?`<div class="p-tied">${T().tiedLeader}</div>`:''}
       <div class="p-block"><span>${rank}</span></div>
     </div>`;
   }
+  function rowHtml(r,rank,rows,hit){
+    const above=rank>1?rows[rank-2]:null,gap=above?above.points-r.points:0;
+    const grew=!firstLoad&&prevPoints[r.uid]!=null&&r.points>prevPoints[r.uid];
+    const pr=progress(r.points||0),t=tier(r.points||0),act=ago(r.updatedAt);
+    const sub=above?(gap===0?T().tiedWith(esc(first(above.name))):T().catchUp(fmt(gap),esc(first(above.name)))):T().leaderTag;
+    return `<div class="row ${grew?'flash':''} ${hit?'hit':''}" data-uid="${esc(r.uid)}">
+      <div class="r-rank">${rank<=3?`<span class="m">${["🥇","🥈","🥉"][rank-1]}</span>`:rank}</div>
+      <div class="r-move">${moveBadge(r.uid,rank)}</div>
+      <div class="r-ava" style="background:${grad(r.name)}">${initial(r.name)}</div>
+      <div class="r-main">
+        <div class="r-top"><b>${esc(r.name||"—")}</b>${tierPill(r.points||0)}${act?`<span class="r-ago">· ${act}</span>`:''}</div>
+        <div class="meter"><i style="width:${pr.pct}%;background:${t.c}"></i></div>
+        <div class="r-sub">${pr.label} · ${sub}</div>
+      </div>
+      <div class="r-pts">${fmt(r.points)}<small>${T().pts}</small></div>
+    </div>`;
+  }
+  function renderRows(){
+    const rows=lastRows;
+    if(query){
+      const q=query.toLowerCase();
+      const hits=rows.map((r,i)=>({r,rank:i+1})).filter(x=>(x.r.name||"").toLowerCase().includes(q));
+      el("rows").innerHTML=hits.length?hits.map(x=>rowHtml(x.r,x.rank,rows,true)).join(""):`<div class="empty">${T().noMatch}</div>`;
+      return;
+    }
+    const rest=rows.slice(3);
+    el("rows").innerHTML=rest.length?rest.map((r,i)=>rowHtml(r,i+4,rows,false)).join(""):`<div class="empty">${T().allPodium}</div>`;
+  }
   function render(rows){
-    if(!rows.length){el("state").style.display="block";el("main").style.display="none";el("state").textContent="No players yet — be the first to earn Eco-points!";return;}
-    const sig=JSON.stringify(rows.map(r=>[r.uid,r.name,r.points,r.updatedAt]));
+    if(!rows.length){el("state").style.display="block";el("main").style.display="none";el("state").textContent=T().noPlayers;return;}
+    const sig=JSON.stringify(rows.map(r=>[r.uid,r.name,r.points,r.updatedAt]))+lang;
     if(sig===lastSig&&booted){lastUpdate=Date.now();return;}
     el("state").style.display="none";el("main").style.display="grid";
 
     if(!firstLoad){
       let earned=false;
-      rows.forEach(r=>{const b=prevPoints[r.uid];if(b!=null&&r.points>b){toast(`🎉 ${first(r.name)} earned +${fmt(r.points-b)} pts!`);earned=true;}});
+      rows.forEach(r=>{const b=prevPoints[r.uid];if(b!=null&&r.points>b){toast(T().earnedT(first(r.name),fmt(r.points-b)));earned=true;}});
       if(earned)burst(90);
-      if(rows[0]&&prevLeader&&rows[0].uid!==prevLeader){toast(`👑 ${first(rows[0].name)} takes the lead!`);burst(150);}
+      if(rows[0]&&prevLeader&&rows[0].uid!==prevLeader){toast(T().leadT(first(rows[0].name)));burst(150);}
     }
 
+    lastRows=rows;
     el("podium").innerHTML=podSlot(rows,2,!booted)+podSlot(rows,1,!booted)+podSlot(rows,3,!booted);
 
     const total=rows.reduce((a,r)=>a+(r.points||0),0),kg=Math.round(total*CO2_PER_POINT);
     el("stats").innerHTML=`
-      <div class="stat"><div class="ic">👥</div><div><div class="v" id="s1">0</div><div class="l">Competing</div></div></div>
-      <div class="stat"><div class="ic">⚡</div><div><div class="v" id="s2">0</div><div class="l">Total Eco-points</div></div></div>
-      <div class="stat"><div class="ic">🌍</div><div><div class="v" id="s3">0</div><div class="l">kg CO₂ saved (est.)</div></div></div>`;
+      <div class="stat card"><div class="ic">👥</div><div style="min-width:0"><div class="v" id="s1">0</div><div class="l">${T().competing}</div></div></div>
+      <div class="stat card"><div class="ic">⚡</div><div style="min-width:0"><div class="v" id="s2">0</div><div class="l">${T().totalPts}</div></div></div>
+      <div class="stat card"><div class="ic">🌍</div><div style="min-width:0"><div class="v" id="s3">0</div><div class="l">${T().co2}</div></div></div>`;
     animateNum(el("s1"),rows.length);animateNum(el("s2"),total);animateNum(el("s3"),kg);
-    tickerData=[
-      "⚡ Earn Eco-points at any PSAUx station, in the app, and by volunteering.",
-      `🌍 Together the campus has saved ≈ ${fmt(kg)} kg of CO₂ <small>· est.</small>`,
-      `📱 That's the clean energy of ≈ ${fmt(kg*120)} phone charges`,
-      `🚗 Or ≈ ${fmt(kg*6)} km NOT driven by car`,
-      `🌳 Equal to ≈ ${fmt(kg*17)} days of one tree at work for the campus`,
-      "♻️ Every bottle counts — scan, sort, climb the board!"];
+    tickerData=T().ticker({kg:fmt(kg),ph:fmt(kg*120),km:fmt(kg*6),tr:fmt(kg*17)});
 
-    const rest=rows.slice(3);
-    el("list").innerHTML='<div class="cap"><span>THE CHASE</span><span>الترتيب</span></div>'+(rest.length?rest.map((r,i)=>{
-      const rank=i+4,above=rows[rank-2],gap=above.points-r.points,grew=!firstLoad&&prevPoints[r.uid]!=null&&r.points>prevPoints[r.uid];
-      const pr=progress(r.points||0),t=tier(r.points||0),act=ago(r.updatedAt);
-      return `<div class="row ${grew?'flash':''}">
-        <div class="r-rank">${rank}</div>
-        <div class="r-move">${moveBadge(r.uid,rank)}</div>
-        <div class="r-ava" style="background:${grad(r.name)}">${initial(r.name)}</div>
-        <div class="r-main">
-          <div class="r-top"><b>${esc(r.name||"Explorer")}</b>${tierPill(r.points||0)}${act?`<span class="r-ago">· ${act}</span>`:''}</div>
-          <div class="meter"><i style="width:${pr.pct}%;background:${t.c}"></i></div>
-          <div class="r-sub">${pr.label} · ${gap===0?`🤝 tied with ${esc(first(above.name))}`:`▲ ${fmt(gap)} to catch ${esc(first(above.name))}`}</div>
-        </div>
-        <div class="r-pts">${fmt(r.points)}<small>pts</small></div>
-      </div>`;
-    }).join(""):'<div class="empty">🏆 Everyone\'s on the podium — scan the QR and join the chase!</div>');
+    renderRows();
+    if(sheetUid)fillSheet();
 
     prevPoints={};prevRank={};rows.forEach((r,i)=>{prevPoints[r.uid]=r.points;prevRank[r.uid]=i+1;});
-    prevLeader=rows[0]?rows[0].uid:null;firstLoad=false;booted=true;lastSig=sig;lastUpdate=Date.now();el("updated").textContent="Updated just now";
+    prevLeader=rows[0]?rows[0].uid:null;firstLoad=false;booted=true;lastSig=sig;lastUpdate=Date.now();el("updated").textContent=T().updatedNow;
   }
+
+  // ── player sheet ──
+  function fillSheet(){
+    const i=lastRows.findIndex(r=>r.uid===sheetUid);
+    if(i<0){closeSheet();return;}
+    const r=lastRows[i],rank=i+1,t=tier(r.points||0),pr=progress(r.points||0),act=ago(r.updatedAt);
+    const above=rank>1?lastRows[rank-2]:null,gap=above?above.points-r.points:0;
+    const ladder=TIERS.map(x=>{
+      const done=r.points>=(TIERS[TIERS.indexOf(x)+1]?TIERS[TIERS.indexOf(x)+1].min:Infinity);
+      const cur=t===x;
+      const fill=done?100:(cur?Math.max(6,pr.pct===100?100:pr.pct):0);
+      return `<div class="lad-seg ${done?'done':''} ${cur?'cur':''}" title="${tname(x)}">
+        <div class="bar"><i style="width:${fill}%;background:${x.c}"></i></div><div class="e">${x.e}</div></div>`;
+    }).join("");
+    el("sheet").innerHTML=`
+      <div class="sh-top">
+        <div class="sh-ava" style="background:${grad(r.name)}">${initial(r.name)}</div>
+        <div class="sh-id"><b>${esc(r.name||"—")}</b><div style="margin-top:4px">${tierPill(r.points||0)}</div></div>
+        <button class="sh-x" id="sh-x">✕</button>
+      </div>
+      <div class="sh-grid">
+        <div class="sh-cell"><div class="v">#${rank}</div><div class="l">${T().rank}</div></div>
+        <div class="sh-cell"><div class="v" style="color:#ffe9a8">${fmt(r.points)}</div><div class="l">${T().points}</div></div>
+        <div class="sh-cell"><div class="v" style="font-size:14px;line-height:2">${act||"—"}</div><div class="l">${T().lastActive}</div></div>
+      </div>
+      <div class="sh-cap">${T().journey}</div>${ladder ? `<div class="lad">${ladder}</div>`:""}
+      <div class="sh-next">${pr.label}${above?` &nbsp;·&nbsp; ${gap===0?T().tiedWith(esc(first(above.name))):T().catchUp(fmt(gap),esc(first(above.name)))}`:` &nbsp;·&nbsp; ${T().leaderTag}`}</div>`;
+    el("sh-x").onclick=closeSheet;
+  }
+  function openSheet(uid){sheetUid=uid;fillSheet();el("ov").classList.add("open");}
+  function closeSheet(){sheetUid=null;el("ov").classList.remove("open");}
+  el("ov").onclick=e=>{if(e.target===el("ov"))closeSheet();};
+  document.addEventListener("keydown",e=>{if(e.key==="Escape")closeSheet();});
+  function delegate(container){el(container).addEventListener("click",e=>{let n=e.target;while(n&&n!==el(container)){if(n.dataset&&n.dataset.uid){openSheet(n.dataset.uid);return;}n=n.parentNode;}});}
+  delegate("rows");delegate("podium");
+
+  // ── search ──
+  let qTimer=null;
+  el("q").addEventListener("input",e=>{clearTimeout(qTimer);qTimer=setTimeout(()=>{query=e.target.value.trim();renderRows();},140);});
+
+  // ── language toggle ──
+  el("lang").onclick=()=>{lang=lang==="ar"?"en":"ar";try{localStorage.setItem("psaux_lang",lang);}catch(e){}chrome();lastSig="";if(lastRows.length)render(lastRows);};
 
   // ── data: anonymous auth + Firestore REST (polled) ──
   async function auth(){
@@ -279,19 +448,17 @@
     try{ render(await fetchUsers()); fails=0; }
     catch(e){ fails++; console.error(e);
       if(firstLoad||fails>=3){ el("main").style.display="none"; const s=el("state"); s.style.display="block";
-        s.innerHTML="Couldn't reach the leaderboard.<small>Check the network connection. If it persists, confirm Firestore allows reading <b>users</b> for signed-in clients. ("+esc(e.message||"error")+")</small>"; }
+        s.innerHTML=T().cantReach+"<small>"+T().cantReachSub+" ("+esc(e.message||"error")+")</small>"; }
     }
   }
-  tick(); setInterval(tick,POLL_MS);
 
-  // ── chrome: clock, updated-ago, ticker, fullscreen, QR ──
-  function clock(){el("clock").textContent=new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});}
-  clock();setInterval(clock,15e3);
-  setInterval(()=>{if(!lastUpdate)return;const s=Math.floor((Date.now()-lastUpdate)/1000);el("updated").textContent=s<3?"Updated just now":(s<60?`Updated ${s}s ago`:`Updated ${Math.floor(s/60)}m ago`);},1000);
+  // ── chrome: clock, updated-ago, ticker, fullscreen ──
+  function clockTick(){el("clock").textContent=new Date().toLocaleTimeString(lang==="ar"?"ar-SA":[],{hour:"2-digit",minute:"2-digit"});}
+  chrome();clockTick();tick();
+  setInterval(tick,POLL_MS);setInterval(clockTick,15e3);
+  setInterval(()=>{if(!lastUpdate)return;const s=Math.floor((Date.now()-lastUpdate)/1000);el("updated").textContent=s<3?T().updatedNow:(s<60?T().updatedS(s):T().updatedM(Math.floor(s/60)));},1000);
   setInterval(()=>{if(!tickerData.length)return;tickIdx=(tickIdx+1)%tickerData.length;const t=el("ticker");t.classList.remove("show");setTimeout(()=>{t.innerHTML=tickerData[tickIdx];t.classList.add("show");},380);},6500);
   el("fs").onclick=()=>{const d=document.documentElement;if(document.fullscreenElement)document.exitFullscreen();else d.requestFullscreen&&d.requestFullscreen();};
-  const here=encodeURIComponent(location.href.split('#')[0]);
-  el("qr").innerHTML=`<img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&margin=0&data=${here}" alt="QR" onerror="this.parentNode.style.display='none'"><div class="t"><b>Scan to view</b><br>on your phone</div>`;
 </script>
 </body>
 </html>
