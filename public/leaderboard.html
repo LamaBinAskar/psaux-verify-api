@@ -46,13 +46,15 @@
   .ctrl.icon{width:40px;padding:0;display:inline-flex;align-items:center;justify-content:center}
   .updated{position:absolute;top:78px;inset-inline-end:26px;font-size:12px;color:var(--ink3);font-weight:500;z-index:2}
 
-  .main{display:grid;grid-template-columns:1.4fr 1fr;gap:18px;flex:1;min-height:0}
-  @media (max-width:940px){.main{grid-template-columns:1fr}}
+  .main{display:flex;flex-direction:column;gap:16px;flex:1;min-height:0}
+  .bottom{display:grid;grid-template-columns:1.25fr 1fr;gap:16px;flex:1;min-height:0}
+  .side{display:flex;flex-direction:column;gap:12px;min-height:0}
+  @media (max-width:940px){.bottom{grid-template-columns:1fr}}
 
   /* ── forest scene ── */
-  .arena{display:flex;flex-direction:column;min-height:0;gap:12px}
   .forest{overflow:hidden;display:flex;flex-direction:column;min-height:0;padding:0}
-  .forest .cap{padding:12px 16px 8px}
+  .forest .cap{padding:13px 18px 9px}
+  .forest .tt{font-size:14px;letter-spacing:0;color:var(--ink2);font-weight:700}
   #scene{line-height:0}
   #scene svg{width:100%;height:auto}
   .cap{display:flex;align-items:center;gap:10px}
@@ -61,13 +63,13 @@
 
   /* scene animation layers */
   .cloud{animation:drift linear infinite}
-  @keyframes drift{from{transform:translateX(-180px)}to{transform:translateX(1080px)}}
+  @keyframes drift{from{transform:translateX(-180px)}to{transform:translateX(1700px)}}
   .tw{animation:tw ease-in-out infinite}
   @keyframes tw{50%{opacity:.15}}
   .fw{animation:fw ease-in-out infinite}
   @keyframes fw{50%{opacity:.15;transform:translateY(-6px)}}
   .fly{animation:fly linear infinite}
-  @keyframes fly{from{transform:translate(-60px,0)}to{transform:translate(1020px,-40px)}}
+  @keyframes fly{from{transform:translate(-60px,0)}to{transform:translate(1660px,-40px)}}
   .flut{animation:flut .35s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:center}
   @keyframes flut{from{transform:scaleX(1)}to{transform:scaleX(.45)}}
   .tree{cursor:pointer}
@@ -79,47 +81,42 @@
   .tree.cheer .body{animation:cheer .5s ease 4 alternate}
   @keyframes cheer{to{transform:scale(1.06) rotate(1deg)}}
 
-  .stats{display:flex;gap:10px}
-  .stat{flex:1;min-width:0;padding:11px 12px;display:flex;align-items:center;gap:10px;border-radius:16px}
-  .stat .ic{width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:var(--green-t);color:var(--green);flex:0 0 auto}
-  .stat .v{font-size:20px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
-  .stat .l{font-size:10px;color:var(--ink2);font-weight:600;margin-top:3px}
+  .stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .stat{min-width:0;padding:14px 16px;display:flex;align-items:center;gap:12px;border-radius:16px}
+  .stat .ic{width:42px;height:42px;border-radius:13px;display:flex;align-items:center;justify-content:center;background:var(--green-t);color:var(--green);flex:0 0 auto}
+  .stat .v{font-size:27px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
+  .stat .l{font-size:11.5px;color:var(--ink2);font-weight:600;margin-top:4px}
+  .msg{flex:1;display:flex;align-items:center;justify-content:center;text-align:center;padding:18px 22px;min-height:86px}
+  .msg .ticker{font-size:20px;font-weight:700;color:var(--green-d);line-height:1.5;opacity:0;transition:opacity .35s}
+  .msg .ticker.show{opacity:1}
+  .msg .ticker small{font-weight:600;color:var(--ink3);font-size:14px}
 
   /* ── ranking list ── */
   .list{padding:10px;overflow:hidden;min-height:0;display:flex;flex-direction:column}
-  .list .cap{padding:4px 6px 10px}
-  .search{flex:1;display:flex;align-items:center;gap:8px;background:#EEF3EE;border:1px solid var(--line);border-radius:13px;padding:8px 12px;color:var(--ink3);transition:border-color .2s}
-  .search:focus-within{border-color:var(--green)}
-  .search input{flex:1;min-width:0;background:none;border:none;outline:none;color:var(--ink);font-size:14px;font-weight:500}
-  .search input::placeholder{color:var(--ink3)}
+  .list .cap{padding:6px 8px 10px}
   #rows{overflow:auto;flex:1;min-height:0}
-  .row{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:15px;cursor:pointer;transition:background .15s,transform .15s;border:1px solid transparent}
+  .row{display:flex;align-items:center;gap:14px;padding:13px 14px;border-radius:15px;cursor:pointer;transition:background .15s,transform .15s;border:1px solid transparent}
   .row:hover{background:#F1F5F1;transform:translateY(-1px)}
   .row:active{transform:scale(.99)}
   .row+.row{margin-top:3px}
   .row.flash{animation:flash 2.4s ease-out}
-  .row.hit{border-color:var(--amber-b);background:#F9F4E4}
   @keyframes flash{0%{background:var(--amber-t)}100%{background:transparent}}
-  .r-rank{width:30px;display:flex;justify-content:center;font-weight:700;font-size:17px;color:var(--ink3);font-variant-numeric:tabular-nums;flex:0 0 auto}
-  .disc{width:27px;height:27px;border-radius:50%;color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(26,28,30,.2)}
+  .r-rank{width:34px;display:flex;justify-content:center;font-weight:700;font-size:19px;color:var(--ink3);font-variant-numeric:tabular-nums;flex:0 0 auto}
+  .disc{width:31px;height:31px;border-radius:50%;color:#fff;font-weight:700;font-size:15px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(26,28,30,.2)}
   .d1{background:linear-gradient(180deg,#E9C349,#AF8D11)}
   .d2{background:linear-gradient(180deg,#BFC6CE,#98A2AD)}
   .d3{background:linear-gradient(180deg,#CBA24C,#A9832F)}
   .r-move{width:26px;font-size:12px;font-weight:700;text-align:center;flex:0 0 auto}
   .up{color:#1F7A3D}.down{color:#C0402A}.same{color:#C9C2AE}.newp{color:var(--amber)}
-  .r-ava{width:42px;height:42px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:17px;color:#fff;flex:0 0 auto}
-  .r-main{flex:1;min-width:0}
-  .r-top{display:flex;align-items:center;gap:8px;min-width:0}
-  .r-top b{font-size:16.5px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .r-ava{width:46px;height:46px;border-radius:15px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:19px;color:#fff;flex:0 0 auto}
+  .r-main{flex:1;min-width:0;display:flex;align-items:center;gap:10px}
+  .r-main b{font-size:19px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .chip{font-size:10.5px;font-weight:700;color:var(--green);background:var(--green-t);border-radius:20px;padding:3px 9px;white-space:nowrap;flex:0 0 auto}
-  .r-sub{font-size:12px;color:var(--ink2);font-weight:500;margin-top:5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .meter{height:5px;border-radius:4px;background:#E6ECE7;margin-top:6px;overflow:hidden}
-  .meter i{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,#C5A35A,#E9C349);transition:width .8s cubic-bezier(.2,.9,.3,1)}
-  .race{margin:0 4px 8px;background:var(--amber-t);border:1px solid var(--amber-b);color:var(--amber-d);border-radius:12px;padding:8px 12px;font-size:12.5px;font-weight:700;display:none;align-items:center;gap:8px}
-  .race .flag{font-size:14px}
-  .r-pts{font-weight:700;font-size:19px;color:var(--ink);font-variant-numeric:tabular-nums;flex:0 0 auto}
-  .r-pts small{font-size:11px;color:var(--ink3);font-weight:600;margin-inline-start:3px}
-  .tier{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:20px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .race{margin:0 4px 8px;background:var(--amber-t);border:1px solid var(--amber-b);color:var(--amber-d);border-radius:12px;padding:10px 14px;font-size:14px;font-weight:700;display:none;align-items:center;gap:9px}
+  .race .flag{font-size:16px}
+  .r-pts{font-weight:800;font-size:23px;color:var(--ink);font-variant-numeric:tabular-nums;flex:0 0 auto}
+  .r-pts small{font-size:12px;color:var(--ink3);font-weight:600;margin-inline-start:3px}
+  .tier{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:20px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:0 0 auto}
   .empty{padding:26px 16px;text-align:center;color:var(--ink2);font-weight:500;font-size:14px}
 
   /* ── player sheet ── */
@@ -194,30 +191,23 @@
   </header>
 
   <div class="main" id="main" style="display:none">
-    <div class="arena">
-      <div class="forest card">
-        <div class="cap"><span class="tt" id="f-cap"></span></div>
-        <div id="scene"></div>
-      </div>
-      <div class="stats" id="stats"></div>
+    <div class="forest card">
+      <div class="cap"><span class="tt" id="f-cap"></span></div>
+      <div id="scene"></div>
     </div>
-    <div class="list card">
-      <div class="cap">
-        <span class="tt" id="l-cap"></span>
-        <label class="search">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-          <input id="q" autocomplete="off"/>
-        </label>
+    <div class="bottom">
+      <div class="list card">
+        <div class="cap"><span class="tt" id="l-cap"></span></div>
+        <div class="race" id="race"></div>
+        <div id="rows"></div>
       </div>
-      <div class="race" id="race"></div>
-      <div id="rows"></div>
+      <div class="side">
+        <div class="stats" id="stats"></div>
+        <div class="msg card"><div class="ticker show" id="ticker"></div></div>
+      </div>
     </div>
   </div>
   <div id="state" class="state"></div>
-
-  <footer>
-    <div class="ticker show" id="ticker"></div>
-  </footer>
 </div>
 
 <div id="ov"><div class="sheet" id="sheet"></div></div>
@@ -246,7 +236,7 @@
 
   const I18N={
     en:{kicker:"Prince Sattam University · Sustainability",title:"PSAUx Campus Forest",live:"LIVE",cap:"THE RANKING",searchPh:"Find a player…",
-      fcap:"CAMPUS FOREST — every player grows a tree with their PSAUx points",
+      fcap:"Every point you earn grows your tree — scan, volunteer, act.",
       competing:"Growing trees",totalPts:"Total PSAUx points",bottlesT:"Bottles saved (est.)",co2:"kg CO₂ saved (est.)",pts:"pts",
       tiedLeader:"Tied with the leader",front:"Leading the race",raceCap:"THE RACE",
       tiedWith:n=>`Tied with ${n}`,catchUp:(g,n)=>`▲ ${g} to overtake ${n}`,
@@ -266,13 +256,13 @@
       rank:"Rank",points:"PSAUx points",bottlesL:"Bottles (est.)",co2L:"kg CO₂ (est.)",lastActive:"Last active",strengthL:"Good at",
       journey:"LEVEL JOURNEY",insightCap:"AI INSIGHT · ESTIMATED FROM ACCOUNT DATA",
       earnedT:(n,p)=>`${n}'s tree grew +${p} pts`,leadT:n=>`${n} takes the lead!`,
-      ticker:x=>["Every PSAUx point you earn makes your tree grow — scan, volunteer, act.",
-        `This forest has saved ≈ ${x.bt} bottles from landfill <small>· est.</small>`,
-        `That's ≈ ${x.kg} kg of CO₂ avoided <small>· est.</small>`,
-        `The clean energy of ≈ ${x.ph} phone charges`,`Or ≈ ${x.km} km not driven by car`,
-        "Tap any tree to meet the student growing it."]},
+      ticker:x=>["Scan a bottle at any PSAUx station — your tree grows.",
+        `This forest saved ≈ ${x.bt} bottles from landfill <small>est.</small>`,
+        `≈ ${x.kg} kg of CO₂ avoided <small>est.</small>`,
+        `Like ${x.km} km not driven by car`,
+        "Tap any tree to meet its student."]},
     ar:{kicker:"جامعة الأمير سطام بن عبدالعزيز · الاستدامة",title:"غابة PSAUx",live:"مباشر",cap:"الترتيب",searchPh:"ابحث عن لاعب…",
-      fcap:"غابة الحرم الجامعي — كل لاعب يزرع شجرة بنقاط PSAUx",
+      fcap:"كل نقطة تكسبها تُنمّي شجرتك — امسح وتطوّع وشارك.",
       competing:"أشجار تنمو",totalPts:"مجموع نقاط PSAUx",bottlesT:"عبوات موفَّرة (تقديري)",co2:"كجم CO₂ موفَّرة (تقديري)",pts:"نقطة",
       tiedLeader:"تعادل مع المتصدر",front:"يتصدر السباق",raceCap:"السباق",
       tiedWith:n=>`تعادل مع ${n}`,catchUp:(g,n)=>`▲ ${g} لتجاوز ${n}`,
@@ -292,17 +282,17 @@
       rank:"المركز",points:"نقاط PSAUx",bottlesL:"عبوات (تقديري)",co2L:"كجم CO₂ (تقديري)",lastActive:"آخر نشاط",strengthL:"يجيد",
       journey:"رحلة المستويات",insightCap:"تحليل ذكي · تقديري من بيانات الحساب",
       earnedT:(n,p)=>`نمت شجرة ${n} ‏+${p} نقطة`,leadT:n=>`${n} في الصدارة!`,
-      ticker:x=>["كل نقطة PSAUx تكسبها تُنمّي شجرتك — امسح وتطوّع وشارك.",
-        `أنقذت هذه الغابة ≈ ${x.bt} عبوة من المكب <small>· تقديري</small>`,
-        `أي ≈ ${x.kg} كجم CO₂ تم تجنبها <small>· تقديري</small>`,
-        `ما يعادل طاقة ≈ ${x.ph} شحنة هاتف نظيفة`,`أو ≈ ${x.km} كم لم تُقطع بالسيارة`,
-        "المس أي شجرة لتتعرف على الطالب الذي يزرعها."]}};
+      ticker:x=>["امسح عبوة في أي محطة PSAUx — وستنمو شجرتك.",
+        `أنقذت هذه الغابة ≈ ${x.bt} عبوة من المكب <small>تقديري</small>`,
+        `≈ ${x.kg} كجم CO₂ تم تجنبها <small>تقديري</small>`,
+        `مثل ${x.km} كم لم تُقطع بالسيارة`,
+        "المس أي شجرة لتتعرف على صاحبها."]}};
   let lang="en";try{lang=localStorage.getItem("psaux_lang")||"en";}catch(e){}
   const T=()=>I18N[lang];
   const tname=t=>lang==="ar"?t.ar:t.n;
 
   let prevPoints={},prevRank={},firstLoad=true,booted=false,lastSig="",lastUpdate=0,prevLeader=null,idToken=null,fails=0;
-  let lastRows=[],query="",tickerData=[],tickIdx=0,sheetUid=null,gained=new Set();
+  let lastRows=[],tickerData=[],tickIdx=0,sheetUid=null,gained=new Set();
 
   const el=id=>document.getElementById(id);
   const initial=n=>((n||"?").trim().charAt(0)||"?").toUpperCase();
@@ -347,7 +337,7 @@
     document.documentElement.lang=lang;document.documentElement.dir=lang==="ar"?"rtl":"ltr";
     el("h-kicker").textContent=T().kicker;el("h-title").textContent=T().title;el("h-live").textContent=T().live;
     el("lang").textContent=lang==="ar"?"English":"العربية";
-    el("l-cap").textContent=T().cap;el("f-cap").textContent=T().fcap;el("q").placeholder=T().searchPh;
+    el("l-cap").textContent=T().cap;el("f-cap").textContent=T().fcap;
     if(!booted){el("state").textContent=T().connecting;el("ticker").innerHTML=T().ticker({bt:"0",kg:"0",ph:"0",km:"0"})[0];}
   }
 
@@ -391,21 +381,22 @@
         body+=`<circle cx="0" cy="${-H*.8}" r="${cw*.95}" fill="none" stroke="#E9C349" stroke-width="1.4" opacity=".5" stroke-dasharray="3 6"/>`;
       }
     }
-    const badge=rank<=3?`${rank===1?`<path class="crown" d="M-9 ${-(H+40)} L-5.5 ${-(H+50)} L0 ${-(H+43)} L5.5 ${-(H+50)} L9 ${-(H+40)} Z" fill="#E9C349" stroke="#A9832F" stroke-width="1"/>`:""}
-      <circle cx="0" cy="${-(H+26)}" r="10" fill="${rank===1?"#E9C349":rank===2?"#B4BDC6":"#CBA24C"}" stroke="${rank===1?"#A9832F":rank===2?"#8D97A3":"#A9832F"}" stroke-width="1.2"/>
-      <text x="0" y="${-(H+22)}" text-anchor="middle" font-size="11" font-weight="800" fill="#fff">${rank}</text>`:"";
+    const badge=rank<=3?`${rank===1?`<path class="crown" d="M-11 ${-(H+42)} L-6.5 ${-(H+54)} L0 ${-(H+46)} L6.5 ${-(H+54)} L11 ${-(H+42)} Z" fill="#E9C349" stroke="#A9832F" stroke-width="1"/>`:""}
+      <circle cx="0" cy="${-(H+27)}" r="12" fill="${rank===1?"#E9C349":rank===2?"#B4BDC6":"#CBA24C"}" stroke="${rank===1?"#A9832F":rank===2?"#8D97A3":"#A9832F"}" stroke-width="1.2"/>
+      <text x="0" y="${-(H+22)}" text-anchor="middle" font-size="13" font-weight="800" fill="#fff">${rank}</text>`:"";
     return `<g class="tree${growIn}${grewNow}" data-uid="${esc(r.uid)}" transform="translate(${x.toFixed(1)},${baseY})" style="--sw:${sway}">
       <ellipse cx="0" cy="3" rx="${Math.max(14,cw*.8)}" ry="5" fill="rgba(10,40,28,.16)"/>
       <g class="body">${body}${badge}</g>
-      <rect x="-34" y="12" width="68" height="17" rx="4" fill="#8A6A45" stroke="#6B4E32" stroke-width="1"/>
-      <text x="0" y="24" text-anchor="middle" font-size="10" font-weight="700" fill="#F6EFDF">${nm}</text>
+      <rect x="-42" y="12" width="84" height="34" rx="5" fill="#8A6A45" stroke="#6B4E32" stroke-width="1"/>
+      <text x="0" y="26" text-anchor="middle" font-size="12" font-weight="700" fill="#F6EFDF">${nm}</text>
+      <text x="0" y="41" text-anchor="middle" font-size="12" font-weight="800" fill="#EBD498">${fmt(r.points)}</text>
     </g>`;
   }
 
   function sceneSvg(rows){
-    const mode=skyMode(),S=SKY[mode],W=1000;
+    const mode=skyMode(),S=SKY[mode],W=1600;
     const shown=rows.slice(0,12);
-    const n=shown.length,spacing=Math.min(150,(W-160)/Math.max(1,n));
+    const n=shown.length,spacing=Math.min(200,(W-180)/Math.max(1,n));
     // rank 1 in the middle, others fanning outwards; top 3 stand on podium mounds
     const moundLift=r=>r===1?20:r===2?13:r===3?8:0;
     const placed=shown.map((r,i)=>{
@@ -420,26 +411,26 @@
     const trees=placed.sort((a,b)=>a.x-b.x).map(t=>treeSvg(t.r,t.rank,t.x,408-moundLift(t.rank))).join("");
 
     const total=rows.reduce((a,r)=>a+(r.points||0),0);
-    const flowers=Math.min(26,Math.round(total*BOTTLE_SHARE/POINTS_PER_BOTTLE/120));
+    const flowers=Math.min(34,Math.round(total*BOTTLE_SHARE/POINTS_PER_BOTTLE/120));
     let flora="";
     for(let i=0;i<flowers;i++){
-      const fx=30+(i*137)%940,fy=432+(i*53)%22,fc=["#E9C349","#F6EFDF","#CBA24C"][i%3];
+      const fx=30+(i*211)%(W-60),fy=436+(i*53)%22,fc=["#E9C349","#F6EFDF","#CBA24C"][i%3];
       flora+=`<g><line x1="${fx}" y1="${fy+6}" x2="${fx}" y2="${fy}" stroke="#4C8A3F" stroke-width="1.4"/><circle cx="${fx}" cy="${fy-2}" r="2.6" fill="${fc}"/></g>`;
     }
 
     let sky="";
     if(mode==="night"){
-      sky+=`<circle cx="860" cy="70" r="26" fill="#EAF0E2"/><circle cx="872" cy="62" r="24" fill="${S.top}"/>`;
-      for(let i=0;i<14;i++){const sx=(i*211)%W,sy=20+(i*67)%120;
+      sky+=`<circle cx="1390" cy="72" r="26" fill="#EAF0E2"/><circle cx="1402" cy="64" r="24" fill="${S.top}"/>`;
+      for(let i=0;i<20;i++){const sx=(i*311)%W,sy=18+(i*67)%120;
         sky+=`<circle class="tw" cx="${sx}" cy="${sy}" r="${1+(i%3)*.5}" fill="#EAF0DC" style="animation-duration:${2+(i%4)}s;animation-delay:${(i%5)*.6}s"/>`;}
-      for(let i=0;i<7;i++){const fx=120+(i*151)%760,fy=330+(i*37)%70;
+      for(let i=0;i<10;i++){const fx=140+(i*181)%(W-280),fy=330+(i*37)%70;
         sky+=`<circle class="fw" cx="${fx}" cy="${fy}" r="2" fill="#E9C349" style="animation-duration:${2.4+(i%3)}s;animation-delay:${(i%4)*.7}s"/>`;}
     }else{
-      sky+=`<circle cx="150" cy="84" r="52" fill="#F7D774" opacity=".28"/><circle cx="150" cy="84" r="32" fill="${mode==="day"?"#F7D774":"#F2B95C"}"/>`;
-      sky+=`<g class="cloud" style="animation-duration:75s"><ellipse cx="0" cy="70" rx="46" ry="15" fill="#fff" opacity=".65"/><ellipse cx="34" cy="62" rx="30" ry="12" fill="#fff" opacity=".65"/></g>
-        <g class="cloud" style="animation-duration:110s;animation-delay:-40s"><ellipse cx="0" cy="130" rx="56" ry="16" fill="#fff" opacity=".5"/><ellipse cx="40" cy="122" rx="32" ry="12" fill="#fff" opacity=".5"/></g>
-        <g class="fly" style="animation-duration:38s"><g class="flut"><ellipse cx="-4" cy="150" rx="5" ry="3.4" fill="#C5A35A"/><ellipse cx="4" cy="150" rx="5" ry="3.4" fill="#E9C349"/></g></g>
-        <g class="fly" style="animation-duration:55s;animation-delay:-20s"><path d="M0 100 q7 -8 14 0 q7 -8 14 0" stroke="#5A6B5E" stroke-width="2" fill="none" stroke-linecap="round"/></g>`;
+      sky+=`<circle cx="190" cy="86" r="52" fill="#F7D774" opacity=".28"/><circle cx="190" cy="86" r="32" fill="${mode==="day"?"#F7D774":"#F2B95C"}"/>`;
+      sky+=`<g class="cloud" style="animation-duration:85s"><ellipse cx="0" cy="70" rx="46" ry="15" fill="#fff" opacity=".65"/><ellipse cx="34" cy="62" rx="30" ry="12" fill="#fff" opacity=".65"/></g>
+        <g class="cloud" style="animation-duration:120s;animation-delay:-50s"><ellipse cx="0" cy="130" rx="56" ry="16" fill="#fff" opacity=".5"/><ellipse cx="40" cy="122" rx="32" ry="12" fill="#fff" opacity=".5"/></g>
+        <g class="fly" style="animation-duration:42s"><g class="flut"><ellipse cx="-4" cy="150" rx="5" ry="3.4" fill="#C5A35A"/><ellipse cx="4" cy="150" rx="5" ry="3.4" fill="#E9C349"/></g></g>
+        <g class="fly" style="animation-duration:60s;animation-delay:-25s"><path d="M0 100 q7 -8 14 0 q7 -8 14 0" stroke="#5A6B5E" stroke-width="2" fill="none" stroke-linecap="round"/></g>`;
     }
 
     return `<svg viewBox="0 0 ${W} 470" preserveAspectRatio="xMidYMax meet" role="img">
@@ -447,8 +438,8 @@
         <stop offset="0" stop-color="${S.top}"/><stop offset="1" stop-color="${S.bot}"/></linearGradient></defs>
       <rect width="${W}" height="470" fill="url(#skyg)"/>
       ${sky}
-      <path d="M0 330 Q170 270 360 316 T720 306 T1000 322 L1000 470 L0 470 Z" fill="${S.hillB}"/>
-      <path d="M0 372 Q220 330 480 362 T1000 358 L1000 470 L0 470 Z" fill="${S.hillF}"/>
+      <path d="M0 330 Q270 268 570 314 T1150 304 T1600 320 L1600 470 L0 470 Z" fill="${S.hillB}"/>
+      <path d="M0 372 Q350 328 770 360 T1600 356 L1600 470 L0 470 Z" fill="${S.hillF}"/>
       <rect y="408" width="${W}" height="62" fill="${S.grass}"/>
       ${mounds}
       ${flora}
@@ -458,33 +449,18 @@
   }
 
   // ── render ──
-  function rowHtml(r,rank,hit){
+  function rowHtml(r,rank){
     const grew=!firstLoad&&prevPoints[r.uid]!=null&&r.points>prevPoints[r.uid];
-    const st=pstats(r);
-    const above=rank>1?lastRows[rank-2]:null,gap=above?above.points-r.points:0;
-    const chase=above?(gap===0?T().tiedWith(esc(first(above.name))):T().catchUp(fmt(gap),esc(first(above.name)))):T().front;
-    const pct=above&&above.points>0?Math.min(100,Math.round((r.points||0)/above.points*100)):100;
-    return `<div class="row ${grew?'flash':''} ${hit?'hit':''}" data-uid="${esc(r.uid)}">
+    return `<div class="row ${grew?'flash':''}" data-uid="${esc(r.uid)}">
       <div class="r-rank">${rank<=3?`<span class="disc d${rank}">${rank}</span>`:rank}</div>
       <div class="r-move">${moveBadge(r.uid,rank)}</div>
       <div class="r-ava" style="background:${color(r.name)}">${initial(r.name)}</div>
-      <div class="r-main">
-        <div class="r-top"><b>${esc(r.name||"—")}</b>${chipHtml(st)}</div>
-        <div class="r-sub">${T().bottlesLine(fmt(st.bottles),fmt(st.kg))} · ${chase}</div>
-        <div class="meter"><i style="width:${pct}%"></i></div>
-      </div>
+      <div class="r-main"><b>${esc(r.name||"—")}</b>${tierPill(r.points||0)}</div>
       <div class="r-pts">${fmt(r.points)}<small>${T().pts}</small></div>
     </div>`;
   }
   function renderRows(){
-    const rows=lastRows;
-    if(query){
-      const q=query.toLowerCase();
-      const hits=rows.map((r,i)=>({r,rank:i+1})).filter(x=>(x.r.name||"").toLowerCase().includes(q));
-      el("rows").innerHTML=hits.length?hits.map(x=>rowHtml(x.r,x.rank,true)).join(""):`<div class="empty">${T().noMatch}</div>`;
-      return;
-    }
-    el("rows").innerHTML=rows.map((r,i)=>rowHtml(r,i+1,false)).join("");
+    el("rows").innerHTML=lastRows.map((r,i)=>rowHtml(r,i+1)).join("");
   }
   function render(rows){
     if(!rows.length){el("state").style.display="block";el("main").style.display="none";el("state").textContent=T().noPlayers;return;}
@@ -581,10 +557,6 @@
   // hover sync: list row <-> its tree in the forest
   el("rows").addEventListener("mouseover",e=>{const u=findUid(e.target,el("rows"));if(!u)return;const t=el("scene").querySelector(`[data-uid="${u}"]`);if(t)t.classList.add("lit");});
   el("rows").addEventListener("mouseout",e=>{const u=findUid(e.target,el("rows"));if(!u)return;const t=el("scene").querySelector(`[data-uid="${u}"]`);if(t)t.classList.remove("lit");});
-
-  // ── search ──
-  let qTimer=null;
-  el("q").addEventListener("input",e=>{clearTimeout(qTimer);qTimer=setTimeout(()=>{query=e.target.value.trim();renderRows();},140);});
 
   // ── language toggle ──
   el("lang").onclick=()=>{lang=lang==="ar"?"en":"ar";try{localStorage.setItem("psaux_lang",lang);}catch(e){}chrome();lastSig="";if(lastRows.length)render(lastRows);};
