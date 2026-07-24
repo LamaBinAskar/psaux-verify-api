@@ -162,7 +162,7 @@
   const KEY="AIzaSyDTZ4COIWrzmXZtC9uAsAUCNwHALOquvMM", PROJECT="psaux-26";
   const CO2_PER_POINT=0.05, POLL_MS=4000;
   const PAL=[["#2E9E6B","#1c6e49"],["#1E8E7E","#125e55"],["#D99A00","#a37200"],["#CB6B3A","#9c4d26"],["#6C4FBF","#4a3388"],["#0A97D9","#0a6ea0"],["#C0397B","#8e2359"],["#3E7C3A","#2a5a27"],["#0f8a8a","#0a5f5f"],["#B0842E","#7d5d18"]];
-  const TIERS=[{min:0,n:"Sprout",e:"🌱",c:"#7bd66a"},{min:500,n:"Explorer",e:"🍃",c:"#35c7b0"},{min:1500,n:"Guardian",e:"🌳",c:"#3fb984"},{min:4000,n:"Champion",e:"🏅",c:"#E7C349"},{min:10000,n:"Legend",e:"💎",c:"#b388ff"}];
+  const TIERS=[{min:0,n:"Active Contributor",e:"🌱",c:"#7bd66a"},{min:500,n:"Green Achiever",e:"🍃",c:"#35c7b0"},{min:1500,n:"Sustainability Advocate",e:"🌿",c:"#3fb984"},{min:3000,n:"Campus Changemaker",e:"🌍",c:"#57b8e8"},{min:5000,n:"PSAUx Champion",e:"🏅",c:"#E7C349"},{min:8000,n:"Sustainability Legend",e:"💎",c:"#b388ff"}];
   let prevPoints={},prevRank={},firstLoad=true,booted=false,lastSig="",lastUpdate=0,prevLeader=null,idToken=null,fails=0,tickerData=[],tickIdx=0;
 
   const el=id=>document.getElementById(id);
@@ -173,7 +173,7 @@
   function grad(name){let h=0;const s=(name||"?");for(let i=0;i<s.length;i++)h=(h*33+s.charCodeAt(i))>>>0;const p=PAL[h%PAL.length];return `linear-gradient(135deg,${p[0]},${p[1]})`;}
   function tier(p){let t=TIERS[0];for(const x of TIERS)if(p>=x.min)t=x;return t;}
   function tierPill(p){const t=tier(p);return `<span class="tier" style="background:${t.c}26;color:${t.c}">${t.e} ${t.n}</span>`;}
-  function progress(p){const i=TIERS.findIndex(t=>p<t.min);if(i<0)return{pct:100,label:"💎 Max tier — a campus Legend"};const lo=TIERS[i-1].min,hi=TIERS[i].min;return{pct:Math.max(4,Math.round((p-lo)/(hi-lo)*100)),label:`${fmt(hi-p)} pts → ${TIERS[i].n} ${TIERS[i].e}`};}
+  function progress(p){const i=TIERS.findIndex(t=>p<t.min);if(i<0)return{pct:100,label:"💎 Top tier — Sustainability Legend"};const lo=TIERS[i-1].min,hi=TIERS[i].min;return{pct:Math.max(4,Math.round((p-lo)/(hi-lo)*100)),label:`${fmt(hi-p)} pts → ${TIERS[i].n} ${TIERS[i].e}`};}
   function ago(iso){if(!iso)return"";const s=(Date.now()-Date.parse(iso))/1e3;if(!(s>=0))return"";if(s<90)return"active now";if(s<3600)return`active ${Math.floor(s/60)}m ago`;if(s<86400)return`active ${Math.floor(s/3600)}h ago`;return`active ${Math.floor(s/86400)}d ago`;}
   function animateNum(node,to){if(!node)return;const from=parseInt((node.textContent||"0").replace(/,/g,""))||0;if(from===to){node.textContent=fmt(to);return;}const t0=performance.now();(function s(t){const k=Math.min(1,(t-t0)/650);node.textContent=fmt(Math.round(from+(to-from)*(1-Math.pow(1-k,3))));if(k<1)requestAnimationFrame(s);})(t0);}
   function toast(m){const d=document.createElement("div");d.className="toast";d.textContent=m;el("toasts").appendChild(d);setTimeout(()=>d.remove(),4000);}
