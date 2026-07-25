@@ -363,12 +363,20 @@
   // Each player is a tree: height grows with points, species richens with tier.
   // Sky follows the real local time; flowers on the grass = campus bottles saved.
   const SKY={
-    day:{top:"#CDE9DB",bot:"#EEF6EC",hillB:"#CBE0CD",hillF:"#B7D6BD",grass:"#A9CFAF",mound:"#B6D8BC",overlay:0},
-    dawn:{top:"#F2DFC3",bot:"#EAF0E2",hillB:"#CBDECB",hillF:"#B4D2B8",grass:"#A5C9A9",mound:"#B2D2B6",overlay:0},
-    dusk:{top:"#E8CBA9",bot:"#DDE7DB",hillB:"#B9D1BC",hillF:"#A3C4A8",grass:"#94B899",mound:"#A1C4A6",overlay:.04},
-    night:{top:"#0E2433",bot:"#14342C",hillB:"#123A2D",hillF:"#0E2F25",grass:"#0B281F",mound:"#0F2E24",overlay:.10}};
+    day:{top:"#CDE9DB",bot:"#EEF6EC",hillB:"#CBE0CD",hillF:"#B7D6BD",grass:"#A9CFAF",mound:"#B6D8BC",dune:"#E6D8B4",sil:"#8FB99A",tuft:"#8FBF98",bush:"#7FAF89",mon:"#9FBFA4",overlay:0},
+    dawn:{top:"#F2DFC3",bot:"#EAF0E2",hillB:"#CBDECB",hillF:"#B4D2B8",grass:"#A5C9A9",mound:"#B2D2B6",dune:"#ECDAB9",sil:"#93B99B",tuft:"#8CBB94",bush:"#7CA986",mon:"#A3BFA6",overlay:0},
+    dusk:{top:"#E8CBA9",bot:"#DDE7DB",hillB:"#B9D1BC",hillF:"#A3C4A8",grass:"#94B899",mound:"#A1C4A6",dune:"#DCC49E",sil:"#7FA98B",tuft:"#7FAA88",bush:"#6E9A79",mon:"#8FAE94",overlay:.04},
+    night:{top:"#0E2433",bot:"#14342C",hillB:"#123A2D",hillF:"#0E2F25",grass:"#0B281F",mound:"#0F2E24",dune:"#123129",sil:"#0E2E25",tuft:"#0E2C22",bush:"#071E16",mon:"#0D2B23",overlay:.10}};
   function skyMode(){const h=new Date().getHours();return h>=19||h<5?"night":h<7?"dawn":h>=17?"dusk":"day";}
   const CANOPY=["#1C6B4C","#15654A","#0F5A3E","#2E7D5B","#247253"];
+
+  // tiny silhouette palm for the horizon grove
+  function farPalm(fx,fy,fs,col){
+    let s=`<path d="M${fx} ${fy} L${fx} ${(fy-26*fs).toFixed(1)}" stroke="${col}" stroke-width="${(2.6*fs).toFixed(1)}" stroke-linecap="round"/>`;
+    [[-1,-.05],[-.5,-.3],[0,-.42],[.5,-.3],[1,-.05]].forEach(d=>{
+      s+=`<path d="M${fx} ${(fy-26*fs).toFixed(1)} Q${(fx+d[0]*9*fs).toFixed(1)} ${(fy-26*fs-9*fs).toFixed(1)} ${(fx+d[0]*17*fs).toFixed(1)} ${(fy-26*fs+d[1]*20*fs).toFixed(1)}" stroke="${col}" stroke-width="${(2*fs).toFixed(1)}" fill="none" stroke-linecap="round"/>`;});
+    return s;
+  }
 
   function treeSvg(r,rank,x,baseY,crowned){
     const p=r.points||0,h0=hash(r.uid+(r.name||"")),ti=TIERS.indexOf(tier(p));
@@ -461,9 +469,26 @@
       sky+=`<circle cx="190" cy="86" r="52" fill="#F7D774" opacity=".28"/><circle cx="190" cy="86" r="32" fill="${mode==="day"?"#F7D774":"#F2B95C"}"/>`;
       sky+=`<g class="cloud" style="animation-duration:85s"><ellipse cx="0" cy="70" rx="46" ry="15" fill="#fff" opacity=".65"/><ellipse cx="34" cy="62" rx="30" ry="12" fill="#fff" opacity=".65"/></g>
         <g class="cloud" style="animation-duration:120s;animation-delay:-50s"><ellipse cx="0" cy="130" rx="56" ry="16" fill="#fff" opacity=".5"/><ellipse cx="40" cy="122" rx="32" ry="12" fill="#fff" opacity=".5"/></g>
+        <g class="cloud" style="animation-duration:150s;animation-delay:-95s"><ellipse cx="0" cy="42" rx="34" ry="10" fill="#fff" opacity=".4"/></g>
         <g class="fly" style="animation-duration:42s"><g class="flut"><ellipse cx="-4" cy="150" rx="5" ry="3.4" fill="#C5A35A"/><ellipse cx="4" cy="150" rx="5" ry="3.4" fill="#E9C349"/></g></g>
-        <g class="fly" style="animation-duration:60s;animation-delay:-25s"><path d="M0 100 q7 -8 14 0 q7 -8 14 0" stroke="#5A6B5E" stroke-width="2" fill="none" stroke-linecap="round"/></g>`;
+        <g class="fly" style="animation-duration:60s;animation-delay:-25s">
+          <path d="M0 100 q7 -8 14 0 q7 -8 14 0" stroke="#5A6B5E" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M26 114 q6 -7 12 0 q6 -7 12 0" stroke="#5A6B5E" stroke-width="1.7" fill="none" stroke-linecap="round"/>
+          <path d="M-20 124 q5 -6 10 0 q5 -6 10 0" stroke="#5A6B5E" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        </g>`;
     }
+
+    // horizon depth: distant palm grove, desert dune band, arch monument,
+    // grass tufts, and corner bushes framing the composition
+    let farGrove="";
+    for(let i=0;i<9;i++){const fx=(80+i*181)%W,fy=340+(i*29)%14,fs=.5+(i%3)*.18;farGrove+=farPalm(fx,fy,fs,S.sil);}
+    const ax=W*.86;
+    const arch=`<g fill="${S.mon}" opacity=".55"><path d="M${ax-30} 350 v-34 a30 30 0 0 1 60 0 v34 h-11 v-32 a19 19 0 0 0 -38 0 v32 Z"/></g>`;
+    const dune=`<path d="M0 354 Q400 338 820 352 T1600 346 L1600 470 L0 470 Z" fill="${S.dune}"/>`;
+    let tufts="";
+    for(let i=0;i<12;i++){const tx=40+(i*233)%(W-80),ty=424+(i*61)%36;
+      tufts+=`<path d="M${tx} ${ty} q-2 -6 -4.5 -8 M${tx} ${ty} q0 -7 0 -9.5 M${tx} ${ty} q2 -6 4.5 -8" stroke="${S.tuft}" stroke-width="1.6" fill="none" stroke-linecap="round"/>`;}
+    const bushes=`<g fill="${S.bush}"><circle cx="-14" cy="474" r="62"/><circle cx="46" cy="482" r="44"/><circle cx="${W+14}" cy="474" r="62"/><circle cx="${W-46}" cy="482" r="44"/></g>`;
 
     return `<svg viewBox="0 0 ${W} 470" preserveAspectRatio="xMidYMax meet" role="img">
       <defs><linearGradient id="skyg" x1="0" y1="0" x2="0" y2="1">
@@ -471,11 +496,16 @@
       <rect width="${W}" height="470" fill="url(#skyg)"/>
       ${sky}
       <path d="M0 330 Q270 268 570 314 T1150 304 T1600 320 L1600 470 L0 470 Z" fill="${S.hillB}"/>
+      ${arch}
+      ${dune}
+      ${farGrove}
       <path d="M0 372 Q350 328 770 360 T1600 356 L1600 470 L0 470 Z" fill="${S.hillF}"/>
       <rect y="408" width="${W}" height="62" fill="${S.grass}"/>
       ${mounds}
       ${flora}
+      ${tufts}
       ${trees}
+      ${bushes}
       ${S.overlay?`<rect width="${W}" height="470" fill="#04140D" opacity="${S.overlay}"/>`:""}
     </svg>`;
   }
