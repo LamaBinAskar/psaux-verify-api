@@ -235,3 +235,13 @@ app.get("/", (req, res) => {
 });
 
 app.listen(PORT, () => console.log(`PSAUX Verify API listening on http://localhost:${PORT}`));
+
+// Render's free tier spins the instance down after ~15 min without inbound
+// traffic, so the next visitor waits 30-60s for a cold start (looks broken,
+// especially on a lobby display). Ping our own public URL every 10 min to
+// stay awake. RENDER_EXTERNAL_URL is set automatically by Render.
+const SELF_URL = process.env.RENDER_EXTERNAL_URL;
+if (SELF_URL) {
+  setInterval(() => { fetch(`${SELF_URL}/`).catch(() => {}); }, 10 * 60 * 1000);
+  console.log(`keep-alive: pinging ${SELF_URL} every 10 min`);
+}
