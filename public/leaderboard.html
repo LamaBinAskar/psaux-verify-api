@@ -380,24 +380,31 @@
     const grewNow=gained.has(r.uid)?" cheer":"";
     const growIn=!booted?" grow":"";
     let body;
-    if(p<100){ // young palm sprout — a small fan of blades
-      body=`<path d="M0 0 Q0 -14 0 -22" stroke="#4C8A3F" stroke-width="3" fill="none" stroke-linecap="round"/>
-        <path d="M0 -8 Q-8 -15 -14 -16" stroke="#5D8A3C" stroke-width="3" fill="none" stroke-linecap="round"/>
-        <path d="M0 -8 Q8 -15 14 -16" stroke="#4C8A3F" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+    if(p<100){ // young palm sprout — a small fan of five blades
+      body=[[-1,-14],[-.5,-19],[0,-22],[.5,-19],[1,-14]].map((b,i)=>
+        `<path d="M0 0 Q${b[0]*7} ${b[1]*.65} ${b[0]*15} ${b[1]}" stroke="${i%2?"#5D8A3C":"#4C8A3F"}" stroke-width="3.2" fill="none" stroke-linecap="round"/>`).join("");
     }else{
-      // date palm: curved ringed trunk + two layers of arching fronds
-      const tw=Math.max(4.5,H*.075),bend=((h0%2)?1:-1)*H*.07,fw=Math.max(3,H*.055);
-      body=`<path d="M${(-tw/2).toFixed(1)} 0 Q${(bend*1.5).toFixed(1)} ${(-H*.55).toFixed(1)} ${(bend-tw*.28).toFixed(1)} ${-H} L${(bend+tw*.28).toFixed(1)} ${-H} Q${(bend*1.5+tw).toFixed(1)} ${(-H*.55).toFixed(1)} ${(tw/2).toFixed(1)} 0 Z" fill="#8A6A45"/>`;
-      [.24,.44,.64,.84].forEach(f=>{const rx=bend*f*1.15,rw=tw*(1.05-f*.45);
-        body+=`<path d="M${(rx-rw/2).toFixed(1)} ${(-H*f).toFixed(1)} h ${rw.toFixed(1)}" stroke="#6B4E32" stroke-width="1.3" opacity=".55"/>`;});
-      const FR=[[-1,.04],[-.68,-.2],[-.34,-.35],[0,-.42],[.34,-.35],[.68,-.2],[1,.04]];
-      FR.forEach((d,i)=>{const tx=bend+d[0]*FL,ty=-H+(d[1]+Math.abs(d[0])*.2)*FL,qx=bend+d[0]*FL*.45,qy=-H-FL*.42;
-        body+=`<path d="M${bend} ${-H} Q${qx.toFixed(1)} ${qy.toFixed(1)} ${tx.toFixed(1)} ${ty.toFixed(1)}" stroke="${i%2?cA:cB}" stroke-width="${fw.toFixed(1)}" fill="none" stroke-linecap="round"/>`;});
-      FR.slice(1,6).forEach((d,i)=>{const tx=bend+d[0]*FL*.55,ty=-H+(d[1]+Math.abs(d[0])*.2)*FL*.55,qx=bend+d[0]*FL*.25,qy=-H-FL*.26;
-        body+=`<path d="M${bend} ${-H} Q${qx.toFixed(1)} ${qy.toFixed(1)} ${tx.toFixed(1)} ${ty.toFixed(1)}" stroke="${i%2?cB:cA}" stroke-width="${(fw*.8).toFixed(1)}" fill="none" stroke-linecap="round"/>`;});
-      if(ti>=4){ // champion+: hanging gold date clusters
-        [[-1,.22],[1,.26]].forEach(c=>{const bx=bend+c[0]*FL*.22,by=-H+FL*c[1];
-          [[0,0],[4.5,3],[-4,3.5],[.5,6.5]].forEach(o=>{body+=`<circle cx="${(bx+o[0]).toFixed(1)}" cy="${(by+o[1]).toFixed(1)}" r="2.9" fill="#E9C349" stroke="#A9832F" stroke-width=".8"/>`;});});
+      // date palm: tapered trunk with diamond texture + a dense crown of
+      // filled, arching blades in three layers, like a flat-style illustration
+      const tw=Math.max(5.5,H*.09),bend=((h0%2)?1:-1)*H*.06,ax=bend,ay=-H;
+      const blade=(dx,dy,sc,col)=>{
+        const tx=ax+dx*FL*sc,ty=ay+(dy+Math.abs(dx)*.18)*FL*sc;
+        const ux=ax+dx*FL*.32*sc,uy=ay-FL*.50*sc;
+        const lx=ax+dx*FL*.62*sc,ly=ay-FL*.08*sc;
+        return `<path d="M${ax.toFixed(1)} ${ay.toFixed(1)} Q${ux.toFixed(1)} ${uy.toFixed(1)} ${tx.toFixed(1)} ${ty.toFixed(1)} Q${lx.toFixed(1)} ${ly.toFixed(1)} ${ax.toFixed(1)} ${ay.toFixed(1)} Z" fill="${col}"/>`;
+      };
+      body=`<path d="M${(-tw/2).toFixed(1)} 0 Q${(bend*1.5).toFixed(1)} ${(-H*.55).toFixed(1)} ${(bend-tw*.30).toFixed(1)} ${-H} L${(bend+tw*.30).toFixed(1)} ${-H} Q${(bend*1.5+tw).toFixed(1)} ${(-H*.55).toFixed(1)} ${(tw/2).toFixed(1)} 0 Z" fill="#8A6A45"/>`;
+      [.16,.30,.44,.58,.72,.86].forEach(f=>{const w=tw*(1.15-f*.5),x=bend*f*1.3;
+        body+=`<path d="M${(x-w*.55).toFixed(1)} ${(-H*f).toFixed(1)} L${x.toFixed(1)} ${(-H*f+3.5).toFixed(1)} L${(x+w*.55).toFixed(1)} ${(-H*f).toFixed(1)}" stroke="#6B4E32" stroke-width="1.4" fill="none" opacity=".6"/>`;});
+      // back layer (darker), main layer (alternating), top highlights (lighter, shorter)
+      [[-.92,-.02],[-.4,-.3],[.4,-.3],[.92,-.02]].forEach(d=>{body+=blade(d[0],d[1]+.05,1.02,"#0B4634");});
+      [[-1,.06],[-.78,-.14],[-.5,-.3],[-.2,-.42],[.2,-.42],[.5,-.3],[.78,-.14],[1,.06]].forEach((d,i)=>{body+=blade(d[0],d[1],1,i%2?cA:cB);});
+      [[-.6,-.26],[.14,-.46],[.6,-.26]].forEach(d=>{body+=blade(d[0],d[1],.55,"#3E8E63");});
+      body+=`<ellipse cx="${bend.toFixed(1)}" cy="${-H}" rx="${(tw*.95).toFixed(1)}" ry="${(tw*.55).toFixed(1)}" fill="#155C41"/>`;
+      if(ti>=4){ // champion+: hanging gold date bunches on short stems
+        [[-1,.16],[1,.19]].forEach(c=>{const bx=bend+c[0]*FL*.20,by=-H+FL*c[1];
+          body+=`<path d="M${bend.toFixed(1)} ${-H} Q${bx.toFixed(1)} ${(by-8).toFixed(1)} ${bx.toFixed(1)} ${(by-2).toFixed(1)}" stroke="#A9832F" stroke-width="1.6" fill="none"/>`;
+          [[0,0],[4.4,3.2],[-4.4,3.2],[2.2,7],[-2.2,7],[0,10.5]].forEach(o=>{body+=`<circle cx="${(bx+o[0]).toFixed(1)}" cy="${(by+o[1]).toFixed(1)}" r="3.3" fill="#E9C349" stroke="#A9832F" stroke-width=".8"/>`;});});
       }
       if(ti>=5){ // legend: halo
         body+=`<circle cx="${bend.toFixed(1)}" cy="${(-H-FL*.05).toFixed(1)}" r="${(FL*1.05).toFixed(1)}" fill="none" stroke="#E9C349" stroke-width="1.4" opacity=".5" stroke-dasharray="3 6"/>`;
