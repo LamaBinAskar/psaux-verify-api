@@ -90,6 +90,7 @@
   .msg .ticker{font-size:20px;font-weight:700;color:var(--green-d);line-height:1.5;opacity:0;transition:opacity .35s}
   .msg .ticker.show{opacity:1}
   .msg .ticker small{font-weight:600;color:var(--ink3);font-size:14px}
+  .msg .ticker .alt{font-size:14px;color:var(--ink3);font-weight:600;margin-top:7px}
 
   /* ── ranking list ── */
   .list{padding:10px;overflow:hidden;min-height:0;display:flex;flex-direction:column}
@@ -100,6 +101,9 @@
   .row:active{transform:scale(.99)}
   .row+.row{margin-top:3px}
   .row.flash{animation:flash 2.4s ease-out}
+  .row.in{animation:rowin .5s cubic-bezier(.2,.9,.3,1) backwards}
+  @keyframes rowin{from{opacity:0;transform:translateY(10px)}}
+  .row.spot{border-color:var(--amber-b);background:#F9F4E4}
   @keyframes flash{0%{background:var(--amber-t)}100%{background:transparent}}
   .r-rank{width:34px;display:flex;justify-content:center;font-weight:700;font-size:19px;color:var(--ink3);font-variant-numeric:tabular-nums;flex:0 0 auto}
   .disc{width:31px;height:31px;border-radius:50%;color:#fff;font-weight:700;font-size:15px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(26,28,30,.2)}
@@ -340,12 +344,19 @@
   function loop(){ctx.clearRect(0,0,cvs.width,cvs.height);parts.forEach(p=>{p.vy+=p.g;p.x+=p.vx;p.y+=p.vy;p.rot+=p.vr;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot);ctx.fillStyle=p.c;ctx.fillRect(-p.s/2,-p.s/2,p.s,p.s*.62);ctx.restore();});parts=parts.filter(p=>p.y<cvs.height+30);if(parts.length)raf=requestAnimationFrame(loop);else{raf=null;ctx.clearRect(0,0,cvs.width,cvs.height);}}
 
   // ── static chrome (re-applied on language switch) ──
+  // The message card is bilingual: current language big, the other beneath.
+  function tickHtml(pair){
+    const pri=lang==="ar"?pair.ar:pair.en,sec=lang==="ar"?pair.en:pair.ar;
+    return `<div><div>${pri}</div><div class="alt" dir="${lang==="ar"?"ltr":"rtl"}">${sec}</div></div>`;
+  }
   function chrome(){
     document.documentElement.lang=lang;document.documentElement.dir=lang==="ar"?"rtl":"ltr";
     el("h-kicker").textContent=T().kicker;el("h-title").textContent=T().title;el("h-live").textContent=T().live;
     el("lang").textContent=lang==="ar"?"English":"العربية";
     el("l-cap").textContent=T().cap;el("f-cap").textContent=T().fcap;
-    if(!booted){el("state").textContent=T().connecting;el("ticker").innerHTML=T().ticker({bt:"0",kg:"0",ph:"0",km:"0"})[0];}
+    if(!booted){el("state").textContent=T().connecting;
+      const z={bt:"0",kg:"0",ph:"0",km:"0"};
+      el("ticker").innerHTML=tickHtml({en:I18N.en.ticker(z)[0],ar:I18N.ar.ticker(z)[0]});}
   }
 
   // ══ THE FOREST SCENE ══
@@ -359,7 +370,7 @@
   function skyMode(){const h=new Date().getHours();return h>=19||h<5?"night":h<7?"dawn":h>=17?"dusk":"day";}
   const CANOPY=["#1C6B4C","#15654A","#0F5A3E","#2E7D5B","#247253"];
 
-  function treeSvg(r,rank,x,baseY){
+  function treeSvg(r,rank,x,baseY,crowned){
     const p=r.points||0,h0=hash(r.uid+(r.name||"")),ti=TIERS.indexOf(tier(p));
     const H=Math.min(128,30+Math.sqrt(p)*1.55);           // tree height from points
     const cw=Math.max(16,H*.52);                          // canopy radius
@@ -388,7 +399,7 @@
         body+=`<circle cx="0" cy="${-H*.8}" r="${cw*.95}" fill="none" stroke="#E9C349" stroke-width="1.4" opacity=".5" stroke-dasharray="3 6"/>`;
       }
     }
-    const badge=rank<=3?`${rank===1?`<path class="crown" d="M-11 ${-(H+42)} L-6.5 ${-(H+54)} L0 ${-(H+46)} L6.5 ${-(H+54)} L11 ${-(H+42)} Z" fill="#E9C349" stroke="#A9832F" stroke-width="1"/>`:""}
+    const badge=rank<=3?`${crowned?`<path class="crown" d="M-11 ${-(H+42)} L-6.5 ${-(H+54)} L0 ${-(H+46)} L6.5 ${-(H+54)} L11 ${-(H+42)} Z" fill="#E9C349" stroke="#A9832F" stroke-width="1"/>`:""}
       <circle cx="0" cy="${-(H+27)}" r="12" fill="${rank===1?"#E9C349":rank===2?"#B4BDC6":"#CBA24C"}" stroke="${rank===1?"#A9832F":rank===2?"#8D97A3":"#A9832F"}" stroke-width="1.2"/>
       <text x="0" y="${-(H+22)}" text-anchor="middle" font-size="13" font-weight="800" fill="#fff">${rank}</text>`:"";
     return `<g class="tree${growIn}${grewNow}" data-uid="${esc(r.uid)}" transform="translate(${x.toFixed(1)},${baseY})" style="--sw:${sway}">
@@ -404,18 +415,20 @@
     const mode=skyMode(),S=SKY[mode],W=1600;
     const shown=rows.slice(0,12);
     const n=shown.length,spacing=Math.min(200,(W-180)/Math.max(1,n));
-    // rank 1 in the middle, others fanning outwards; top 3 stand on podium mounds
-    const moundLift=r=>r===1?20:r===2?13:r===3?8:0;
+    // rank 1 in the middle, others fanning outwards; top 3 stand on podium mounds.
+    // A tie at the top crowns (and lifts) both leaders equally.
+    const tiedTop=shown[1]&&shown[0]&&shown[1].points===shown[0].points;
+    const moundLift=r=>r===1?20:r===2?(tiedTop?20:13):r===3?8:0;
     const placed=shown.map((r,i)=>{
       const off=Math.ceil(i/2)*(i%2?-1:1);
       const jitter=(hash(r.uid)%25)-12;
       return {r,rank:i+1,x:W/2+off*spacing+jitter};
     });
     const mounds=placed.filter(t=>t.rank<=3).map(t=>{
-      const rx=t.rank===1?88:t.rank===2?72:60,ry=moundLift(t.rank)+10;
+      const rx=t.rank===1||(t.rank===2&&tiedTop)?88:t.rank===2?72:60,ry=moundLift(t.rank)+10;
       return `<ellipse class="mound" cx="${t.x.toFixed(1)}" cy="412" rx="${rx}" ry="${ry}" fill="${S.mound}"/>`;
     }).join("");
-    const trees=placed.sort((a,b)=>a.x-b.x).map(t=>treeSvg(t.r,t.rank,t.x,408-moundLift(t.rank))).join("");
+    const trees=placed.sort((a,b)=>a.x-b.x).map(t=>treeSvg(t.r,t.rank,t.x,408-moundLift(t.rank),t.rank===1||(t.rank===2&&tiedTop))).join("");
 
     const total=rows.reduce((a,r)=>a+(r.points||0),0);
     const flowers=Math.min(34,Math.round(total*BOTTLE_SHARE/POINTS_PER_BOTTLE/120));
@@ -462,7 +475,7 @@
     const pct=lead>0?Math.max(2,Math.round((r.points||0)/lead*100)):(rank===1?100:2);
     const above=rank>1?lastRows[rank-2]:null,gap=above?above.points-r.points:0;
     const gapHtml=above?(gap===0?`<div class="r-gap tie">${T().tie}</div>`:`<div class="r-gap">▲ ${fmt(gap)}</div>`):"";
-    return `<div class="row ${grew?'flash':''}" data-uid="${esc(r.uid)}">
+    return `<div class="row ${grew?'flash':''} ${booted?'':'in'}" style="animation-delay:${booted?0:Math.min(rank*45,500)}ms" data-uid="${esc(r.uid)}">
       <div class="r-rank">${rank<=3?`<span class="disc d${rank}">${rank}</span>`:rank}</div>
       <div class="r-move">${moveBadge(r.uid,rank)}</div>
       <div class="r-ava" style="background:${color(r.name)}">${initial(r.name)}</div>
@@ -499,7 +512,9 @@
       <div class="stat card"><div class="ic">${ICONS.bottle}</div><div style="min-width:0"><div class="v" id="s3">0</div><div class="l">${T().bottlesT}</div></div></div>
       <div class="stat card"><div class="ic">${ICONS.globe}</div><div style="min-width:0"><div class="v" id="s4">0</div><div class="l">${T().co2}</div></div></div>`;
     animateNum(el("s1"),rows.length);animateNum(el("s2"),total);animateNum(el("s3"),bt);animateNum(el("s4"),kg);
-    tickerData=T().ticker({bt:fmt(bt),kg:fmt(kg),ph:fmt(kg*120),km:fmt(kg*6)});
+    const z={bt:fmt(bt),kg:fmt(kg),ph:fmt(kg*120),km:fmt(kg*6)};
+    const tEn=I18N.en.ticker(z),tAr=I18N.ar.ticker(z);
+    tickerData=tEn.map((m,i)=>({en:m,ar:tAr[i]}));
 
     // race banner (#1 vs #2) + closest-battle ticker line
     if(rows[1]){
@@ -509,7 +524,9 @@
       let bi=1,bg=Infinity;
       for(let i=1;i<rows.length;i++){const g=rows[i-1].points-rows[i].points;if(g<bg){bg=g;bi=i;}}
       const x=esc(first(rows[bi-1].name)),y=esc(first(rows[bi].name));
-      tickerData.push(bg===0?T().battleTied(x,y):T().battle(x,y,fmt(bg)));
+      tickerData.push({
+        en:bg===0?I18N.en.battleTied(x,y):I18N.en.battle(x,y,fmt(bg)),
+        ar:bg===0?I18N.ar.battleTied(x,y):I18N.ar.battle(x,y,fmt(bg))});
     }else{el("race").style.display="none";}
 
     renderRows();
@@ -568,9 +585,32 @@
   el("rows").addEventListener("click",e=>{const u=findUid(e.target,el("rows"));if(u)openSheet(u);});
   el("scene").addEventListener("click",e=>{const u=findUid(e.target,el("scene"));if(u)openSheet(u);else burst(24);});
 
-  // hover sync: list row <-> its tree in the forest
+  // hover sync: list row <-> its tree in the forest (both directions)
   el("rows").addEventListener("mouseover",e=>{const u=findUid(e.target,el("rows"));if(!u)return;const t=el("scene").querySelector(`[data-uid="${u}"]`);if(t)t.classList.add("lit");});
   el("rows").addEventListener("mouseout",e=>{const u=findUid(e.target,el("rows"));if(!u)return;const t=el("scene").querySelector(`[data-uid="${u}"]`);if(t)t.classList.remove("lit");});
+  el("scene").addEventListener("mouseover",e=>{const u=findUid(e.target,el("scene"));if(!u)return;const r=el("rows").querySelector(`[data-uid="${u}"]`);if(r)r.classList.add("spot");});
+  el("scene").addEventListener("mouseout",e=>{const u=findUid(e.target,el("scene"));if(!u)return;const r=el("rows").querySelector(`[data-uid="${u}"]`);if(r)r.classList.remove("spot");});
+
+  // kiosk spotlight: every 8s, softly feature the next player (tree + row),
+  // pausing while the sheet is open or right after someone touches the screen
+  let spotIdx=-1,spotUid=null,lastTouch=0;
+  function clearSpot(){
+    if(!spotUid)return;
+    const r=el("rows").querySelector(`[data-uid="${spotUid}"]`);if(r)r.classList.remove("spot");
+    const t=el("scene").querySelector(`[data-uid="${spotUid}"]`);if(t)t.classList.remove("lit");
+    spotUid=null;
+  }
+  setInterval(()=>{
+    if(!booted||!lastRows.length||sheetUid)return;
+    if(Date.now()-lastTouch<15e3)return;
+    clearSpot();
+    spotIdx=(spotIdx+1)%lastRows.length;
+    spotUid=lastRows[spotIdx].uid;
+    const r=el("rows").querySelector(`[data-uid="${spotUid}"]`);
+    if(r){r.classList.add("spot");if(r.scrollIntoView)r.scrollIntoView({block:"nearest",behavior:"smooth"});}
+    const t=el("scene").querySelector(`[data-uid="${spotUid}"]`);if(t)t.classList.add("lit");
+  },8000);
+  addEventListener("pointerdown",()=>{lastTouch=Date.now();clearSpot();},true);
 
   // ── language toggle ──
   el("lang").onclick=()=>{lang=lang==="ar"?"en":"ar";try{localStorage.setItem("psaux_lang",lang);}catch(e){}chrome();lastSig="";if(lastRows.length)render(lastRows);};
@@ -606,7 +646,7 @@
   setInterval(tick,POLL_MS);setInterval(clockTick,15e3);
   setInterval(()=>{if(booted&&lastRows.length)el("scene").innerHTML=sceneSvg(lastRows);},18e5); // sky follows the clock
   setInterval(()=>{if(!lastUpdate)return;const s=Math.floor((Date.now()-lastUpdate)/1000);el("updated").textContent=s<3?T().updatedNow:(s<60?T().updatedS(s):T().updatedM(Math.floor(s/60)));},1000);
-  setInterval(()=>{if(!tickerData.length)return;tickIdx=(tickIdx+1)%tickerData.length;const t=el("ticker");t.classList.remove("show");setTimeout(()=>{t.innerHTML=tickerData[tickIdx];t.classList.add("show");},380);},6500);
+  setInterval(()=>{if(!tickerData.length)return;tickIdx=(tickIdx+1)%tickerData.length;const t=el("ticker");t.classList.remove("show");setTimeout(()=>{t.innerHTML=tickHtml(tickerData[tickIdx]);t.classList.add("show");},380);},6500);
   el("fs").onclick=()=>{const d=document.documentElement;if(document.fullscreenElement)document.exitFullscreen();else d.requestFullscreen&&d.requestFullscreen();};
 </script>
 </body>
