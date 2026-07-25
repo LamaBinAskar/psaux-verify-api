@@ -66,6 +66,8 @@
   @keyframes drift{from{transform:translateX(-180px)}to{transform:translateX(1700px)}}
   .tw{animation:tw ease-in-out infinite}
   @keyframes tw{50%{opacity:.15}}
+  .turb{animation:turb 8s linear infinite}
+  @keyframes turb{to{transform:rotate(360deg)}}
   .fw{animation:fw ease-in-out infinite}
   @keyframes fw{50%{opacity:.15;transform:translateY(-6px)}}
   .fly{animation:fly linear infinite}
@@ -317,7 +319,7 @@
       cantReach:"Couldn't reach the leaderboard.",cantReachSub:"Check the network connection. If it persists, confirm Firestore allows reading <b>users</b> for signed-in clients.",
       updatedNow:"Updated just now",updatedS:s=>`Updated ${s}s ago`,updatedM:m=>`Updated ${m}m ago`,
       rank:"Rank",points:"PSAUx points",bottlesL:"Bottles (est.)",co2L:"kg CO₂ (est.)",lastActive:"Last active",strengthL:"Good at",
-      journey:"LEVEL JOURNEY",insightCap:"AI INSIGHT · ESTIMATED FROM ACCOUNT DATA",
+      journey:"LEVEL JOURNEY",insightCap:"AI INSIGHT · ESTIMATED FROM ACCOUNT DATA",plotSign:"Your tree here!",
       earnedT:(n,p)=>`${n}'s tree grew +${p} pts`,leadT:n=>`${n} takes the lead!`,
       ticker:x=>["Scan a bottle at any PSAUx station — your tree grows.",
         `This forest saved ≈ ${x.bt} bottles from landfill <small>est.</small>`,
@@ -345,7 +347,7 @@
       cantReach:"تعذّر الوصول إلى لوحة الصدارة.",cantReachSub:"تحقق من اتصال الشبكة. إذا استمرت المشكلة تأكد من صلاحيات القراءة في Firestore.",
       updatedNow:"حُدِّثت الآن",updatedS:s=>`حُدِّثت قبل ${s} ث`,updatedM:m=>`حُدِّثت قبل ${m} د`,
       rank:"المركز",points:"نقاط PSAUx",bottlesL:"عبوات (تقديري)",co2L:"كجم CO₂ (تقديري)",lastActive:"آخر نشاط",strengthL:"يجيد",
-      journey:"رحلة المستويات",insightCap:"تحليل ذكي · تقديري من بيانات الحساب",
+      journey:"رحلة المستويات",insightCap:"تحليل ذكي · تقديري من بيانات الحساب",plotSign:"مكان شجرتك!",
       earnedT:(n,p)=>`نمت شجرة ${n} ‏+${p} نقطة`,leadT:n=>`${n} في الصدارة!`,
       ticker:x=>["امسح عبوة في أي محطة PSAUx — وستنمو شجرتك.",
         `أنقذت هذه الغابة ≈ ${x.bt} عبوة من المكب <small>تقديري</small>`,
@@ -417,10 +419,10 @@
   // Each player is a tree: height grows with points, species richens with tier.
   // Sky follows the real local time; flowers on the grass = campus bottles saved.
   const SKY={
-    day:{top:"#CDE9DB",bot:"#EEF6EC",hillB:"#CBE0CD",hillF:"#B7D6BD",grass:"#A9CFAF",mound:"#B6D8BC",dune:"#E6D8B4",sil:"#8FB99A",tuft:"#8FBF98",bush:"#7FAF89",mon:"#9FBFA4",overlay:0},
-    dawn:{top:"#F2DFC3",bot:"#EAF0E2",hillB:"#CBDECB",hillF:"#B4D2B8",grass:"#A5C9A9",mound:"#B2D2B6",dune:"#ECDAB9",sil:"#93B99B",tuft:"#8CBB94",bush:"#7CA986",mon:"#A3BFA6",overlay:0},
-    dusk:{top:"#E8CBA9",bot:"#DDE7DB",hillB:"#B9D1BC",hillF:"#A3C4A8",grass:"#94B899",mound:"#A1C4A6",dune:"#DCC49E",sil:"#7FA98B",tuft:"#7FAA88",bush:"#6E9A79",mon:"#8FAE94",overlay:.04},
-    night:{top:"#0E2433",bot:"#14342C",hillB:"#123A2D",hillF:"#0E2F25",grass:"#0B281F",mound:"#0F2E24",dune:"#123129",sil:"#0E2E25",tuft:"#0E2C22",bush:"#071E16",mon:"#0D2B23",overlay:.10}};
+    day:{top:"#CDE9DB",bot:"#EEF6EC",hillB:"#CBE0CD",hillF:"#B7D6BD",grass:"#A9CFAF",mound:"#B6D8BC",dune:"#E6D8B4",sil:"#8FB99A",tuft:"#8FBF98",bush:"#7FAF89",mon:"#9FBFA4",water:"#9CCBDD",waterR:"#C4E2EC",turb:"#F2F5F1",overlay:0},
+    dawn:{top:"#F2DFC3",bot:"#EAF0E2",hillB:"#CBDECB",hillF:"#B4D2B8",grass:"#A5C9A9",mound:"#B2D2B6",dune:"#ECDAB9",sil:"#93B99B",tuft:"#8CBB94",bush:"#7CA986",mon:"#A3BFA6",water:"#A6CBD8",waterR:"#CDE3EA",turb:"#F3F0E6",overlay:0},
+    dusk:{top:"#E8CBA9",bot:"#DDE7DB",hillB:"#B9D1BC",hillF:"#A3C4A8",grass:"#94B899",mound:"#A1C4A6",dune:"#DCC49E",sil:"#7FA98B",tuft:"#7FAA88",bush:"#6E9A79",mon:"#8FAE94",water:"#8FB3C4",waterR:"#B9D2DC",turb:"#E4E3D5",overlay:.04},
+    night:{top:"#0E2433",bot:"#14342C",hillB:"#123A2D",hillF:"#0E2F25",grass:"#0B281F",mound:"#0F2E24",dune:"#123129",sil:"#0E2E25",tuft:"#0E2C22",bush:"#071E16",mon:"#0D2B23",water:"#143540",waterR:"#0F2A32",turb:"#3A5A50",overlay:.10}};
   function skyMode(){const h=new Date().getHours();return h>=19||h<5?"night":h<7?"dawn":h>=17?"dusk":"day";}
   const CANOPY=["#1C6B4C","#15654A","#0F5A3E","#2E7D5B","#247253"];
 
@@ -504,13 +506,52 @@
     }).join("");
     const trees=placed.sort((a,b)=>a.x-b.x).map(t=>treeSvg(t.r,t.rank,t.x,408-moundLift(t.rank),t.rank===1||(t.rank===2&&tiedTop))).join("");
 
+    // empty reserved plots just beyond the grove — "your tree here!"
+    let plots="";
+    for(let k=0;k<2&&shown.length+k<12;k++){
+      const i=shown.length+k,off=Math.ceil(i/2)*(i%2?-1:1),px=W/2+off*spacing;
+      if(px<80||px>W-80)break;
+      if(px>1270&&px<1510)continue; // keep the pond clear
+      plots+=`<g opacity=".9">
+        <ellipse cx="${px.toFixed(1)}" cy="410" rx="34" ry="8" fill="none" stroke="${S.tuft}" stroke-width="1.6" stroke-dasharray="5 5"/>
+        <path d="M${px} 408 Q${px} 401 ${px} 396 M${px} 401 Q${(px-5).toFixed(1)} 397 ${(px-8).toFixed(1)} 396 M${px} 401 Q${(px+5).toFixed(1)} 397 ${(px+8).toFixed(1)} 396" stroke="${S.tuft}" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <rect x="${(px-52).toFixed(1)}" y="419" width="104" height="26" rx="7" fill="none" stroke="#8A6A45" stroke-width="1.7" stroke-dasharray="6 4"/>
+        <text x="${px.toFixed(1)}" y="437" text-anchor="middle" font-size="12.5" font-weight="700" fill="#8A6A45">${T().plotSign}</text>
+      </g>`;
+    }
+
     const total=rows.reduce((a,r)=>a+(r.points||0),0);
     const flowers=Math.min(34,Math.round(total*BOTTLE_SHARE/POINTS_PER_BOTTLE/120));
     let flora="";
     for(let i=0;i<flowers;i++){
       const fx=30+(i*211)%(W-60),fy=436+(i*53)%22,fc=["#E9C349","#F6EFDF","#CBA24C"][i%3];
-      flora+=`<g><line x1="${fx}" y1="${fy+6}" x2="${fx}" y2="${fy}" stroke="#4C8A3F" stroke-width="1.4"/><circle cx="${fx}" cy="${fy-2}" r="2.6" fill="${fc}"/></g>`;
+      if(fx>1280&&fx<1500)continue; // keep the pond clear
+      flora+=`<g><line x1="${fx}" y1="${fy+6}" x2="${fx}" y2="${fy}" stroke="#4C8A3F" stroke-width="1.4"/>
+        <g fill="${fc}"><circle cx="${fx-2.2}" cy="${fy-2}" r="1.6"/><circle cx="${fx+2.2}" cy="${fy-2}" r="1.6"/><circle cx="${fx}" cy="${fy-4.2}" r="1.6"/><circle cx="${fx}" cy="${fy+.2}" r="1.6"/></g>
+        <circle cx="${fx}" cy="${fy-2}" r="1.7" fill="${fc==="#F6EFDF"?"#E9C349":"#F6EFDF"}"/></g>`;
     }
+
+    // sustainability landmarks: wind turbine on the ridge, oasis pond,
+    // and a PSAUx recycling station in the meadow
+    const hub=256;
+    const turbine=`<g opacity="${mode==="night"?".6":".92"}">
+      <path d="M229.4 318 L231 ${hub} L233 ${hub} L234.6 318 Z" fill="${S.turb}"/>
+      <g transform="translate(232,${hub})"><g class="turb">
+        <path d="M0 0 L3 -27 L-3 -27 Z" fill="${S.turb}"/>
+        <path d="M0 0 L3 -27 L-3 -27 Z" fill="${S.turb}" transform="rotate(120)"/>
+        <path d="M0 0 L3 -27 L-3 -27 Z" fill="${S.turb}" transform="rotate(240)"/>
+      </g></g>
+      <circle cx="232" cy="${hub}" r="3.2" fill="${S.turb}"/></g>`;
+    const pond=`<g><ellipse cx="1385" cy="437" rx="94" ry="17" fill="${S.waterR}"/>
+      <ellipse cx="1385" cy="437" rx="80" ry="13" fill="${S.water}"/>
+      <path d="M1352 434 h 20 M1396 441 h 15" stroke="#FFFFFF" stroke-width="1.6" opacity="${mode==="night"?".15":".5"}" stroke-linecap="round"/></g>`;
+    const station=`<g>
+      <rect x="101" y="391" width="40" height="7" rx="3" fill="#14563A"/>
+      <rect x="104" y="396" width="34" height="27" rx="4" fill="#1F7A4D" stroke="#14563A" stroke-width="1"/>
+      <g transform="translate(121,410)" stroke="#FFFFFF" fill="none" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M-2.6 -7 h 5.2 M-2.6 -7 v 2.1 c 0 .5 -1.7 1.2 -1.7 2.6 V 4 a 1.7 1.7 0 0 0 1.7 1.7 h 5.2 A 1.7 1.7 0 0 0 4.3 4 V -2.3 c 0 -1.4 -1.7 -2.1 -1.7 -2.6 V -7"/>
+      </g>
+      <text x="121" y="437" text-anchor="middle" font-size="9.5" font-weight="700" fill="${S.tuft}">PSAUx</text></g>`;
 
     let sky="";
     if(mode==="night"){
@@ -553,11 +594,15 @@
       ${arch}
       ${dune}
       ${farGrove}
+      ${turbine}
       <path d="M0 372 Q350 328 770 360 T1600 356 L1600 470 L0 470 Z" fill="${S.hillF}"/>
       <rect y="408" width="${W}" height="62" fill="${S.grass}"/>
+      ${pond}
+      ${station}
       ${mounds}
       ${flora}
       ${tufts}
+      ${plots}
       ${trees}
       ${bushes}
       ${S.overlay?`<rect width="${W}" height="470" fill="#04140D" opacity="${S.overlay}"/>`:""}
