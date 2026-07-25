@@ -123,8 +123,22 @@
   .r-gap{font-size:12.5px;font-weight:700;color:var(--amber-d);white-space:nowrap}
   .r-gap.tie{color:var(--ink3)}
   .chip{font-size:10.5px;font-weight:700;color:var(--green);background:var(--green-t);border-radius:20px;padding:3px 9px;white-space:nowrap;flex:0 0 auto}
-  .race{margin:0 4px 8px;background:var(--amber-t);border:1px solid var(--amber-b);color:var(--amber-d);border-radius:12px;padding:10px 14px;font-size:14px;font-weight:700;display:none;align-items:center;gap:9px}
-  .race .flag{font-size:16px}
+  /* head-to-head duel module (#1 vs #2) */
+  .race{margin:0 4px 10px;background:var(--card);border:1px solid var(--amber-b);border-radius:16px;padding:12px 14px;display:none;flex-direction:column;gap:9px}
+  .duel-top{display:flex;align-items:center;gap:12px}
+  .duel-side{flex:1;min-width:0;display:flex;align-items:center;gap:10px}
+  .duel-side.b{flex-direction:row-reverse;text-align:end}
+  .duel-ava{width:44px;height:44px;border-radius:14px;color:#fff;font-weight:700;font-size:18px;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+  .duel-nm{min-width:0}
+  .duel-nm b{display:block;font-size:18px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .duel-nm span{font-size:15px;font-weight:800;color:var(--green);font-variant-numeric:tabular-nums}
+  .duel-vs{flex:0 0 auto;width:40px;height:40px;border-radius:50%;background:var(--amber-t);border:1px solid var(--amber-b);color:var(--amber-d);font-weight:800;font-size:13.5px;display:flex;align-items:center;justify-content:center}
+  .duel-vs.tie{animation:vspulse 1.6s ease-in-out infinite}
+  @keyframes vspulse{50%{transform:scale(1.14);box-shadow:0 0 0 7px rgba(197,163,90,.18)}}
+  .duel-bar{height:10px;border-radius:6px;background:#DDE3E9;overflow:hidden}
+  .duel-bar i{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,#E9C349,#C5A35A);transition:width .8s cubic-bezier(.2,.9,.3,1)}
+  .duel-note{font-size:13.5px;font-weight:700;color:var(--amber-d);text-align:center}
+  .hot{display:inline-flex;flex:0 0 auto}
   .r-pts{font-weight:800;font-size:23px;color:var(--ink);font-variant-numeric:tabular-nums;flex:0 0 auto}
   .r-pts small{font-size:12px;color:var(--ink3);font-weight:600;margin-inline-start:3px}
   .tier{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:20px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:0 0 auto}
@@ -182,8 +196,13 @@
     .pill{font-size:16px;padding:11px 17px}
     .forest .tt{font-size:18px}
     .cap .tt{font-size:13px}
-    .race{font-size:18px;padding:13px 17px}
-    .race .flag{font-size:20px}
+    .race{padding:15px 18px}
+    .duel-ava{width:54px;height:54px;font-size:22px}
+    .duel-nm b{font-size:23px}
+    .duel-nm span{font-size:19px}
+    .duel-vs{width:50px;height:50px;font-size:16px}
+    .duel-bar{height:14px}
+    .duel-note{font-size:17px}
     .row{padding:16px 17px}
     .r-rank{width:42px;font-size:23px}
     .disc{width:38px;height:38px;font-size:18px}
@@ -280,7 +299,7 @@
     en:{kicker:"Prince Sattam University · Sustainability",title:"PSAUx Campus Forest",live:"LIVE",cap:"THE RANKING",searchPh:"Find a player…",
       fcap:"Every point you earn grows your tree — scan, volunteer, act.",
       competing:"Growing trees",totalPts:"Total PSAUx points",bottlesT:"Bottles saved (est.)",co2:"kg CO₂ saved (est.)",pts:"pts",
-      tiedLeader:"Tied with the leader",front:"Leading the race",raceCap:"THE RACE",tie:"Tied",
+      tiedLeader:"Tied with the leader",front:"Leading the race",raceCap:"THE RACE",tie:"Tied",vs:"VS",hotT:"Active in the last 48 hours",
       tiedWith:n=>`Tied with ${n}`,catchUp:(g,n)=>`▲ ${g} to overtake ${n}`,
       raceTied:(a,b,p)=>`${a} & ${b} are tied at ${p} — the next point takes the lead!`,
       raceGap:(b,g,a)=>`${b} needs ${g} pts to catch ${a}`,
@@ -306,7 +325,7 @@
     ar:{kicker:"جامعة الأمير سطام بن عبدالعزيز · الاستدامة",title:"غابة PSAUx",live:"مباشر",cap:"الترتيب",searchPh:"ابحث عن لاعب…",
       fcap:"كل نقطة تكسبها تُنمّي شجرتك — امسح وتطوّع وشارك.",
       competing:"أشجار تنمو",totalPts:"مجموع نقاط PSAUx",bottlesT:"عبوات موفَّرة (تقديري)",co2:"كجم CO₂ موفَّرة (تقديري)",pts:"نقطة",
-      tiedLeader:"تعادل مع المتصدر",front:"يتصدر السباق",raceCap:"السباق",tie:"تعادل",
+      tiedLeader:"تعادل مع المتصدر",front:"يتصدر السباق",raceCap:"السباق",tie:"تعادل",vs:"ضد",hotT:"نشط خلال آخر ٤٨ ساعة",
       tiedWith:n=>`تعادل مع ${n}`,catchUp:(g,n)=>`▲ ${g} لتجاوز ${n}`,
       raceTied:(a,b,p)=>`${a} و${b} متعادلان عند ${p} — النقطة التالية تحسم الصدارة!`,
       raceGap:(b,g,a)=>`${b} يحتاج ${g} نقطة للحاق بـ ${a}`,
@@ -548,19 +567,34 @@
     const pct=lead>0?Math.max(2,Math.round((r.points||0)/lead*100)):(rank===1?100:2);
     const above=rank>1?lastRows[rank-2]:null,gap=above?above.points-r.points:0;
     const gapHtml=above?(gap===0?`<div class="r-gap tie">${T().tie}</div>`:`<div class="r-gap">▲ ${fmt(gap)}</div>`):"";
+    const hot=r.updatedAt&&(Date.now()-Date.parse(r.updatedAt))<1728e5?`<span class="hot" title="${T().hotT}"><svg width="14" height="14" viewBox="0 0 24 24" fill="#D97E2B"><path d="M12 2C14.2 6.2 8.5 8 8.5 12.6a3.5 3.5 0 0 0 7 .3C17.8 9 14.2 6.8 12 2z"/></svg></span>`:"";
     return `<div class="row ${grew?'flash':''} ${booted?'':'in'}" style="animation-delay:${booted?0:Math.min(rank*45,500)}ms" data-uid="${esc(r.uid)}">
       <div class="r-rank">${rank<=3?`<span class="disc d${rank}">${rank}</span>`:rank}</div>
       <div class="r-move">${moveBadge(r.uid,rank)}</div>
       <div class="r-ava" style="background:${color(r.name)}">${initial(r.name)}</div>
       <div class="r-main">
-        <div class="r-top"><b>${esc(r.name||"—")}</b>${tierPill(r.points||0)}</div>
+        <div class="r-top"><b>${esc(r.name||"—")}</b>${tierPill(r.points||0)}${hot}</div>
         <div class="pbar"><i style="width:${pct}%;background:${t.c}"></i></div>
       </div>
       <div class="r-col"><div class="r-pts">${fmt(r.points)}<small>${T().pts}</small></div>${gapHtml}</div>
     </div>`;
   }
   function renderRows(){
-    el("rows").innerHTML=lastRows.map((r,i)=>rowHtml(r,i+1)).join("");
+    const cont=el("rows");
+    cont.innerHTML=lastRows.map((r,i)=>rowHtml(r,i+1)).join("");
+    // FLIP: rows that changed rank glide from their old position to the new one
+    if(firstLoad||!cont.querySelectorAll)return;
+    const kids=cont.querySelectorAll(".row");
+    let rowH=0;
+    kids.forEach((k,i)=>{
+      if(!rowH&&k.offsetHeight)rowH=k.offsetHeight+3;
+      const r0=prevRank[k.dataset.uid],r1=i+1;
+      if(r0&&r0!==r1&&rowH){
+        k.style.transition="none";k.style.transform=`translateY(${(r0-r1)*rowH}px)`;
+        requestAnimationFrame(()=>{requestAnimationFrame(()=>{
+          k.style.transition="transform .7s cubic-bezier(.2,.9,.3,1)";k.style.transform="";});});
+      }
+    });
   }
   function render(rows){
     if(!rows.length){el("state").style.display="block";el("main").style.display="none";el("state").textContent=T().noPlayers;return;}
@@ -589,11 +623,19 @@
     const tEn=I18N.en.ticker(z),tAr=I18N.ar.ticker(z);
     tickerData=tEn.map((m,i)=>({en:m,ar:tAr[i]}));
 
-    // race banner (#1 vs #2) + closest-battle ticker line
+    // head-to-head duel (#1 vs #2) + closest-battle ticker line
     if(rows[1]){
-      const gap12=rows[0].points-rows[1].points,a=esc(first(rows[0].name)),b=esc(first(rows[1].name));
+      const A=rows[0],B=rows[1],gap12=A.points-B.points,a=esc(first(A.name)),b=esc(first(B.name));
+      const share=(A.points+B.points)>0?Math.round(A.points/(A.points+B.points)*100):50;
       el("race").style.display="flex";
-      el("race").innerHTML=`<span class="flag">🏁</span><span>${gap12===0?T().raceTied(a,b,fmt(rows[0].points)):T().raceGap(b,fmt(gap12),a)}</span>`;
+      el("race").innerHTML=`
+        <div class="duel-top">
+          <div class="duel-side"><div class="duel-ava" style="background:${color(A.name)}">${initial(A.name)}</div><div class="duel-nm"><b>${esc(A.name||"—")}</b><span>${fmt(A.points)}</span></div></div>
+          <div class="duel-vs ${gap12===0?'tie':''}">${T().vs}</div>
+          <div class="duel-side b"><div class="duel-ava" style="background:${color(B.name)}">${initial(B.name)}</div><div class="duel-nm"><b>${esc(B.name||"—")}</b><span>${fmt(B.points)}</span></div></div>
+        </div>
+        <div class="duel-bar"><i style="width:${share}%"></i></div>
+        <div class="duel-note">${gap12===0?T().raceTied(a,b,fmt(A.points)):T().raceGap(b,fmt(gap12),a)}</div>`;
       let bi=1,bg=Infinity;
       for(let i=1;i<rows.length;i++){const g=rows[i-1].points-rows[i].points;if(g<bg){bg=g;bi=i;}}
       const x=esc(first(rows[bi-1].name)),y=esc(first(rows[bi].name));
