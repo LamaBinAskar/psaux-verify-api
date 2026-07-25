@@ -300,6 +300,8 @@
       fcap:"Every point you earn grows your tree — scan, volunteer, act.",
       competing:"Growing trees",totalPts:"Total PSAUx points",bottlesT:"Bottles saved (est.)",co2:"kg CO₂ saved (est.)",pts:"pts",
       tiedLeader:"Tied with the leader",front:"Leading the race",raceCap:"THE RACE",tie:"Tied",vs:"VS",hotT:"Active in the last 48 hours",
+      cheer:["You've got this!","Keep going!","So close!","Every bottle counts!"],
+      defend:(a,p)=>`${a} leads with ${p} — defending the crown!`,
       tiedWith:n=>`Tied with ${n}`,catchUp:(g,n)=>`▲ ${g} to overtake ${n}`,
       raceTied:(a,b,p)=>`${a} & ${b} are tied at ${p} — the next point takes the lead!`,
       raceGap:(b,g,a)=>`${b} needs ${g} pts to catch ${a}`,
@@ -326,6 +328,8 @@
       fcap:"كل نقطة تكسبها تُنمّي شجرتك — امسح وتطوّع وشارك.",
       competing:"أشجار تنمو",totalPts:"مجموع نقاط PSAUx",bottlesT:"عبوات موفَّرة (تقديري)",co2:"كجم CO₂ موفَّرة (تقديري)",pts:"نقطة",
       tiedLeader:"تعادل مع المتصدر",front:"يتصدر السباق",raceCap:"السباق",tie:"تعادل",vs:"ضد",hotT:"نشط خلال آخر ٤٨ ساعة",
+      cheer:["قدها!","واصل!","قربت!","كل عبوة تفرق!"],
+      defend:(a,p)=>`${a} في الصدارة بـ ${p} نقطة — يدافع عن التاج!`,
       tiedWith:n=>`تعادل مع ${n}`,catchUp:(g,n)=>`▲ ${g} لتجاوز ${n}`,
       raceTied:(a,b,p)=>`${a} و${b} متعادلان عند ${p} — النقطة التالية تحسم الصدارة!`,
       raceGap:(b,g,a)=>`${b} يحتاج ${g} نقطة للحاق بـ ${a}`,
@@ -579,6 +583,26 @@
       <div class="r-col"><div class="r-pts">${fmt(r.points)}<small>${T().pts}</small></div>${gapHtml}</div>
     </div>`;
   }
+  // The duel card cycles through ALL adjacent pairs (with the spotlight), so
+  // every student appears on screen with a personal push — not just the top 2.
+  function renderDuel(i){
+    const rows=lastRows;if(!rows[1])return;
+    if(i<1||i>=rows.length)i=0;
+    const A=i===0?rows[0]:rows[i-1],B=i===0?rows[1]:rows[i];
+    const gap=A.points-B.points,a=esc(first(A.name)),b=esc(first(B.name));
+    const share=(A.points+B.points)>0?Math.round(A.points/(A.points+B.points)*100):50;
+    const note=i===0
+      ?(gap===0?T().raceTied(a,b,fmt(A.points)):T().defend(a,fmt(A.points)))
+      :`${b} — ${gap===0?T().tiedWith(a):T().catchUp(fmt(gap),a)} · ${T().cheer[i%T().cheer.length]}`;
+    el("race").innerHTML=`
+      <div class="duel-top">
+        <div class="duel-side"><div class="duel-ava" style="background:${color(A.name)}">${initial(A.name)}</div><div class="duel-nm"><b>${esc(A.name||"—")}</b><span>${fmt(A.points)}</span></div></div>
+        <div class="duel-vs ${gap===0?'tie':''}">${T().vs}</div>
+        <div class="duel-side b"><div class="duel-ava" style="background:${color(B.name)}">${initial(B.name)}</div><div class="duel-nm"><b>${esc(B.name||"—")}</b><span>${fmt(B.points)}</span></div></div>
+      </div>
+      <div class="duel-bar"><i style="width:${share}%"></i></div>
+      <div class="duel-note">${note}</div>`;
+  }
   function renderRows(){
     const cont=el("rows");
     cont.innerHTML=lastRows.map((r,i)=>rowHtml(r,i+1)).join("");
@@ -623,19 +647,10 @@
     const tEn=I18N.en.ticker(z),tAr=I18N.ar.ticker(z);
     tickerData=tEn.map((m,i)=>({en:m,ar:tAr[i]}));
 
-    // head-to-head duel (#1 vs #2) + closest-battle ticker line
+    // rotating duel: everyone gets featured vs the player just above them
     if(rows[1]){
-      const A=rows[0],B=rows[1],gap12=A.points-B.points,a=esc(first(A.name)),b=esc(first(B.name));
-      const share=(A.points+B.points)>0?Math.round(A.points/(A.points+B.points)*100):50;
       el("race").style.display="flex";
-      el("race").innerHTML=`
-        <div class="duel-top">
-          <div class="duel-side"><div class="duel-ava" style="background:${color(A.name)}">${initial(A.name)}</div><div class="duel-nm"><b>${esc(A.name||"—")}</b><span>${fmt(A.points)}</span></div></div>
-          <div class="duel-vs ${gap12===0?'tie':''}">${T().vs}</div>
-          <div class="duel-side b"><div class="duel-ava" style="background:${color(B.name)}">${initial(B.name)}</div><div class="duel-nm"><b>${esc(B.name||"—")}</b><span>${fmt(B.points)}</span></div></div>
-        </div>
-        <div class="duel-bar"><i style="width:${share}%"></i></div>
-        <div class="duel-note">${gap12===0?T().raceTied(a,b,fmt(A.points)):T().raceGap(b,fmt(gap12),a)}</div>`;
+      renderDuel(spotIdx>0&&spotIdx<rows.length?spotIdx:0);
       let bi=1,bg=Infinity;
       for(let i=1;i<rows.length;i++){const g=rows[i-1].points-rows[i].points;if(g<bg){bg=g;bi=i;}}
       const x=esc(first(rows[bi-1].name)),y=esc(first(rows[bi].name));
@@ -724,6 +739,7 @@
     const r=el("rows").querySelector(`[data-uid="${spotUid}"]`);
     if(r){r.classList.add("spot");if(r.scrollIntoView)r.scrollIntoView({block:"nearest",behavior:"smooth"});}
     const t=el("scene").querySelector(`[data-uid="${spotUid}"]`);if(t)t.classList.add("lit");
+    renderDuel(spotIdx);
   },8000);
   addEventListener("pointerdown",()=>{lastTouch=Date.now();clearSpot();},true);
 
