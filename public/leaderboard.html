@@ -141,6 +141,7 @@
   .duel-bar i{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,#E9C349,#C5A35A);transition:width .8s cubic-bezier(.2,.9,.3,1)}
   .duel-note{font-size:13.5px;font-weight:700;color:var(--amber-d);text-align:center}
   .hot{display:inline-flex;flex:0 0 auto}
+  .pico{width:58%;height:58%}
   .r-pts{font-weight:800;font-size:23px;color:var(--ink);font-variant-numeric:tabular-nums;flex:0 0 auto}
   .r-pts small{font-size:12px;color:var(--ink3);font-weight:600;margin-inline-start:3px}
   .tier{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:20px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:0 0 auto}
@@ -362,8 +363,14 @@
   let lastRows=[],tickerData=[],tickIdx=0,sheetUid=null,gained=new Set();
 
   const el=id=>document.getElementById(id);
-  const initial=n=>((n||"?").trim().charAt(0)||"?").toUpperCase();
   const first=n=>(n||"?").trim().split(" ")[0];
+  // Person-shape avatars: woman silhouette for female names, man otherwise.
+  // (No gender field in Firestore, so we match common Saudi female names.)
+  const FEMALE=["lama","لمى","لما","wedad","وداد","sara","سارة","ساره","nora","نورة","نوره","noura","norah","fatima","فاطمة","aisha","عائشة","reem","ريم","maha","مها","hind","هند","dana","دانة","danah","rana","رنا","lina","لينا","mona","منى","amal","أمل","امل","haya","هيا","shahad","شهد","raghad","رغد","layan","ليان","jana","جنى","salma","سلمى","ghada","غادة","abeer","عبير","huda","هدى","maryam","mariam","مريم","zainab","زينب","atheer","أثير","اثير","njoud","نجود","afnan","أفنان","افنان","renad","رناد","remas","ريماس","deem","ديم","jood","جود","wafa","وفاء","asma","أسماء","اسماء","munira","منيرة","latifa","لطيفة","khadija","خديجة","lamia","لمياء","dalal","دلال","hessa","حصة","sheikha","شيخة","noor","نور","joud","rawan","روان","lujain","لجين","albandari","البندري","bashayer","بشاير","waad","وعد","razan","رزان"];
+  function isFemale(n){const s=(n||"").trim().toLowerCase();if(!s)return false;const w=s.split(/\s+/)[0];return FEMALE.some(t=>w===t||s.startsWith(t));}
+  function avatar(n){return isFemale(n)
+    ?'<svg class="pico" viewBox="0 0 24 24" fill="#fff"><circle cx="12" cy="6.3" r="3.6"/><path d="M12 10.6c-1 0-1.9.6-2.2 1.6L7.3 19.2h3.1v3.4h3.2v-3.4h3.1l-2.5-7c-.3-1-1.2-1.6-2.2-1.6z"/></svg>'
+    :'<svg class="pico" viewBox="0 0 24 24" fill="#fff"><circle cx="12" cy="6.3" r="3.6"/><path d="M12 10.6c-2.9 0-4.9 1.9-4.9 4.6v7.3h9.8v-7.3c0-2.7-2-4.6-4.9-4.6z"/></svg>';}
   const esc=s=>(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
   const fmt=n=>(n||0).toLocaleString("en-US");
   function hash(s){let h=0;s=s||"?";for(let i=0;i<s.length;i++)h=(h*33+s.charCodeAt(i))>>>0;return h;}
@@ -620,7 +627,7 @@
     return `<div class="row ${grew?'flash':''} ${booted?'':'in'}" style="animation-delay:${booted?0:Math.min(rank*45,500)}ms" data-uid="${esc(r.uid)}">
       <div class="r-rank">${rank<=3?`<span class="disc d${rank}">${rank}</span>`:rank}</div>
       <div class="r-move">${moveBadge(r.uid,rank)}</div>
-      <div class="r-ava" style="background:${color(r.name)}">${initial(r.name)}</div>
+      <div class="r-ava" style="background:${color(r.name)}">${avatar(r.name)}</div>
       <div class="r-main">
         <div class="r-top"><b>${esc(r.name||"—")}</b>${tierPill(r.points||0)}${hot}</div>
         <div class="pbar"><i style="width:${pct}%;background:${t.c}"></i></div>
@@ -641,9 +648,9 @@
       :`${b} — ${gap===0?T().tiedWith(a):T().catchUp(fmt(gap),a)} · ${T().cheer[i%T().cheer.length]}`;
     el("race").innerHTML=`
       <div class="duel-top">
-        <div class="duel-side"><div class="duel-ava" style="background:${color(A.name)}">${initial(A.name)}</div><div class="duel-nm"><b>${esc(A.name||"—")}</b><span>${fmt(A.points)}</span></div></div>
+        <div class="duel-side"><div class="duel-ava" style="background:${color(A.name)}">${avatar(A.name)}</div><div class="duel-nm"><b>${esc(A.name||"—")}</b><span>${fmt(A.points)}</span></div></div>
         <div class="duel-vs ${gap===0?'tie':''}">${T().vs}</div>
-        <div class="duel-side b"><div class="duel-ava" style="background:${color(B.name)}">${initial(B.name)}</div><div class="duel-nm"><b>${esc(B.name||"—")}</b><span>${fmt(B.points)}</span></div></div>
+        <div class="duel-side b"><div class="duel-ava" style="background:${color(B.name)}">${avatar(B.name)}</div><div class="duel-nm"><b>${esc(B.name||"—")}</b><span>${fmt(B.points)}</span></div></div>
       </div>
       <div class="duel-bar"><i style="width:${share}%"></i></div>
       <div class="duel-note">${note}</div>`;
@@ -726,7 +733,7 @@
     }).join("");
     el("sheet").innerHTML=`
       <div class="sh-top">
-        <div class="sh-ava" style="background:${color(r.name)}">${initial(r.name)}</div>
+        <div class="sh-ava" style="background:${color(r.name)}">${avatar(r.name)}</div>
         <div class="sh-id"><b>${esc(r.name||"—")}</b><div style="margin-top:4px">${tierPill(r.points||0)} ${chipHtml(st)}</div></div>
         <button class="sh-x" id="sh-x">✕</button>
       </div>
