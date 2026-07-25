@@ -94,6 +94,11 @@
   .msg .ticker.show{opacity:1}
   .msg .ticker small{font-weight:600;color:var(--ink3);font-size:14px}
   .msg .ticker .alt{font-size:14px;color:var(--ink3);font-weight:600;margin-top:7px}
+  .adbox{padding:10px}
+  .adbox .cap{padding:2px 8px 8px}
+  .adimg{height:132px;display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:13px;background:#F3F6F3;border:1px solid var(--line)}
+  .adimg img{max-width:100%;max-height:100%;object-fit:contain;opacity:0;transition:opacity .45s}
+  .adimg img.show{opacity:1}
 
   /* ── ranking list ── */
   .list{padding:10px;overflow:hidden;min-height:0;display:flex;flex-direction:column}
@@ -229,6 +234,7 @@
     .msg{min-height:110px;padding:22px 26px}
     .msg .ticker{font-size:27px}
     .msg .ticker .alt{font-size:18px;margin-top:9px}
+    .adimg{height:172px}
     .empty{font-size:17px}
   }
   @media (prefers-reduced-motion: reduce){
@@ -272,6 +278,10 @@
       <div class="side">
         <div class="stats" id="stats"></div>
         <div class="msg card"><div class="ticker show" id="ticker"></div></div>
+        <div class="adbox card" id="adbox" style="display:none">
+          <div class="cap"><span class="tt" id="ad-cap"></span></div>
+          <div class="adimg"><img id="adimg" alt="ad"/></div>
+        </div>
       </div>
     </div>
   </div>
@@ -323,7 +333,7 @@
       cantReach:"Couldn't reach the leaderboard.",cantReachSub:"Check the network connection. If it persists, confirm Firestore allows reading <b>users</b> for signed-in clients.",
       updatedNow:"Updated just now",updatedS:s=>`Updated ${s}s ago`,updatedM:m=>`Updated ${m}m ago`,
       rank:"Rank",points:"PSAUx points",bottlesL:"Bottles (est.)",co2L:"kg CO₂ (est.)",lastActive:"Last active",strengthL:"Good at",
-      journey:"LEVEL JOURNEY",insightCap:"AI INSIGHT · ESTIMATED FROM ACCOUNT DATA",plotSign:"Your tree here!",
+      journey:"LEVEL JOURNEY",insightCap:"AI INSIGHT · ESTIMATED FROM ACCOUNT DATA",plotSign:"Your tree here!",adCap:"SPONSORS & ANNOUNCEMENTS",
       earnedT:(n,p)=>`${n}'s tree grew +${p} pts`,leadT:n=>`${n} takes the lead!`,
       ticker:x=>["Scan a bottle at any PSAUx station — your tree grows.",
         `This forest saved ≈ ${x.bt} bottles from landfill <small>est.</small>`,
@@ -350,7 +360,7 @@
       cantReach:"تعذّر الوصول إلى لوحة الصدارة.",cantReachSub:"تحقق من اتصال الشبكة. إذا استمرت المشكلة تأكد من صلاحيات القراءة في Firestore.",
       updatedNow:"حُدِّثت الآن",updatedS:s=>`حُدِّثت قبل ${s} ث`,updatedM:m=>`حُدِّثت قبل ${m} د`,
       rank:"المركز",points:"نقاط PSAUx",bottlesL:"عبوات (تقديري)",co2L:"كجم CO₂ (تقديري)",lastActive:"آخر نشاط",strengthL:"يجيد",
-      journey:"رحلة المستويات",insightCap:"تحليل ذكي · تقديري من بيانات الحساب",plotSign:"مكان شجرتك!",
+      journey:"رحلة المستويات",insightCap:"تحليل ذكي · تقديري من بيانات الحساب",plotSign:"مكان شجرتك!",adCap:"الرعاة والإعلانات",
       earnedT:(n,p)=>`نمت شجرة ${n} ‏+${p} نقطة`,leadT:n=>`${n} في الصدارة!`,
       ticker:x=>["امسح عبوة في أي محطة PSAUx — وستنمو شجرتك.",
         `أنقذت هذه الغابة ≈ ${x.bt} عبوة من المكب <small>تقديري</small>`,
@@ -418,7 +428,7 @@
     document.documentElement.lang=lang;document.documentElement.dir=lang==="ar"?"rtl":"ltr";
     el("h-kicker").textContent=T().kicker;el("h-title").textContent=T().title;el("h-live").textContent=T().live;
     el("lang").textContent=lang==="ar"?"English":"العربية";
-    el("l-cap").textContent=T().cap;el("f-cap").textContent=T().fcap;
+    el("l-cap").textContent=T().cap;el("f-cap").textContent=T().fcap;el("ad-cap").textContent=T().adCap;
     if(!booted){el("state").textContent=T().connecting;
       const z={bt:"0",kg:"0",ph:"0",km:"0"};
       el("ticker").innerHTML=tickHtml({en:I18N.en.ticker(z)[0],ar:I18N.ar.ticker(z)[0]});}
@@ -829,6 +839,24 @@
       if(firstLoad||fails>=3){ el("main").style.display="none"; const s=el("state"); s.style.display="block";
         s.innerHTML=T().cantReach+"<small>"+T().cantReachSub+" ("+esc(e.message||"error")+")</small>"; }
     }
+  }
+
+  // ── ad slot: drop images into public/ads/ named 1.png, 2.jpg, 3.png …
+  //    the page auto-discovers them and rotates; hidden when none exist ──
+  const ADS=[];let adIdx=0;
+  function showAd(k){adIdx=((k%ADS.length)+ADS.length)%ADS.length;const im=el("adimg");
+    im.classList.remove("show");setTimeout(()=>{im.onload=()=>im.classList.add("show");im.src=ADS[adIdx].src;},260);}
+  if(typeof Image!=="undefined"){
+    let pending=0;
+    for(let i=1;i<=8;i++)["png","jpg","jpeg","webp"].forEach(ext=>{
+      pending++;
+      const im=new Image();
+      im.onload=()=>{ADS.push({i,src:`/ads/${i}.${ext}`});done();};
+      im.onerror=done;
+      im.src=`/ads/${i}.${ext}`;
+    });
+    function done(){if(--pending===0&&ADS.length){ADS.sort((a,b)=>a.i-b.i);el("adbox").style.display="block";showAd(0);}}
+    setInterval(()=>{if(ADS.length>1)showAd(adIdx+1);},10000);
   }
 
   // ── chrome: clock, updated-ago, ticker, fullscreen, hourly sky refresh ──
