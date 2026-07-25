@@ -372,38 +372,43 @@
 
   function treeSvg(r,rank,x,baseY,crowned){
     const p=r.points||0,h0=hash(r.uid+(r.name||"")),ti=TIERS.indexOf(tier(p));
-    const H=Math.min(128,30+Math.sqrt(p)*1.55);           // tree height from points
-    const cw=Math.max(16,H*.52);                          // canopy radius
+    const H=Math.min(128,30+Math.sqrt(p)*1.55);           // palm height from points
+    const FL=Math.max(24,H*.5);                           // frond length (palm crown)
     const cA=CANOPY[h0%CANOPY.length],cB=CANOPY[(h0+2)%CANOPY.length];
     const sway=(3.2+h0%3)+"s";
     const nm=esc((r.name||"—").slice(0,10));
     const grewNow=gained.has(r.uid)?" cheer":"";
     const growIn=!booted?" grow":"";
     let body;
-    if(p<100){ // seedling
-      body=`<path d="M0 0 C0 -10 0 -16 0 -22" stroke="#4C8A3F" stroke-width="3" fill="none" stroke-linecap="round"/>
-        <ellipse cx="-7" cy="-22" rx="8" ry="4.5" fill="#5D8A3C" transform="rotate(-28 -7 -22)"/>
-        <ellipse cx="7" cy="-26" rx="8" ry="4.5" fill="#4C8A3F" transform="rotate(24 7 -26)"/>`;
+    if(p<100){ // young palm sprout — a small fan of blades
+      body=`<path d="M0 0 Q0 -14 0 -22" stroke="#4C8A3F" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M0 -8 Q-8 -15 -14 -16" stroke="#5D8A3C" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M0 -8 Q8 -15 14 -16" stroke="#4C8A3F" stroke-width="3" fill="none" stroke-linecap="round"/>`;
     }else{
-      const trunkW=Math.max(4,H*.09);
-      body=`<path d="M${-trunkW/2} 0 Q${-trunkW*.35} ${-H*.5} ${-trunkW*.22} ${-H*.72} L${trunkW*.22} ${-H*.72} Q${trunkW*.35} ${-H*.5} ${trunkW/2} 0 Z" fill="#6B4E32"/>
-        <circle cx="${-cw*.45}" cy="${-H*.68}" r="${cw*.62}" fill="${cB}"/>
-        <circle cx="${cw*.45}" cy="${-H*.66}" r="${cw*.58}" fill="${cA}"/>
-        <circle cx="0" cy="${-H*.88}" r="${cw*.68}" fill="${cA}"/>
-        <circle cx="0" cy="${-H*.80}" r="${cw*.40}" fill="${cB}" opacity=".55"/>`;
-      if(ti>=4){ // champion+: golden fruit
-        for(let f=0;f<5;f++){const fx=((h0>>f)%2?-1:1)*(cw*.15+((h0>>(f+1))%40)/100*cw*.5),fy=-H*.66-((h0>>(f+2))%50)/100*cw*.7;
-          body+=`<circle cx="${fx.toFixed(1)}" cy="${fy.toFixed(1)}" r="3.2" fill="#E9C349" stroke="#A9832F" stroke-width=".8"/>`;}
+      // date palm: curved ringed trunk + two layers of arching fronds
+      const tw=Math.max(4.5,H*.075),bend=((h0%2)?1:-1)*H*.07,fw=Math.max(3,H*.055);
+      body=`<path d="M${(-tw/2).toFixed(1)} 0 Q${(bend*1.5).toFixed(1)} ${(-H*.55).toFixed(1)} ${(bend-tw*.28).toFixed(1)} ${-H} L${(bend+tw*.28).toFixed(1)} ${-H} Q${(bend*1.5+tw).toFixed(1)} ${(-H*.55).toFixed(1)} ${(tw/2).toFixed(1)} 0 Z" fill="#8A6A45"/>`;
+      [.24,.44,.64,.84].forEach(f=>{const rx=bend*f*1.15,rw=tw*(1.05-f*.45);
+        body+=`<path d="M${(rx-rw/2).toFixed(1)} ${(-H*f).toFixed(1)} h ${rw.toFixed(1)}" stroke="#6B4E32" stroke-width="1.3" opacity=".55"/>`;});
+      const FR=[[-1,.04],[-.68,-.2],[-.34,-.35],[0,-.42],[.34,-.35],[.68,-.2],[1,.04]];
+      FR.forEach((d,i)=>{const tx=bend+d[0]*FL,ty=-H+(d[1]+Math.abs(d[0])*.2)*FL,qx=bend+d[0]*FL*.45,qy=-H-FL*.42;
+        body+=`<path d="M${bend} ${-H} Q${qx.toFixed(1)} ${qy.toFixed(1)} ${tx.toFixed(1)} ${ty.toFixed(1)}" stroke="${i%2?cA:cB}" stroke-width="${fw.toFixed(1)}" fill="none" stroke-linecap="round"/>`;});
+      FR.slice(1,6).forEach((d,i)=>{const tx=bend+d[0]*FL*.55,ty=-H+(d[1]+Math.abs(d[0])*.2)*FL*.55,qx=bend+d[0]*FL*.25,qy=-H-FL*.26;
+        body+=`<path d="M${bend} ${-H} Q${qx.toFixed(1)} ${qy.toFixed(1)} ${tx.toFixed(1)} ${ty.toFixed(1)}" stroke="${i%2?cB:cA}" stroke-width="${(fw*.8).toFixed(1)}" fill="none" stroke-linecap="round"/>`;});
+      if(ti>=4){ // champion+: hanging gold date clusters
+        [[-1,.22],[1,.26]].forEach(c=>{const bx=bend+c[0]*FL*.22,by=-H+FL*c[1];
+          [[0,0],[4.5,3],[-4,3.5],[.5,6.5]].forEach(o=>{body+=`<circle cx="${(bx+o[0]).toFixed(1)}" cy="${(by+o[1]).toFixed(1)}" r="2.9" fill="#E9C349" stroke="#A9832F" stroke-width=".8"/>`;});});
       }
       if(ti>=5){ // legend: halo
-        body+=`<circle cx="0" cy="${-H*.8}" r="${cw*.95}" fill="none" stroke="#E9C349" stroke-width="1.4" opacity=".5" stroke-dasharray="3 6"/>`;
+        body+=`<circle cx="${bend.toFixed(1)}" cy="${(-H-FL*.05).toFixed(1)}" r="${(FL*1.05).toFixed(1)}" fill="none" stroke="#E9C349" stroke-width="1.4" opacity=".5" stroke-dasharray="3 6"/>`;
       }
     }
-    const badge=rank<=3?`${crowned?`<path class="crown" d="M-11 ${-(H+42)} L-6.5 ${-(H+54)} L0 ${-(H+46)} L6.5 ${-(H+54)} L11 ${-(H+42)} Z" fill="#E9C349" stroke="#A9832F" stroke-width="1"/>`:""}
-      <circle cx="0" cy="${-(H+27)}" r="12" fill="${rank===1?"#E9C349":rank===2?"#B4BDC6":"#CBA24C"}" stroke="${rank===1?"#A9832F":rank===2?"#8D97A3":"#A9832F"}" stroke-width="1.2"/>
-      <text x="0" y="${-(H+22)}" text-anchor="middle" font-size="13" font-weight="800" fill="#fff">${rank}</text>`:"";
+    const BT=H+FL*.48;
+    const badge=rank<=3?`${crowned?`<path class="crown" d="M-11 ${(-(BT+30)).toFixed(1)} L-6.5 ${(-(BT+42)).toFixed(1)} L0 ${(-(BT+34)).toFixed(1)} L6.5 ${(-(BT+42)).toFixed(1)} L11 ${(-(BT+30)).toFixed(1)} Z" fill="#E9C349" stroke="#A9832F" stroke-width="1"/>`:""}
+      <circle cx="0" cy="${(-(BT+15)).toFixed(1)}" r="12" fill="${rank===1?"#E9C349":rank===2?"#B4BDC6":"#CBA24C"}" stroke="${rank===1?"#A9832F":rank===2?"#8D97A3":"#A9832F"}" stroke-width="1.2"/>
+      <text x="0" y="${(-(BT+10)).toFixed(1)}" text-anchor="middle" font-size="13" font-weight="800" fill="#fff">${rank}</text>`:"";
     return `<g class="tree${growIn}${grewNow}" data-uid="${esc(r.uid)}" transform="translate(${x.toFixed(1)},${baseY})" style="--sw:${sway}">
-      <ellipse cx="0" cy="3" rx="${Math.max(14,cw*.8)}" ry="5" fill="rgba(10,40,28,.16)"/>
+      <ellipse cx="0" cy="3" rx="${Math.max(14,FL*.85).toFixed(1)}" ry="5" fill="rgba(10,40,28,.16)"/>
       <g class="body">${body}${badge}</g>
       <rect x="-42" y="12" width="84" height="34" rx="5" fill="#8A6A45" stroke="#6B4E32" stroke-width="1"/>
       <text x="0" y="26" text-anchor="middle" font-size="12" font-weight="700" fill="#F6EFDF">${nm}</text>
