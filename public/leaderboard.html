@@ -806,7 +806,7 @@
     el("lang-t").textContent=T().lang;el("lb-cap").textContent=T().lbCap;
     el("act-cap").textContent=T().actCap;el("act-all").innerHTML=`${T().actAll} ${ICONS.chev}`;
     el("rw-cap").textContent=T().rwCap;el("st-cap").textContent=T().stCap;el("pt-label").textContent=T().ptLabel;el("wk-chip").textContent="🔥 "+T().wkChip;
-    el("act-list").innerHTML=T().acts.map(a=>{const sg=SDG[a[3]]||{c:"#5C8A38"};return `<div class="act"><div class="act-ic">${ICONS[a[0]]}</div><div class="act-tx"><b>${a[1]}</b><span>${a[2]}</span></div><span class="act-sdg" style="color:${sg.c};background:${sg.c}1A">SDG ${a[3]}</span><div class="act-go">${ICONS.chev}</div></div>`;}).join("");
+    el("act-list").innerHTML=T().acts.map(a=>{const sg=SDG[a[3]]||{c:"#5C8A38"};return `<div class="act"><div class="act-ic">${ICONS[a[0]]}</div><div class="act-tx"><b>${a[1]}</b><span>${a[2]}</span></div><span class="act-sdg" style="color:${sg.c};background:${sg.c}1A">SDG ${a[3]}</span></div>`;}).join("");
     el("pt-list").innerHTML=PARTNERS.map(p=>`<span class="pt-pill"><span class="dotc" style="background:${p.c}"></span>${esc(p.n)}</span>`).join("");
     renderAd();
     if(!booted)el("state").textContent=T().connecting;
@@ -835,8 +835,7 @@
         </div>
         <div class="ad-logo">${logo}</div>
       </div>
-      <div class="ad-mile"><div class="ad-mile-t">${away<=0?"✓ "+T().unlocked:mile}</div><div class="ad-mbar"><i style="width:${pct}%"></i></div></div>
-      <div class="ad-cta">${T().rwCta} ${ICONS.chev}</div>`;
+      <div class="ad-mile"><div class="ad-mile-t">${away<=0?"✓ "+T().unlocked:mile}</div><div class="ad-mbar"><i style="width:${pct}%"></i></div></div>`;
     const dots=el("ad-dots");
     if(dots)dots.innerHTML=REWARDS.length>1?REWARDS.map((_,i)=>`<i class="${i===adIdx%REWARDS.length?'on':''}" data-ad="${i}"></i>`).join(""):"";
   }
