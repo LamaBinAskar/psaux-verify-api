@@ -170,7 +170,7 @@
   .ad-deco{position:absolute;inset:0;z-index:0;pointer-events:none;background:radial-gradient(circle at 86% 8%,rgba(255,255,255,.22),transparent 40%),radial-gradient(circle at 72% 120%,rgba(255,255,255,.13),transparent 46%)}
   .ad-ribbon{position:absolute;top:0;inset-inline-end:0;z-index:3;background:#fff;color:#8A6400;font-weight:800;font-size:10px;letter-spacing:.4px;padding:5px 12px;border-bottom-left-radius:12px;box-shadow:0 3px 9px rgba(0,0,0,.2)}
   [dir=rtl] .ad-ribbon{border-bottom-left-radius:0;border-bottom-right-radius:12px}
-  .ad-chip{position:relative;z-index:1;align-self:flex-start;background:rgba(255,255,255,.26);color:#fff;font-size:11.5px;font-weight:700;padding:5px 12px;border-radius:20px;max-width:78%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;backdrop-filter:blur(2px)}
+  .ad-chip{position:relative;z-index:1;align-self:flex-start;background:#fff;color:#5C8A38;font-size:11.5px;font-weight:800;letter-spacing:.2px;padding:5px 12px;border-radius:20px;max-width:64%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;box-shadow:0 3px 9px rgba(0,0,0,.18)}
   .ad-body{position:relative;z-index:1;display:flex;align-items:center;gap:14px;flex:1}
   .ad-txt{flex:1;min-width:0}
   .ad-offer{font-size:25px;font-weight:800;line-height:1.1;text-shadow:0 2px 10px rgba(0,0,0,.22)}
@@ -826,7 +826,7 @@
     card.innerHTML=`
       <div class="ad-deco"></div>
       <div class="ad-ribbon">★ ${T().featured}</div>
-      <div class="ad-chip">SDG ${r.sdg} · ${lang==="ar"?sg.ar:sg.en}</div>
+      <div class="ad-chip" style="color:${sg.c}">SDG ${r.sdg} · ${lang==="ar"?sg.ar:sg.en}</div>
       <div class="ad-body">
         <div class="ad-txt">
           <div class="ad-offer">${esc(L.offer)}</div>
@@ -841,7 +841,7 @@
     if(dots)dots.innerHTML=REWARDS.length>1?REWARDS.map((_,i)=>`<i class="${i===adIdx%REWARDS.length?'on':''}" data-ad="${i}"></i>`).join(""):"";
   }
   el("ad-dots").addEventListener("click",e=>{const i=e.target.dataset&&e.target.dataset.ad;if(i!=null){adIdx=+i;renderAd();}});
-  setInterval(()=>{if(REWARDS.length>1){const c=el("adcard");if(c)c.style.opacity=".0";setTimeout(()=>{adIdx=(adIdx+1)%REWARDS.length;renderAd();if(c)c.style.opacity="1";},350);}},6000);
+  setInterval(()=>{if(REWARDS.length>1){const c=el("adcard");if(c)c.style.opacity=".35";setTimeout(()=>{adIdx=(adIdx+1)%REWARDS.length;renderAd();if(c)c.style.opacity="1";},260);}},6000);
 
   // ── player sheet ──
   function fillSheet(){
