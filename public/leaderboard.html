@@ -186,6 +186,13 @@
   .ad-dots i{width:7px;height:7px;border-radius:50%;background:var(--line2);transition:background .2s,width .2s;cursor:pointer}
   .ad-dots i.on{background:var(--green);width:18px;border-radius:4px}
   .act-go{color:var(--ink3);display:flex;align-items:center}
+  .act-sdg{font-size:9.5px;font-weight:800;padding:3px 8px;border-radius:20px;white-space:nowrap;flex:0 0 auto;letter-spacing:.3px}
+  [dir=rtl] .act-sdg{letter-spacing:0}
+  .ad-mile{position:relative;z-index:1}
+  .ad-mile-t{font-size:11px;font-weight:700;opacity:.96;margin-bottom:5px}
+  .ad-mbar{height:6px;border-radius:4px;background:rgba(255,255,255,.28);overflow:hidden}
+  .ad-mbar i{display:block;height:100%;border-radius:4px;background:#fff;box-shadow:0 0 8px rgba(255,255,255,.55)}
+  .wk-chip{display:inline-flex;align-items:center;gap:5px;background:var(--gold-t);color:var(--gold-d);font-size:11px;font-weight:800;padding:4px 11px;border-radius:20px;border:1px solid var(--gold-b);margin-inline-end:10px}
 
   /* stats */
   .stat{display:flex;align-items:center;gap:14px;padding:14px 8px}
@@ -282,15 +289,23 @@
     .rail>*{min-height:0}
     .actions-card,.reward-card,.stats-card{padding:11px 14px;overflow:hidden}
     .rail .panel-h{margin-bottom:6px}
-    .rail .act{padding:4px 8px}
-    .rail .act-tx b{font-size:13.5px}.rail .act-tx span{font-size:11px}
-    .rail .act-ic{width:34px;height:34px;border-radius:10px}
+    .rail .act{padding:2px 8px}
+    .rail .act-tx b{font-size:13px}.rail .act-tx span{font-size:10.5px}
+    .rail .act-ic{width:30px;height:30px;border-radius:9px}
     .rail .act-all{display:none}
-    .reward-card{flex:1;display:flex;flex-direction:column}
-    .reward-card .adcard{flex:1;min-height:150px;gap:9px}
-    .reward-card .ad-logo{width:76px;height:76px}
-    .reward-card .ad-offer{font-size:21px}
-    .reward-card .ad-dots{margin-top:6px}
+    .rail .act-sdg{font-size:9px;padding:2px 7px}
+    .stats-card .kpi-tile{padding:6px 9px}
+    .reward-card{flex:1.45;display:flex;flex-direction:column}
+    .reward-card .adcard{flex:1;min-height:0;gap:5px;padding:11px 13px}
+    .reward-card .ad-chip{font-size:10.5px;padding:4px 10px}
+    .reward-card .ad-logo{width:62px;height:62px;border-radius:14px}
+    .reward-card .ad-offer{font-size:18px}
+    .reward-card .ad-sub{font-size:11.5px;margin-top:3px}
+    .reward-card .ad-brand{font-size:11px;margin-top:7px}
+    .reward-card .ad-mile-t{font-size:10px;margin-bottom:3px}
+    .reward-card .ad-mbar{height:5px}
+    .reward-card .ad-cta{padding:8px;font-size:12px}
+    .reward-card .ad-dots{margin-top:5px}
     .stats-card .kpi{grid-template-columns:repeat(4,1fr);gap:7px;margin:0}
     .stats-card .kpi-tile{flex-direction:column;align-items:flex-start;gap:1px;padding:8px 9px}
     .stats-card .stat-ic{display:none}
@@ -334,7 +349,7 @@
       <div class="lb card hero-lb">
         <div class="lb-head">
           <div class="t"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6"/></svg> <span id="lb-cap"></span></div>
-          <div class="u"><span id="lb-updated"></span></div>
+          <div class="u"><span class="wk-chip" id="wk-chip"></span><span id="lb-updated"></span></div>
         </div>
         <div class="podium"><div id="scene"></div></div>
         <div id="rows"></div>
@@ -401,20 +416,21 @@
     15:{c:"#56C02B",en:"Life on Land",ar:"الحياة في البر"}};
   // Sponsor rewards from the PSAUx Key Partners. Add logos: put a PNG in /ads/
   // and set logoImg:"/ads/<file>", or keep the inline logoHtml text mark.
+  // Each reward is tied to a points milestone (unlock) so it feels earned.
   const REWARDS=[
-    {sdg:12,brand:"PANDA",en:{offer:"10% OFF Groceries",sub:"Bring your own bag bonus"},ar:{offer:"خصم ١٠٪ على البقالة",sub:"مكافأة إحضار كيسك"},
+    {sdg:12,brand:"PANDA",unlock:5000,en:{offer:"10% OFF Groceries",sub:"Bring your own bag bonus"},ar:{offer:"خصم ١٠٪ على البقالة",sub:"مكافأة إحضار كيسك"},
       logoHtml:'<div style="line-height:1.05"><div style="color:#0A8A3F;font-weight:800;font-size:19px">Panda</div><div style="color:#E23744;font-weight:700;font-size:14px">بنده</div></div>'},
-    {sdg:3,brand:"ALMARAI",en:{offer:"Free Almarai Juice",sub:"For every 10 cartons recycled"},ar:{offer:"عصير المراعي مجاناً",sub:"لكل ١٠ عبوات مُعاد تدويرها"},
+    {sdg:3,brand:"ALMARAI",unlock:4500,en:{offer:"Free Almarai Juice",sub:"For every 10 cartons recycled"},ar:{offer:"عصير المراعي مجاناً",sub:"لكل ١٠ عبوات مُعاد تدويرها"},
       logoHtml:'<div style="color:#0A7A3C;font-weight:800;font-size:15px;line-height:1.1">Almarai<div style="font-size:12px">المراعي</div></div>'},
-    {sdg:12,brand:"TAMIMI MARKETS",en:{offer:"15% OFF at Tamimi",sub:"Reusable-bag reward"},ar:{offer:"خصم ١٥٪ في التميمي",sub:"مكافأة الكيس المُعاد استخدامه"},
+    {sdg:12,brand:"TAMIMI MARKETS",unlock:5500,en:{offer:"15% OFF at Tamimi",sub:"Reusable-bag reward"},ar:{offer:"خصم ١٥٪ في التميمي",sub:"مكافأة الكيس المُعاد استخدامه"},
       logoHtml:'<div style="color:#C5192D;font-weight:800;font-size:14px;line-height:1.1">TAMIMI<div style="font-size:11px">التميمي</div></div>'},
-    {sdg:11,brand:"RIYADH METRO",en:{offer:"Free Metro Ride",sub:"Ride green, earn points"},ar:{offer:"رحلة مترو مجانية",sub:"تنقّل أخضر واكسب نقاطاً"},
+    {sdg:11,brand:"RIYADH METRO",unlock:6000,en:{offer:"Free Metro Ride",sub:"Ride green, earn points"},ar:{offer:"رحلة مترو مجانية",sub:"تنقّل أخضر واكسب نقاطاً"},
       logoHtml:'<div style="font-size:30px">🚇</div>'},
-    {sdg:9,brand:"stc",en:{offer:"1 GB Data Bonus",sub:"Reward for your eco-actions"},ar:{offer:"١ جيجا بيانات هدية",sub:"مكافأة على أعمالك البيئية"},
+    {sdg:9,brand:"stc",unlock:5200,en:{offer:"1 GB Data Bonus",sub:"Reward for your eco-actions"},ar:{offer:"١ جيجا بيانات هدية",sub:"مكافأة على أعمالك البيئية"},
       logoHtml:'<div style="color:#4C1D6E;font-weight:800;font-size:24px">stc</div>'},
-    {sdg:11,brand:"SAUDI TOURISM",en:{offer:"Explore Saudi Discount",sub:"Travel more sustainably"},ar:{offer:"خصم اكتشف السعودية",sub:"سافر بشكل أكثر استدامة"},
+    {sdg:11,brand:"SAUDI TOURISM",unlock:7000,en:{offer:"Explore Saudi Discount",sub:"Travel more sustainably"},ar:{offer:"خصم اكتشف السعودية",sub:"سافر بشكل أكثر استدامة"},
       logoHtml:'<div style="font-size:28px">🇸🇦</div>'},
-    {sdg:12,brand:"SIRC",en:{offer:"Recycling Rewards",sub:"Earn at every drop-off"},ar:{offer:"مكافآت التدوير",sub:"اكسب عند كل تسليم"},
+    {sdg:12,brand:"SIRC",unlock:4800,en:{offer:"Recycling Rewards",sub:"Earn at every drop-off"},ar:{offer:"مكافآت التدوير",sub:"اكسب عند كل تسليم"},
       logoHtml:'<div style="color:#BF8B2E;font-weight:800;font-size:18px">SIRC ♻️</div>'}];
   // All PSAUx Key Partners (shown in the bottom strip)
   const PARTNERS=[
@@ -422,6 +438,15 @@
     {n:"Almarai",c:"#4C9F38"},{n:"SIRC",c:"#BF8B2E"},{n:"stc",c:"#4C1D6E"},
     {n:"Panda",c:"#0A8A3F"},{n:"Tamimi",c:"#C5192D"},{n:"Riyadh Metro",c:"#FD9D24"},
     {n:"Saudi Tourism",c:"#00689D"}];
+  // Seed competitors — shown only when fewer than 3 real players exist yet, so the
+  // board always looks competitive with close scores. Real players take over as
+  // participation grows. Close point band keeps the race feeling winnable.
+  const DEMO=[
+    {name:"Sara Al-Otaibi",points:5540,mins:4},
+    {name:"Mohammed Al-Harbi",points:5410,mins:12},
+    {name:"Noura Al-Qahtani",points:4980,mins:40},
+    {name:"Faisal Al-Dosari",points:4730,mins:90},
+    {name:"Reem Al-Shehri",points:4510,mins:180}];
 
   const ICONS={
     users:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M15.5 3.13a4 4 0 0 1 0 7.75"/></svg>',
@@ -444,19 +469,20 @@
       heroTie:`It's a tie for <span class="one">#1</span>!`,
       heroSolo:`You're <span class="one">#1</span> — leading the forest!`,
       heroP:"Keep taking action. Every point grows our forest!",
-      motiv:(n)=>`<span class="tro">🏆</span> Only <b>${n} pts</b> to reach <span class="one">#1</span>`,
-      motivTie:`<span class="tro">🏆</span> Neck and neck for <span class="one">#1</span>!`,
-      motivSolo:`<span class="tro">🏆</span> Leading at <span class="one">#1</span> — keep climbing!`,
+      motivLead:(n,g)=>`<span class="tro">🏆</span> <b>${n}</b> leads by <b>${g} pts</b> — who's closing in?`,
+      motivClose:(g)=>`<span class="tro">🔥</span> Tight race! Only <b>${g} pts</b> between <span class="one">#1</span> and #2`,
+      motivTie:`<span class="tro">🔥</span> It's a tie at <span class="one">#1</span> — next point wins!`,
+      motivSolo:(n)=>`<span class="tro">🏆</span> <b>${n}</b> is in the lead — be the next challenger!`,
       stCap:"Impact",ptLabel:"Key Partners",
       gapTo:(g)=>`▲ ${g} to overtake`,leadBy:(g)=>`Leading by ${g}`,tiedNow:"Tied — go go go!",
-      rwCta:"Redeem reward",featured:"Featured Offer",
+      rwCta:"Redeem reward",featured:"Featured Offer",unlockAt:"Unlock at",ptsAway:(g)=>`${g} pts away`,unlocked:"Unlocked",
+      champion:"Champion",closing:"Closing the gap",chasing:"Chasing #1",challenger:"New challenger",keepGoing:"Keep going",wkChip:"Weekly Challenge",
       updatedNow:"Updated just now",updatedS:s=>`Updated ${s}s ago`,updatedM:m=>`Updated ${m}m ago`,
-      b1:"In the Lead",b2:"Keep it up!",b3:"Great work!",bN:"Keep going!",
       actCap:"Ways to Take Action",actAll:"View all actions",
-      acts:[["ewaste","Donate e-waste","Drop old electronics at a station"],
-            ["recycle","Recycle bottles & cans","Scan them at any kiosk"],
-            ["bag","Bring your own bag","Skip single-use plastic"],
-            ["volunteer","Volunteer on campus","Join a green initiative"]],
+      acts:[["ewaste","Donate e-waste","Drop old electronics at a station",12],
+            ["recycle","Recycle bottles & cans","Scan them at any kiosk",11],
+            ["bag","Bring your own bag","Skip single-use plastic",13],
+            ["volunteer","Volunteer on campus","Join a green initiative",3]],
       rwCap:"Rewards & Offers",rwBtn:"See all rewards",
       stTotal:"Total Points",stTrees:"Trees Growing",stBottles:"Bottles Saved",stCo2:"CO₂ Avoided",tons:"t",pts:"pts",
       earnedT:(n,p)=>`${n}'s tree grew +${p}`,leadT:n=>`${n} takes the lead!`,
@@ -470,19 +496,20 @@
       heroTie:`تعادل على <span class="one">المركز الأول</span>!`,
       heroSolo:`أنت <span class="one">المركز الأول</span> — تتصدّر الغابة!`,
       heroP:"واصل العمل. كل نقطة تُنمّي غابتنا!",
-      motiv:(n)=>`<span class="tro">🏆</span> باقٍ <b>${n} نقطة</b> فقط للوصول إلى <span class="one">المركز الأول</span>`,
-      motivTie:`<span class="tro">🏆</span> تعادل على <span class="one">المركز الأول</span>!`,
-      motivSolo:`<span class="tro">🏆</span> متصدّر <span class="one">المركز الأول</span> — واصل التقدّم!`,
+      motivLead:(n,g)=>`<span class="tro">🏆</span> <b>${n}</b> متقدّم بـ <b>${g} نقطة</b> — مين يلحقه؟`,
+      motivClose:(g)=>`<span class="tro">🔥</span> سباق محتدم! <b>${g} نقطة</b> فقط بين <span class="one">الأول</span> والثاني`,
+      motivTie:`<span class="tro">🔥</span> تعادل على <span class="one">المركز الأول</span> — النقطة القادمة تحسم!`,
+      motivSolo:(n)=>`<span class="tro">🏆</span> <b>${n}</b> في الصدارة — كن المنافس التالي!`,
       stCap:"الأثر",ptLabel:"شركاؤنا",
       gapTo:(g)=>`▲ ${g} للتجاوز`,leadBy:(g)=>`متقدّم بـ ${g}`,tiedNow:"تعادل — يلا!",
-      rwCta:"استبدل المكافأة",featured:"عرض مميّز",
+      rwCta:"استبدل المكافأة",featured:"عرض مميّز",unlockAt:"يُفتح عند",ptsAway:(g)=>`باقٍ ${g} نقطة`,unlocked:"مفتوح",
+      champion:"البطل",closing:"يقلّص الفارق",chasing:"يطارد الأول",challenger:"منافس جديد",keepGoing:"واصل",wkChip:"تحدّي الأسبوع",
       updatedNow:"حُدِّثت الآن",updatedS:s=>`حُدِّثت قبل ${s} ث`,updatedM:m=>`حُدِّثت قبل ${m} د`,
-      b1:"في الصدارة",b2:"واصل!",b3:"أحسنت!",bN:"استمر!",
       actCap:"طرق للمشاركة",actAll:"عرض كل الخطوات",
-      acts:[["ewaste","تبرّع بالنفايات الإلكترونية","سلّم أجهزتك القديمة في أي محطة"],
-            ["recycle","أعد تدوير العبوات والعلب","امسحها في أي محطة"],
-            ["bag","أحضر كيسك الخاص","قلّل البلاستيك أحادي الاستخدام"],
-            ["volunteer","تطوّع في الحرم","انضم لمبادرة خضراء"]],
+      acts:[["ewaste","تبرّع بالنفايات الإلكترونية","سلّم أجهزتك القديمة في أي محطة",12],
+            ["recycle","أعد تدوير العبوات والعلب","امسحها في أي محطة",11],
+            ["bag","أحضر كيسك الخاص","قلّل البلاستيك أحادي الاستخدام",13],
+            ["volunteer","تطوّع في الحرم","انضم لمبادرة خضراء",3]],
       rwCap:"المكافآت والعروض",rwBtn:"شاهد كل المكافآت",
       stTotal:"مجموع النقاط",stTrees:"أشجار تنمو",stBottles:"عبوات موفَّرة",stCo2:"CO₂ متجنَّب",tons:"طن",pts:"نقطة",
       earnedT:(n,p)=>`نمت شجرة ${n} ‏+${p}`,leadT:n=>`${n} في الصدارة!`,
@@ -495,7 +522,7 @@
   const T=()=>I18N[lang];
   const tname=t=>lang==="ar"?t.ar:t.n;
 
-  let prevPoints={},firstLoad=true,booted=false,lastSig="",lastUpdate=0,prevLeader=null,idToken=null,fails=0;
+  let prevPoints={},firstLoad=true,booted=false,lastSig="",lastUpdate=0,prevLeader=null,idToken=null,fails=0,topPoints=0;
   let lastRows=[],sheetUid=null,gained=new Set();
 
   const el=id=>document.getElementById(id);
@@ -681,10 +708,11 @@
 
   // ── render ──
   function badgeFor(rank){
-    if(rank===1)return `<span class="badge b1">🏆 ${T().b1}</span>`;
-    if(rank===2)return `<span class="badge b2">📈 ${T().b2}</span>`;
-    if(rank===3)return `<span class="badge b3">⭐ ${T().b3}</span>`;
-    return `<span class="badge bN">${T().bN}</span>`;
+    if(rank===1)return `<span class="badge b1">🏆 ${T().champion}</span>`;
+    if(rank===2){const g=(lastRows[0]?lastRows[0].points:0)-(lastRows[1]?lastRows[1].points:0);
+      return `<span class="badge b2">${g<=300?"🔥 "+T().closing:"📈 "+T().chasing}</span>`;}
+    if(rank===3)return `<span class="badge b3">⭐ ${T().challenger}</span>`;
+    return `<span class="badge bN">${T().keepGoing}</span>`;
   }
   function rowHtml(r,rank){
     const grew=!firstLoad&&prevPoints[r.uid]!=null&&r.points>prevPoints[r.uid];
@@ -713,9 +741,11 @@
 
   function renderHero(rows){
     let h;
-    if(rows.length<=1)h=T().motivSolo;
-    else{const gap=(rows[0].points||0)-(rows[1].points||0);
-      h=gap===0?T().motivTie:T().motiv(fmt(gap));}
+    if(rows.length<=1)h=T().motivSolo(esc(first((rows[0]||{}).name)||"—"));
+    else{const gap=(rows[0].points||0)-(rows[1].points||0),lead=esc(first(rows[0].name));
+      h = gap===0 ? T().motivTie
+        : gap<=250 ? T().motivClose(fmt(gap))
+        : T().motivLead(lead,fmt(gap));}
     el("motiv").innerHTML=h;
   }
 
@@ -733,7 +763,9 @@
     }
 
     lastRows=rows;
+    topPoints=rows[0]?rows[0].points||0:0;
     renderHero(rows);
+    renderAd();
     el("scene").innerHTML=sceneSvg(rows);
     el("rows").innerHTML=rows.map((r,i)=>rowHtml(r,i+1)).join("");
 
@@ -762,8 +794,8 @@
     el("h-title").textContent=T().title;el("h-kicker").textContent=T().kicker;el("h-tagline").textContent=T().tagline;el("h-live").textContent=T().live;
     el("lang-t").textContent=T().lang;el("lb-cap").textContent=T().lbCap;
     el("act-cap").textContent=T().actCap;el("act-all").innerHTML=`${T().actAll} ${ICONS.chev}`;
-    el("rw-cap").textContent=T().rwCap;el("st-cap").textContent=T().stCap;el("pt-label").textContent=T().ptLabel;
-    el("act-list").innerHTML=T().acts.map(a=>`<div class="act"><div class="act-ic">${ICONS[a[0]]}</div><div class="act-tx"><b>${a[1]}</b><span>${a[2]}</span></div><div class="act-go">${ICONS.chev}</div></div>`).join("");
+    el("rw-cap").textContent=T().rwCap;el("st-cap").textContent=T().stCap;el("pt-label").textContent=T().ptLabel;el("wk-chip").textContent="🔥 "+T().wkChip;
+    el("act-list").innerHTML=T().acts.map(a=>{const sg=SDG[a[3]]||{c:"#5C8A38"};return `<div class="act"><div class="act-ic">${ICONS[a[0]]}</div><div class="act-tx"><b>${a[1]}</b><span>${a[2]}</span></div><span class="act-sdg" style="color:${sg.c};background:${sg.c}1A">SDG ${a[3]}</span><div class="act-go">${ICONS.chev}</div></div>`;}).join("");
     el("pt-list").innerHTML=PARTNERS.map(p=>`<span class="pt-pill"><span class="dotc" style="background:${p.c}"></span>${esc(p.n)}</span>`).join("");
     renderAd();
     if(!booted)el("state").textContent=T().connecting;
@@ -777,6 +809,9 @@
     const card=el("adcard");if(!card)return;
     card.style.background=`linear-gradient(145deg, ${shade(sg.c,30)} 0%, ${sg.c} 58%, ${shade(sg.c,-32)} 100%)`;
     const logo=r.logoImg?`<img src="${r.logoImg}" alt="${esc(r.brand)}"/>`:(r.logoHtml||esc(r.brand));
+    // milestone: reward tied to the leaderboard's top progress
+    const away=(r.unlock||0)-topPoints, pct=Math.max(4,Math.min(100,Math.round(topPoints/(r.unlock||1)*100)));
+    const mile = away<=0 ? T().unlocked : `${T().unlockAt} ${fmt(r.unlock)} · ${T().ptsAway(fmt(away))}`;
     card.innerHTML=`
       <div class="ad-deco"></div>
       <div class="ad-ribbon">★ ${T().featured}</div>
@@ -789,6 +824,7 @@
         </div>
         <div class="ad-logo">${logo}</div>
       </div>
+      <div class="ad-mile"><div class="ad-mile-t">${away<=0?"✓ "+T().unlocked:mile}</div><div class="ad-mbar"><i style="width:${pct}%"></i></div></div>
       <div class="ad-cta">${T().rwCta} ${ICONS.chev}</div>`;
     const dots=el("ad-dots");
     if(dots)dots.innerHTML=REWARDS.length>1?REWARDS.map((_,i)=>`<i class="${i===adIdx%REWARDS.length?'on':''}" data-ad="${i}"></i>`).join(""):"";
@@ -849,8 +885,17 @@
     rows.sort((a,b)=>(b.points||0)-(a.points||0));
     return rows.slice(0,20);
   }
+  // Fill a sparse board with seed competitors so the top always feels contested.
+  function seedRows(rows){
+    if(rows.length>=3) return rows;
+    const have=new Set(rows.map(r=>(r.name||"").trim().toLowerCase()));
+    const seeds=DEMO.filter(d=>!have.has(d.name.toLowerCase())).map(d=>({
+      uid:"seed_"+d.name.replace(/\s+/g,"_"),name:d.name,points:d.points,level:"",
+      updatedAt:new Date(Date.now()-d.mins*60000).toISOString(),createdAt:"",seed:true}));
+    return rows.concat(seeds).sort((a,b)=>(b.points||0)-(a.points||0)).slice(0,20);
+  }
   async function tick(){
-    try{ render(await fetchUsers()); fails=0; }
+    try{ render(seedRows(await fetchUsers())); fails=0; }
     catch(e){ fails++; console.error(e);
       if(firstLoad||fails>=3){ el("main").style.display="none"; const s=el("state"); s.style.display="block";
         s.innerHTML=T().cantReach+"<small>"+T().cantReachSub+" ("+esc(e.message||"error")+")</small>"; }
