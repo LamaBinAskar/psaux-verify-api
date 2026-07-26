@@ -3,698 +3,583 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta name="theme-color" content="#F4F7F4" />
+<meta name="theme-color" content="#F4F6EF" />
 <title>PSAUx Campus Forest — Live</title>
 <link rel="icon" href="/emblem.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  /* Palette + type from the PSAUxLONDON app (AppColors: passport green,
-     antique gold, ledger surfaces; fontFamily: PlusJakartaSans). */
-  :root{--ff:"Plus Jakarta Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    --paper:#F4F7F4;--card:#FFFFFF;--line:#E2E8F0;--line-2:#D0DCD4;
-    --ink:#1A1C1E;--ink2:#5A6B5E;--ink3:#9AA59C;
-    --green:#0F5A3E;--green-d:#0B3D2E;--green-t:#EEF3EE;
-    --amber:#C5A35A;--amber-d:#705D00;--amber-t:#F5EFDD;--amber-b:#E3D2A4;--r:20px}
-  [dir=rtl]{--ff:"IBM Plex Sans Arabic","Plus Jakarta Sans",-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  :root{
+    --ff:"Poppins",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --paper:#F1F5EA;--card:#FFFFFF;--line:#EAEFE0;--line2:#DCE6CE;
+    --ink:#28331F;--ink2:#69795C;--ink3:#9DAB90;
+    --green:#5C8A38;--green-d:#3E6624;--green-t:#EDF4E1;
+    --gold:#E0A52B;--gold-d:#A6790F;--gold-t:#FBF3DC;--gold-b:#EAD9A6;
+    --cream:#FAF4E2;--cream2:#F4E9C8;
+    --r:22px;
+  }
+  [dir=rtl]{--ff:"IBM Plex Sans Arabic","Poppins",-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
   *{box-sizing:border-box;margin:0;padding:0;font-family:var(--ff)}
   html,body{height:100%}
   body{background:var(--paper);color:var(--ink);min-height:100vh;overflow-x:hidden}
-  .bg{position:fixed;inset:0;z-index:0;background:radial-gradient(90% 55% at 50% -8%,rgba(15,90,62,.06),transparent 70%)}
+  .bg{position:fixed;inset:0;z-index:0;background:radial-gradient(80% 50% at 50% -10%,rgba(92,138,56,.08),transparent 70%)}
   #confetti{position:fixed;inset:0;z-index:60;pointer-events:none}
-  .wrap{position:relative;z-index:1;max-width:1320px;margin:0 auto;padding:20px 26px 22px;min-height:100vh;display:flex;flex-direction:column}
-
-  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:0 1px 2px rgba(26,28,30,.04),0 10px 28px rgba(26,28,30,.06)}
+  .wrap{position:relative;z-index:1;max-width:1240px;margin:0 auto;padding:22px 26px 26px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:0 1px 2px rgba(40,51,31,.03),0 12px 30px rgba(40,51,31,.06)}
   svg{display:block}
 
   /* ── header ── */
-  header{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:14px}
-  .brand{display:flex;align-items:center;gap:14px;min-width:0}
-  .brand img{height:50px}
-  .brand .k{font-size:11px;letter-spacing:2.2px;text-transform:uppercase;color:var(--green);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  [dir=rtl] .brand .k{letter-spacing:0}
-  .brand h2{font-size:28px;font-weight:800;line-height:1.08;color:var(--green-d);letter-spacing:-.5px;white-space:nowrap}
-  [dir=rtl] .brand h2{letter-spacing:0}
-  .hright{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+  header{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:16px}
+  .brand{display:flex;align-items:center;gap:12px;min-width:0}
+  .brand .logo{width:44px;height:44px;border-radius:13px;background:var(--green-t);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+  .brand img{height:34px}
+  .brand .bt{font-size:22px;font-weight:800;line-height:1;color:var(--green-d);letter-spacing:-.3px}
+  .brand .bs{font-size:10px;letter-spacing:2.4px;text-transform:uppercase;color:var(--ink3);font-weight:700;margin-top:3px}
+  [dir=rtl] .brand .bs{letter-spacing:0}
+  .hright{display:flex;align-items:center;gap:9px;flex:0 0 auto}
   .pill{display:inline-flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);padding:9px 14px;border-radius:30px;font-weight:600;font-size:13.5px;color:var(--ink)}
+  .live{color:var(--green);font-weight:700}
   .clock{font-variant-numeric:tabular-nums}
-  .dot{width:9px;height:9px;border-radius:50%;background:#1F9D55;box-shadow:0 0 0 0 rgba(31,157,85,.5);animation:pulse 1.8s infinite}
-  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(31,157,85,.45)}70%{box-shadow:0 0 0 12px rgba(31,157,85,0)}100%{box-shadow:0 0 0 0 rgba(31,157,85,0)}}
-  .ctrl{height:40px;border-radius:30px;background:var(--card);border:1px solid var(--line);color:var(--ink);font-size:13.5px;font-weight:600;cursor:pointer;padding:0 14px;transition:background .15s,transform .15s}
-  .ctrl:hover{background:#E8EDE8}
+  .dot{width:9px;height:9px;border-radius:50%;background:#4EA43C;box-shadow:0 0 0 0 rgba(78,164,60,.5);animation:pulse 1.8s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(78,164,60,.45)}70%{box-shadow:0 0 0 11px rgba(78,164,60,0)}100%{box-shadow:0 0 0 0 rgba(78,164,60,0)}}
+  .ctrl{cursor:pointer;transition:background .15s,transform .15s}
+  .ctrl:hover{background:#EDF2E4}
   .ctrl:active{transform:scale(.96)}
-  .ctrl.icon{width:40px;padding:0;display:inline-flex;align-items:center;justify-content:center}
-  .updated{position:absolute;top:78px;inset-inline-end:26px;font-size:12px;color:var(--ink3);font-weight:500;z-index:2}
 
-  .main{display:flex;flex-direction:column;gap:16px;flex:1;min-height:0}
-  .bottom{display:grid;grid-template-columns:1.25fr 1fr;gap:16px;flex:1;min-height:0}
-  .side{display:flex;flex-direction:column;gap:12px;min-height:0}
-  @media (max-width:940px){.bottom{grid-template-columns:1fr}}
+  /* ── hero banner ── */
+  .hero{display:flex;align-items:center;gap:22px;background:linear-gradient(110deg,var(--cream),var(--cream2));border:1px solid var(--gold-b);border-radius:var(--r);padding:22px 28px;margin-bottom:16px;position:relative;overflow:hidden}
+  .hero .leaf{position:absolute;inset-inline-end:-10px;top:-20px;font-size:120px;opacity:.10;transform:rotate(-18deg);pointer-events:none}
+  .hero .trophy{width:78px;height:78px;border-radius:50%;background:radial-gradient(circle at 50% 35%,#FCEBB4,#F3D072);display:flex;align-items:center;justify-content:center;flex:0 0 auto;box-shadow:0 6px 16px rgba(224,165,43,.28);font-size:38px}
+  .hero-txt{min-width:0}
+  .hero-txt h1{font-size:34px;font-weight:800;line-height:1.12;letter-spacing:-.6px;color:var(--ink)}
+  .hero-txt h1 .n{color:var(--green)}
+  .hero-txt h1 .one{color:var(--gold-d)}
+  .hero-txt p{margin-top:6px;font-size:15.5px;color:var(--ink2);font-weight:500}
 
-  /* ── forest scene ── */
-  .forest{overflow:hidden;display:flex;flex-direction:column;min-height:0;padding:0}
-  .forest .cap{padding:13px 18px 9px}
-  .forest .tt{font-size:14px;letter-spacing:0;color:var(--ink2);font-weight:700}
+  /* ── podium scene ── */
+  .scene-card{overflow:hidden;padding:0;margin-bottom:16px}
   #scene{line-height:0}
   #scene svg{width:100%;height:auto}
-  .cap{display:flex;align-items:center;gap:10px}
-  .cap .tt{font-size:11px;letter-spacing:2px;font-weight:700;color:var(--ink3)}
-  [dir=rtl] .cap .tt{letter-spacing:0}
-
-  /* scene animation layers */
+  .tree{cursor:pointer;transition:filter .2s}
+  .tree:hover{filter:brightness(1.05)}
   .cloud{animation:drift linear infinite}
-  @keyframes drift{from{transform:translateX(-180px)}to{transform:translateX(1700px)}}
-  .tw{animation:tw ease-in-out infinite}
-  @keyframes tw{50%{opacity:.15}}
-  .turb{animation:turb 8s linear infinite}
-  @keyframes turb{to{transform:rotate(360deg)}}
-  .fw{animation:fw ease-in-out infinite}
-  @keyframes fw{50%{opacity:.15;transform:translateY(-6px)}}
-  .fly{animation:fly linear infinite}
-  @keyframes fly{from{transform:translate(-60px,0)}to{transform:translate(1660px,-40px)}}
-  .flut{animation:flut .35s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:center}
-  @keyframes flut{from{transform:scaleX(1)}to{transform:scaleX(.45)}}
-  .tree{cursor:pointer}
-  .tree .body{transform-box:fill-box;transform-origin:50% 100%;animation:sway var(--sw,4s) ease-in-out infinite alternate}
-  @keyframes sway{from{transform:rotate(-1.4deg)}to{transform:rotate(1.4deg)}}
-  .tree.grow .body{animation:grow .9s cubic-bezier(.2,1.25,.4,1) backwards,sway var(--sw,4s) ease-in-out 1s infinite alternate}
-  @keyframes grow{from{transform:scaleY(0)}}
-  .tree:hover .body,.tree.lit .body{filter:brightness(1.12) drop-shadow(0 0 6px rgba(197,163,90,.55))}
-  .tree.cheer .body{animation:cheer .5s ease 4 alternate}
-  @keyframes cheer{to{transform:scale(1.06) rotate(1deg)}}
+  @keyframes drift{from{transform:translateX(-160px)}to{transform:translateX(1360px)}}
+  .swy{transform-box:fill-box;transform-origin:50% 100%;animation:sway var(--sw,4s) ease-in-out infinite alternate}
+  @keyframes sway{from{transform:rotate(-1.3deg)}to{transform:rotate(1.3deg)}}
+  .glow{animation:glow 3s ease-in-out infinite alternate}
+  @keyframes glow{from{opacity:.35}to{opacity:.7}}
 
-  .stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .stat{min-width:0;padding:14px 16px;display:flex;align-items:center;gap:12px;border-radius:16px}
-  .stat .ic{width:42px;height:42px;border-radius:13px;display:flex;align-items:center;justify-content:center;background:var(--green-t);color:var(--green);flex:0 0 auto}
-  .stat .v{font-size:27px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
-  .stat .l{font-size:11.5px;color:var(--ink2);font-weight:600;margin-top:4px}
-  .msg{flex:1;display:flex;align-items:center;justify-content:center;text-align:center;padding:18px 22px;min-height:86px}
-  .msg .ticker{font-size:20px;font-weight:700;color:var(--green-d);line-height:1.5;opacity:0;transition:opacity .35s}
-  .msg .ticker.show{opacity:1}
-  .msg .ticker small{font-weight:600;color:var(--ink3);font-size:14px}
-  .msg .ticker .alt{font-size:14px;color:var(--ink3);font-weight:600;margin-top:7px}
-  .adbox{padding:10px}
-  .adbox .cap{padding:2px 8px 8px}
-  .adimg{height:132px;display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:13px;background:#F3F6F3;border:1px solid var(--line)}
-  .adimg img{max-width:100%;max-height:100%;object-fit:contain;opacity:0;transition:opacity .45s}
-  .adimg img.show{opacity:1}
+  /* ── main grid ── */
+  .grid{display:grid;grid-template-columns:1.15fr .85fr;gap:16px;align-items:start}
+  @media (max-width:960px){.grid{grid-template-columns:1fr}}
+  .side{display:flex;flex-direction:column;gap:16px}
 
-  /* ── ranking list ── */
-  .list{padding:10px;overflow:hidden;min-height:0;display:flex;flex-direction:column}
-  .list .cap{padding:6px 8px 10px}
-  #rows{overflow:auto;flex:1;min-height:0}
-  .row{display:flex;align-items:center;gap:14px;padding:13px 14px;border-radius:15px;cursor:pointer;transition:background .15s,transform .15s;border:1px solid transparent}
-  .row:hover{background:#F1F5F1;transform:translateY(-1px)}
-  .row:active{transform:scale(.99)}
-  .row+.row{margin-top:3px}
-  .row.flash{animation:flash 2.4s ease-out}
-  .row.in{animation:rowin .5s cubic-bezier(.2,.9,.3,1) backwards}
-  @keyframes rowin{from{opacity:0;transform:translateY(10px)}}
-  .row.spot{border-color:var(--amber-b);background:#F9F4E4}
-  @keyframes flash{0%{background:var(--amber-t)}100%{background:transparent}}
-  .r-rank{width:34px;display:flex;justify-content:center;font-weight:700;font-size:19px;color:var(--ink3);font-variant-numeric:tabular-nums;flex:0 0 auto}
-  .disc{width:31px;height:31px;border-radius:50%;color:#fff;font-weight:700;font-size:15px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(26,28,30,.2)}
-  .d1{background:linear-gradient(180deg,#E9C349,#AF8D11)}
-  .d2{background:linear-gradient(180deg,#BFC6CE,#98A2AD)}
-  .d3{background:linear-gradient(180deg,#CBA24C,#A9832F)}
-  .r-move{width:26px;font-size:12px;font-weight:700;text-align:center;flex:0 0 auto}
-  .up{color:#1F7A3D}.down{color:#C0402A}.same{color:#C9C2AE}.newp{color:var(--amber)}
-  .r-ava{width:46px;height:46px;border-radius:15px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:19px;color:#fff;flex:0 0 auto}
+  /* ── leaderboard ── */
+  .lb{padding:18px 18px 12px}
+  .lb-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;padding:0 4px}
+  .lb-head .t{display:flex;align-items:center;gap:8px;font-size:14px;letter-spacing:1.6px;font-weight:700;color:var(--green-d);text-transform:uppercase}
+  [dir=rtl] .lb-head .t{letter-spacing:0}
+  .lb-head .u{font-size:12px;color:var(--ink3);font-weight:500;display:flex;align-items:center;gap:6px}
+  #rows{margin-top:6px;max-height:none;overflow:auto}
+  .row{display:flex;align-items:center;gap:14px;padding:13px 12px;border-radius:16px;cursor:pointer;transition:background .15s,transform .15s;border:1px solid transparent}
+  .row:hover{background:#F4F8EE;transform:translateY(-1px)}
+  .row+.row{margin-top:4px}
+  .row.spot{border-color:var(--gold-b);background:#FCF7E6}
+  .row.flash{animation:flash 2.2s ease-out}
+  @keyframes flash{0%{background:var(--gold-t)}100%{background:transparent}}
+  .r-medal{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;color:#fff;flex:0 0 auto;box-shadow:inset 0 -4px 7px rgba(0,0,0,.15),0 2px 5px rgba(40,51,31,.16)}
+  .m1{background:linear-gradient(180deg,#F2CE55,#D69E1E)}
+  .m2{background:linear-gradient(180deg,#C9D0D7,#9AA6B0)}
+  .m3{background:linear-gradient(180deg,#DBA35C,#B87A34)}
+  .mN{background:linear-gradient(180deg,#B7C6A6,#93A683);font-size:13px}
+  .r-ava{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:0 0 auto;box-shadow:inset 0 -6px 11px rgba(10,30,20,.18),0 3px 7px rgba(40,51,31,.14);overflow:hidden}
+  .r-ava svg.pico{width:60%;height:60%}
   .r-main{flex:1;min-width:0}
-  .r-top{display:flex;align-items:center;gap:10px;min-width:0}
-  .r-top b{font-size:19px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .pbar{height:9px;border-radius:5px;background:#EDF1ED;margin-top:8px;overflow:hidden}
-  .pbar i{display:block;height:100%;border-radius:5px;transition:width .8s cubic-bezier(.2,.9,.3,1)}
-  .r-col{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex:0 0 auto}
+  .r-name{font-size:17.5px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1.15}
+  .r-role{font-size:12.5px;color:var(--ink2);font-weight:500;display:flex;align-items:center;gap:5px;margin-top:2px}
+  .r-role svg{flex:0 0 auto}
+  .pbar{height:8px;border-radius:5px;background:#ECF1E4;margin-top:9px;overflow:hidden;max-width:100%}
+  .pbar i{display:block;height:100%;border-radius:5px;background:linear-gradient(90deg,#7DB24A,#5C8A38);transition:width .8s cubic-bezier(.2,.9,.3,1)}
+  .r-col{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex:0 0 auto}
   [dir=rtl] .r-col{align-items:flex-start}
-  .r-gap{font-size:12.5px;font-weight:700;color:var(--amber-d);white-space:nowrap}
-  .r-gap.tie{color:var(--ink3)}
-  .chip{font-size:10.5px;font-weight:700;color:var(--green);background:var(--green-t);border-radius:20px;padding:3px 9px;white-space:nowrap;flex:0 0 auto}
-  /* head-to-head duel module (#1 vs #2) */
-  .race{margin:0 4px 10px;background:var(--card);border:1px solid var(--amber-b);border-radius:16px;padding:12px 14px;display:none;flex-direction:column;gap:9px}
-  .duel-top{display:flex;align-items:center;gap:12px}
-  .duel-side{flex:1;min-width:0;display:flex;align-items:center;gap:10px}
-  .duel-side.b{flex-direction:row-reverse;text-align:end}
-  .duel-ava{width:44px;height:44px;border-radius:14px;color:#fff;font-weight:700;font-size:18px;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
-  .duel-nm{min-width:0}
-  .duel-nm b{display:block;font-size:18px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .duel-nm span{font-size:15px;font-weight:800;color:var(--green);font-variant-numeric:tabular-nums}
-  .duel-vs{flex:0 0 auto;width:40px;height:40px;border-radius:50%;background:var(--amber-t);border:1px solid var(--amber-b);color:var(--amber-d);font-weight:800;font-size:13.5px;display:flex;align-items:center;justify-content:center}
-  .duel-vs.tie{animation:vspulse 1.6s ease-in-out infinite}
-  @keyframes vspulse{50%{transform:scale(1.14);box-shadow:0 0 0 7px rgba(197,163,90,.18)}}
-  .duel-bar{height:10px;border-radius:6px;background:#DDE3E9;overflow:hidden}
-  .duel-bar i{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,#E9C349,#C5A35A);transition:width .8s cubic-bezier(.2,.9,.3,1)}
-  .duel-note{font-size:13.5px;font-weight:700;color:var(--amber-d);text-align:center}
-  .hot{display:inline-flex;flex:0 0 auto}
-  .pico{width:58%;height:58%}
-  .r-ava,.duel-ava,.sh-ava{box-shadow:inset 0 -7px 12px rgba(10,30,20,.16),inset 0 5px 9px rgba(255,255,255,.16),0 3px 8px rgba(26,28,30,.14)}
-  .duel-bar{position:relative}
-  .duel-bar::after{content:"";position:absolute;left:50%;top:-2px;bottom:-2px;width:2px;background:rgba(26,28,30,.28);border-radius:1px}
-  .r-pts{font-weight:800;font-size:23px;color:var(--ink);font-variant-numeric:tabular-nums;flex:0 0 auto}
+  .r-pts{font-weight:800;font-size:21px;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap}
   .r-pts small{font-size:12px;color:var(--ink3);font-weight:600;margin-inline-start:3px}
-  .tier{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:20px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:0 0 auto}
-  .empty{padding:26px 16px;text-align:center;color:var(--ink2);font-weight:500;font-size:14px}
+  .badge{font-size:11.5px;font-weight:700;padding:5px 12px;border-radius:20px;white-space:nowrap;display:inline-flex;align-items:center;gap:5px}
+  .b1{background:var(--gold-t);color:var(--gold-d)}
+  .b2{background:#EEF2F4;color:#5B6B72}
+  .b3{background:#FCEEE1;color:#C1743A}
+  .bN{background:var(--green-t);color:var(--green-d)}
+  @media (max-width:520px){.r-role{display:none}.r-pts{font-size:19px}}
 
-  /* ── player sheet ── */
-  #ov{position:fixed;inset:0;z-index:50;background:rgba(24,32,26,.38);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:none;align-items:flex-end;justify-content:center}
-  #ov.open{display:flex}
-  .sheet{width:100%;max-width:560px;background:var(--card);border:1px solid var(--line);border-bottom:none;border-radius:24px 24px 0 0;padding:22px 24px 28px;box-shadow:0 -18px 50px rgba(24,32,26,.25);animation:sheetup .32s cubic-bezier(.2,1.05,.35,1)}
-  @keyframes sheetup{from{transform:translateY(60px);opacity:0}}
-  @media (min-width:940px){#ov{align-items:center}.sheet{border-radius:24px;border-bottom:1px solid var(--line);animation:sheetpop .28s cubic-bezier(.2,1.1,.35,1)}@keyframes sheetpop{from{transform:scale(.95);opacity:0}}}
-  .sh-top{display:flex;align-items:center;gap:15px}
-  .sh-ava{width:68px;height:68px;border-radius:22px;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;color:#fff;flex:0 0 auto}
-  .sh-id{flex:1;min-width:0}
-  .sh-id b{font-size:22px;font-weight:700;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .sh-x{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:#EEF3EE;color:var(--ink2);font-size:14px;cursor:pointer;flex:0 0 auto}
-  .sh-x:hover{background:#E8EDE8}
-  .sh-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0}
-  .sh-cell{background:#F3F6F3;border:1px solid var(--line);border-radius:15px;padding:11px 12px;text-align:center}
-  .sh-cell .v{font-size:19px;font-weight:700;font-variant-numeric:tabular-nums}
-  .sh-cell .l{font-size:10.5px;color:var(--ink2);font-weight:600;margin-top:3px}
-  .sh-cap{font-size:11px;letter-spacing:1.6px;font-weight:700;color:var(--ink3);margin-bottom:9px}
-  [dir=rtl] .sh-cap{letter-spacing:0}
-  .lad{display:flex;gap:5px}
-  .lad-seg{flex:1;text-align:center}
-  .lad-seg .bar{height:7px;border-radius:4px;background:#E6ECE7;overflow:hidden}
-  .lad-seg .bar i{display:block;height:100%;border-radius:4px}
-  .dot2{display:inline-block;width:9px;height:9px;border-radius:50%;margin-top:7px;opacity:.3}
-  .lad-seg.done .dot2,.lad-seg.cur .dot2{opacity:1}
-  .lad-seg.cur .dot2{transform:scale(1.45)}
-  .sh-insight{margin-top:16px;background:var(--green-t);border:1px solid var(--line-2);border-radius:15px;padding:13px 15px;font-size:13.5px;line-height:1.55;color:var(--green-d);font-weight:500}
+  /* ── panels ── */
+  .panel{padding:16px 18px}
+  .panel-h{display:flex;align-items:center;gap:9px;font-size:14px;letter-spacing:1.4px;font-weight:700;color:var(--green-d);text-transform:uppercase;margin-bottom:12px;padding:0 2px}
+  [dir=rtl] .panel-h{letter-spacing:0}
+  .panel-h svg{flex:0 0 auto}
 
-  /* ── footer ── */
-  footer{margin-top:14px;display:flex;align-items:center;gap:16px;font-size:13.5px}
-  .ticker{flex:1;min-width:0;font-size:15px;font-weight:600;color:var(--ink);opacity:0;transition:opacity .35s;text-align:center}
-  .ticker.show{opacity:1}
-  .ticker small{font-weight:500;color:var(--ink3)}
+  /* actions */
+  .act{display:flex;align-items:center;gap:13px;padding:11px 10px;border-radius:14px;cursor:default;transition:background .15s}
+  .act:hover{background:#F4F8EE}
+  .act+.act{margin-top:2px}
+  .act-ic{width:42px;height:42px;border-radius:12px;background:var(--green-t);color:var(--green);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+  .act-tx{flex:1;min-width:0}
+  .act-tx b{font-size:15px;font-weight:700;display:block}
+  .act-tx span{font-size:12.5px;color:var(--ink2);font-weight:500}
+  .act-pts{font-weight:800;font-size:14px;color:var(--green);white-space:nowrap;display:flex;align-items:center;gap:8px}
+  .act-pts svg{color:var(--ink3)}
+  .act-all{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:8px;padding:10px;font-size:14px;font-weight:700;color:var(--green-d);cursor:pointer;border-radius:12px}
+  .act-all:hover{background:var(--green-t)}
+
+  /* reward */
+  .rw-img{border-radius:16px;overflow:hidden;position:relative;height:186px;background:linear-gradient(160deg,#3E6624,#5C8A38)}
+  .rw-img svg{width:100%;height:100%}
+  .rw-badge{position:absolute;top:12px;inset-inline-end:12px;background:var(--green-d);color:#fff;font-size:12.5px;font-weight:700;padding:5px 12px;border-radius:20px}
+  .rw-title{font-size:18px;font-weight:700;margin-top:13px}
+  .rw-sub{font-size:13.5px;color:var(--ink2);font-weight:500;margin-top:3px}
+  .rw-btn{margin-top:13px;display:flex;align-items:center;justify-content:center;gap:8px;padding:12px;border-radius:14px;background:var(--green-t);color:var(--green-d);font-size:14px;font-weight:700;cursor:pointer;transition:background .15s}
+  .rw-btn:hover{background:#E2EED2}
+
+  /* stats */
+  .stat{display:flex;align-items:center;gap:14px;padding:14px 8px}
+  .stat+.stat{border-top:1px solid var(--line)}
+  .stat-ic{width:46px;height:46px;border-radius:13px;background:var(--green-t);color:var(--green);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+  .stat-tx{flex:1;min-width:0}
+  .stat-tx .l{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--ink3);font-weight:700}
+  [dir=rtl] .stat-tx .l{letter-spacing:0}
+  .stat-tx .v{font-size:23px;font-weight:800;line-height:1.1;font-variant-numeric:tabular-nums;margin-top:2px}
+  .stat-tx .v small{font-size:13px;color:var(--ink3);font-weight:600;margin-inline-start:3px}
+  .spark{width:76px;height:34px;flex:0 0 auto}
+
+  /* state */
   .state{text-align:center;padding:70px 20px;color:var(--ink2);font-size:19px;font-weight:600}
   .state small{display:block;margin-top:12px;font-weight:400;font-size:14px;color:var(--ink3);max-width:560px;margin:12px auto 0;line-height:1.5}
 
+  /* toasts */
   #toasts{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:70;display:flex;flex-direction:column;gap:10px;align-items:center;pointer-events:none}
-  .toast{background:#002114;color:#EBD498;font-weight:600;font-size:16.5px;padding:13px 22px;border-radius:30px;box-shadow:0 12px 34px rgba(24,32,26,.3);animation:tpop .35s cubic-bezier(.2,1.3,.4,1),tout .4s ease 3.4s forwards}
+  .toast{background:#274016;color:#F1E4B6;font-weight:600;font-size:15.5px;padding:12px 22px;border-radius:30px;box-shadow:0 12px 30px rgba(40,51,31,.28);animation:tpop .35s cubic-bezier(.2,1.3,.4,1),tout .4s ease 3.4s forwards}
   @keyframes tpop{from{opacity:0;transform:translateY(-14px) scale(.9)}to{opacity:1;transform:none}}
   @keyframes tout{to{opacity:0;transform:translateY(-14px) scale(.96)}}
 
-  @media (max-width:940px){
-    .brand h2{font-size:21px}.brand .k{font-size:9.5px}.clock{display:none}.updated{display:none}
-    .stats{flex-wrap:wrap}.stat{flex:1 1 44%}
+  /* player sheet */
+  #ov{position:fixed;inset:0;z-index:50;background:rgba(24,32,22,.4);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:none;align-items:flex-end;justify-content:center}
+  #ov.open{display:flex}
+  .sheet{width:100%;max-width:520px;background:var(--card);border-radius:24px 24px 0 0;padding:22px 24px 28px;box-shadow:0 -18px 50px rgba(24,32,22,.25);animation:sheetup .32s cubic-bezier(.2,1.05,.35,1)}
+  @keyframes sheetup{from{transform:translateY(60px);opacity:0}}
+  @media (min-width:960px){#ov{align-items:center}.sheet{border-radius:24px}}
+  .sh-top{display:flex;align-items:center;gap:14px}
+  .sh-ava{width:64px;height:64px;border-radius:20px;display:flex;align-items:center;justify-content:center;flex:0 0 auto;overflow:hidden}
+  .sh-ava svg.pico{width:60%;height:60%}
+  .sh-id{flex:1;min-width:0}
+  .sh-id b{font-size:21px;font-weight:700;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .sh-x{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:#EEF3E7;color:var(--ink2);font-size:14px;cursor:pointer;flex:0 0 auto}
+  .sh-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}
+  .sh-cell{background:#F4F8EE;border:1px solid var(--line);border-radius:15px;padding:12px;text-align:center}
+  .sh-cell .v{font-size:18px;font-weight:700;font-variant-numeric:tabular-nums}
+  .sh-cell .l{font-size:10.5px;color:var(--ink2);font-weight:600;margin-top:3px}
+
+  @media (max-width:600px){
+    .wrap{padding:16px 14px}
+    .hero{padding:18px;gap:16px}.hero .trophy{width:60px;height:60px;font-size:30px}
+    .hero-txt h1{font-size:25px}.hero-txt p{font-size:13.5px}
+    .brand .bt{font-size:18px}.clock{display:none}
   }
-  /* ── big-screen mode: everything larger for projectors / lobby TVs ── */
-  @media (min-width:1500px){
-    .wrap{max-width:1560px}
-    .brand h2{font-size:36px}.brand .k{font-size:13px}
-    .brand img{height:60px}
-    .pill{font-size:16px;padding:11px 17px}
-    .forest .tt{font-size:18px}
-    .cap .tt{font-size:13px}
-    .race{padding:15px 18px}
-    .duel-ava{width:54px;height:54px;font-size:22px}
-    .duel-nm b{font-size:23px}
-    .duel-nm span{font-size:19px}
-    .duel-vs{width:50px;height:50px;font-size:16px}
-    .duel-bar{height:14px}
-    .duel-note{font-size:17px}
-    .row{padding:16px 17px}
-    .r-rank{width:42px;font-size:23px}
-    .disc{width:38px;height:38px;font-size:18px}
-    .r-move{width:32px;font-size:15px}
-    .r-ava{width:56px;height:56px;font-size:23px}
-    .r-top b{font-size:24px}
-    .tier{font-size:13.5px;padding:4px 12px}
-    .pbar{height:12px;margin-top:10px}
-    .r-pts{font-size:30px}
-    .r-pts small{font-size:15px}
-    .r-gap{font-size:16px}
-    .stat{padding:17px 19px}
-    .stat .ic{width:52px;height:52px;border-radius:15px}
-    .stat .ic svg{width:22px;height:22px}
-    .stat .v{font-size:36px}
-    .stat .l{font-size:13.5px;margin-top:5px}
-    .msg{min-height:110px;padding:22px 26px}
-    .msg .ticker{font-size:27px}
-    .msg .ticker .alt{font-size:18px;margin-top:9px}
-    .adimg{height:172px}
-    .empty{font-size:17px}
+  /* big-screen / lobby TV */
+  @media (min-width:1440px){
+    .wrap{max-width:1440px}
+    .hero-txt h1{font-size:40px}.brand .bt{font-size:25px}
+    .r-name{font-size:19px}.r-pts{font-size:23px}.r-ava{width:52px;height:52px}
+    .stat-tx .v{font-size:26px}
   }
-  @media (prefers-reduced-motion: reduce){
-    *,*::before,*::after{animation:none!important;transition:none!important}
-  }
+  @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
 <div class="bg"></div>
 <canvas id="confetti"></canvas>
 <div id="toasts"></div>
-<div class="updated" id="updated"></div>
+
 <div class="wrap">
   <header>
     <div class="brand">
-      <img src="/emblem.png" alt="PSAUx" onerror="this.style.display='none'"/>
+      <div class="logo"><img src="/emblem.png" alt="PSAUx" onerror="this.parentNode.innerHTML='🌿';this.parentNode.style.fontSize='24px'"/></div>
       <div style="min-width:0">
-        <div class="k" id="h-kicker"></div>
-        <h2 id="h-title"></h2>
+        <div class="bt" id="h-title"></div>
+        <div class="bs" id="h-kicker"></div>
       </div>
     </div>
     <div class="hright">
+      <div class="pill"><span class="dot"></span> <span class="live" id="h-live"></span></div>
       <div class="pill clock" id="clock"></div>
-      <div class="pill"><span class="dot"></span> <span id="h-live"></span></div>
-      <button class="ctrl" id="lang"></button>
-      <button class="ctrl icon" id="fs" title="Fullscreen"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></button>
+      <div class="pill ctrl" id="lang"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg> <span id="lang-t"></span></div>
     </div>
   </header>
 
-  <div class="main" id="main" style="display:none">
-    <div class="forest card">
-      <div class="cap"><span class="tt" id="f-cap"></span></div>
-      <div id="scene"></div>
+  <div id="main" style="display:none">
+    <!-- hero -->
+    <div class="hero">
+      <div class="leaf">🌳</div>
+      <div class="trophy">🏆</div>
+      <div class="hero-txt">
+        <h1 id="hero-h"></h1>
+        <p id="hero-p"></p>
+      </div>
     </div>
-    <div class="bottom">
-      <div class="list card">
-        <div class="cap"><span class="tt" id="l-cap"></span></div>
-        <div class="race" id="race"></div>
+
+    <!-- podium scene -->
+    <div class="scene-card card"><div id="scene"></div></div>
+
+    <!-- main grid -->
+    <div class="grid">
+      <div class="lb card">
+        <div class="lb-head">
+          <div class="t"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6"/></svg> <span id="lb-cap"></span></div>
+          <div class="u"><span id="lb-updated"></span></div>
+        </div>
         <div id="rows"></div>
       </div>
+
       <div class="side">
-        <div class="stats" id="stats"></div>
-        <div class="msg card"><div class="ticker show" id="ticker"></div></div>
-        <div class="adbox card" id="adbox" style="display:none">
-          <div class="cap"><span class="tt" id="ad-cap"></span></div>
-          <div class="adimg"><img id="adimg" alt="ad"/></div>
+        <!-- today's actions -->
+        <div class="panel card">
+          <div class="panel-h"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span id="act-cap"></span></div>
+          <div id="act-list"></div>
+          <div class="act-all" id="act-all"></div>
+        </div>
+
+        <!-- reward preview -->
+        <div class="panel card">
+          <div class="panel-h"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C11 3 12 8 12 8M16.5 8a2.5 2.5 0 0 0 0-5C13 3 12 8 12 8"/></svg> <span id="rw-cap"></span></div>
+          <div class="rw-img">
+            <div class="rw-badge" id="rw-badge"></div>
+            <svg viewBox="0 0 300 186" preserveAspectRatio="xMidYMid slice">
+              <defs><radialGradient id="rwg" cx="50%" cy="38%" r="70%"><stop offset="0" stop-color="#6FA84B"/><stop offset="1" stop-color="#3E6624"/></radialGradient></defs>
+              <rect width="300" height="186" fill="url(#rwg)"/>
+              <g opacity=".16" fill="#fff"><circle cx="40" cy="40" r="26"/><circle cx="262" cy="150" r="34"/><circle cx="250" cy="30" r="14"/></g>
+              <!-- wood stump -->
+              <ellipse cx="150" cy="168" rx="66" ry="12" fill="#7A5A38"/>
+              <ellipse cx="150" cy="162" rx="66" ry="12" fill="#9A7448"/>
+              <ellipse cx="150" cy="162" rx="46" ry="8" fill="#87663E"/>
+              <!-- tumbler -->
+              <g>
+                <path d="M120 70 h60 a6 6 0 0 1 6 6 l-6 74 a10 10 0 0 1-10 9 h-40 a10 10 0 0 1-10-9 l-6-74 a6 6 0 0 1 6-6 Z" fill="#EDEFE2"/>
+                <path d="M120 70 h30 v89 h-20 a10 10 0 0 1-10-9 l-6-74 a6 6 0 0 1 6-6 Z" fill="#F7F8F0"/>
+                <rect x="116" y="62" width="68" height="12" rx="6" fill="#CBD3B8"/>
+                <rect x="130" y="92" width="40" height="30" rx="6" fill="#5C8A38" opacity=".85"/>
+                <text x="150" y="112" text-anchor="middle" font-size="15" font-weight="800" fill="#fff" font-family="Poppins,sans-serif">🌿</text>
+              </g>
+            </svg>
+          </div>
+          <div class="rw-title" id="rw-title"></div>
+          <div class="rw-sub" id="rw-sub"></div>
+          <div class="rw-btn ctrl" id="rw-btn"></div>
+        </div>
+
+        <!-- stats -->
+        <div class="panel card">
+          <div id="stats"></div>
         </div>
       </div>
     </div>
   </div>
+
   <div id="state" class="state"></div>
 </div>
 
 <div id="ov"><div class="sheet" id="sheet"></div></div>
 
 <script>
-  // ── Reads Firestore over plain REST (no realtime SDK / no CDN) so it works on
-  //    any network Google is reachable from; polls every few seconds. ──
+  // ── live data source (unchanged): anonymous Firebase auth + Firestore REST poll
   const KEY="AIzaSyDTZ4COIWrzmXZtC9uAsAUCNwHALOquvMM", PROJECT="psaux-26";
   const CO2_PER_POINT=0.05, POLL_MS=4000;
-  // Bottle model: the PSAUx app awards 2 pts per scanned bottle; assume ~70% of
-  // a player's points come from bottle scans (rest: challenges, volunteering).
   const POINTS_PER_BOTTLE=2, BOTTLE_SHARE=0.7;
   const PAL=["#3E7C50","#2E7D74","#B08900","#B15E36","#6D5CA8","#2C6E9E","#A8447C","#587A33","#0F7E7E","#8A6D3B"];
   const TIERS=[
-    {min:0,n:"Active Contributor",ar:"المساهم النشط",c:"#5D8A3C"},
-    {min:500,n:"Green Achiever",ar:"المنجز الأخضر",c:"#2E8B6A"},
+    {min:0,n:"Active Contributor",ar:"مساهم نشط",c:"#5D8A3C"},
+    {min:500,n:"Green Achiever",ar:"منجز أخضر",c:"#2E8B6A"},
     {min:1500,n:"Sustainability Advocate",ar:"مناصر الاستدامة",c:"#0F7E7E"},
-    {min:3000,n:"Campus Changemaker",ar:"صانع التغيير",c:"#2C6E9E"},
+    {min:3000,n:"Campus Changemaker",ar:"صانع تغيير",c:"#2C6E9E"},
     {min:5000,n:"PSAUx Champion",ar:"بطل PSAUx",c:"#A9832F"},
     {min:8000,n:"Sustainability Legend",ar:"أسطورة الاستدامة",c:"#7A4FA8"}];
+
   const ICONS={
-    users:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M15.5 3.13a4 4 0 0 1 0 7.75"/></svg>',
-    bolt:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z"/></svg>',
-    bottle:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2h4M10 2v3.2c0 .6-2.6 1.8-2.6 4V19a2.4 2.4 0 0 0 2.4 2.4h4.4A2.4 2.4 0 0 0 16.6 19V9.2c0-2.2-2.6-3.4-2.6-4V2"/></svg>',
-    globe:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg>'};
+    users:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M15.5 3.13a4 4 0 0 1 0 7.75"/></svg>',
+    tree:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22v-7"/><path d="M9 15a5 5 0 1 1 6 0"/><path d="M12 2a7 7 0 0 1 4 12.9"/><path d="M12 2a7 7 0 0 0-4 12.9"/></svg>',
+    bottle:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2h4M10 2v3.2c0 .6-2.6 1.8-2.6 4V19a2.4 2.4 0 0 0 2.4 2.4h4.4A2.4 2.4 0 0 0 16.6 19V9.2c0-2.2-2.6-3.4-2.6-4V2"/></svg>',
+    cloud:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19a4.5 4.5 0 0 0 0-9 6 6 0 0 0-11.6 1.5A4 4 0 0 0 6 19Z"/></svg>',
+    scan:'<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2M7 12h10"/></svg>',
+    recycle:'<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 19H4.8a2 2 0 0 1-1.7-3l1.3-2M8.5 4.5l1.2-2a2 2 0 0 1 3.4 0l1.3 2.2M20.7 14l1 1.7a2 2 0 0 1-1.7 3H17M6.2 9.5 4 11l-1.5-2.6M14 21l2.2-1.3-1.5-2.6M17.5 8 20 9.3 18.5 12"/></svg>',
+    water:'<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.7S6 9.4 6 14a6 6 0 0 0 12 0c0-4.6-6-11.3-6-11.3Z"/></svg>',
+    chev:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>',
+    leafSm:'<svg width="13" height="13" viewBox="0 0 24 24" fill="#5C8A38"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/></svg>'};
 
   const I18N={
-    en:{kicker:"Prince Sattam University · Sustainability",title:"PSAUx Campus Forest",live:"LIVE",cap:"THE RANKING",searchPh:"Find a player…",
-      fcap:"Every point you earn grows your tree — scan, volunteer, act.",
-      competing:"Growing trees",totalPts:"Total PSAUx points",bottlesT:"Bottles saved (est.)",co2:"kg CO₂ saved (est.)",pts:"pts",
-      front:"Leading the race",raceCap:"THE RACE",tie:"Tied",vs:"VS",hotT:"Active in the last 48 hours",
-      cheer:["You've got this!","Keep going!","So close!","Every bottle counts!"],
-      defend:(a,p)=>`${a} leads with ${p} — defending the crown!`,
-      tiedWith:n=>`Tied with ${n}`,catchUp:(g,n)=>`▲ ${g} to overtake ${n}`,
-      raceTied:(a,b,p)=>`${a} & ${b} are tied at ${p} — the next point takes the lead!`,
-      raceGap:(b,g,a)=>`${b} needs ${g} pts to catch ${a}`,
-      behindYou:(n,g)=>`${n} is ${g} pts behind you — stay ahead!`,
-      battle:(x,y,g)=>`Closest battle: ${x} vs ${y} — only ${g} pts apart`,
-      battleTied:(x,y)=>`Closest battle: ${x} & ${y} — dead even!`,
-      strengths:{fast:"Fast riser",streak:"Daily streak",power:"Big impact",steady:"Steady recycler",starter:"Just started"},
-      insight:(n,s)=>`${n} ${s.vel!=null?`averages ≈ ${s.vel} pts a day since joining, and `:""}has kept ≈ ${s.bottles} bottles out of landfill — about ${s.kg} kg of CO₂ avoided, like ${s.km} km not driven by car.`,
-      agoNow:"active now",agoM:m=>`active ${m}m ago`,agoH:h=>`active ${h}h ago`,agoD:d=>`active ${d}d ago`,
-      connecting:"Planting the campus forest…",noPlayers:"No players yet — be the first to plant your tree!",
-      noMatch:"No player matches your search.",
-      cantReach:"Couldn't reach the leaderboard.",cantReachSub:"Check the network connection. If it persists, confirm Firestore allows reading <b>users</b> for signed-in clients.",
+    en:{title:"PSAUx",kicker:"Campus Forest",live:"LIVE",lang:"AR",lbCap:"Leaderboard",
+      heroAway:(n)=>`You're <span class="n">${n} points</span> away from <span class="one">#1</span>`,
+      heroLead:(n)=>`<span class="n">${n}</span> is leading — <span class="one">#1</span> in the forest`,
+      heroTie:`It's a tie for <span class="one">#1</span>!`,
+      heroSolo:`You're <span class="one">#1</span> — leading the forest!`,
+      heroP:"Keep taking action. Every point grows our forest!",
       updatedNow:"Updated just now",updatedS:s=>`Updated ${s}s ago`,updatedM:m=>`Updated ${m}m ago`,
-      rank:"Rank",points:"PSAUx points",bottlesL:"Bottles (est.)",co2L:"kg CO₂ (est.)",lastActive:"Last active",strengthL:"Good at",
-      journey:"LEVEL JOURNEY",insightCap:"AI INSIGHT · ESTIMATED FROM ACCOUNT DATA",plotSign:"Your tree here!",adCap:"SPONSORS & ANNOUNCEMENTS",
-      earnedT:(n,p)=>`${n}'s tree grew +${p} pts`,leadT:n=>`${n} takes the lead!`,
-      ticker:x=>["Scan a bottle at any PSAUx station — your tree grows.",
-        `This forest saved ≈ ${x.bt} bottles from landfill <small>est.</small>`,
-        `≈ ${x.kg} kg of CO₂ avoided <small>est.</small>`,
-        `Like ${x.km} km not driven by car`,
-        "Tap any tree to meet its student."]},
-    ar:{kicker:"جامعة الأمير سطام بن عبدالعزيز · الاستدامة",title:"غابة PSAUx",live:"مباشر",cap:"الترتيب",searchPh:"ابحث عن لاعب…",
-      fcap:"كل نقطة تكسبها تُنمّي شجرتك — امسح وتطوّع وشارك.",
-      competing:"أشجار تنمو",totalPts:"مجموع نقاط PSAUx",bottlesT:"عبوات موفَّرة (تقديري)",co2:"كجم CO₂ موفَّرة (تقديري)",pts:"نقطة",
-      front:"يتصدر السباق",raceCap:"السباق",tie:"تعادل",vs:"ضد",hotT:"نشط خلال آخر ٤٨ ساعة",
-      cheer:["قدها!","واصل!","قربت!","كل عبوة تفرق!"],
-      defend:(a,p)=>`${a} في الصدارة بـ ${p} نقطة — يدافع عن التاج!`,
-      tiedWith:n=>`تعادل مع ${n}`,catchUp:(g,n)=>`▲ ${g} لتجاوز ${n}`,
-      raceTied:(a,b,p)=>`${a} و${b} متعادلان عند ${p} — النقطة التالية تحسم الصدارة!`,
-      raceGap:(b,g,a)=>`${b} يحتاج ${g} نقطة للحاق بـ ${a}`,
-      behindYou:(n,g)=>`${n} خلفك بفارق ${g} نقطة — حافظ على تقدمك!`,
-      battle:(x,y,g)=>`أقرب منافسة: ${x} ضد ${y} — فارق ${g} نقطة فقط`,
-      battleTied:(x,y)=>`أقرب منافسة: ${x} و${y} — تعادل تام!`,
-      strengths:{fast:"صاعد بسرعة",streak:"مواظب يومياً",power:"تأثير كبير",steady:"منتظم في التدوير",starter:"بدأ للتو"},
-      insight:(n,s)=>`${n} ${s.vel!=null?`بمعدل ≈ ${s.vel} نقطة يومياً منذ الانضمام، و`:""}أنقذ ≈ ${s.bottles} عبوة من المكب — أي ≈ ${s.kg} كجم CO₂ تم تجنبها، مثل ${s.km} كم لم تُقطع بالسيارة.`,
-      agoNow:"نشط الآن",agoM:m=>`نشط قبل ${m} د`,agoH:h=>`نشط قبل ${h} س`,agoD:d=>`نشط قبل ${d} يوم`,
-      connecting:"جارٍ زراعة غابة الحرم…",noPlayers:"لا يوجد لاعبون بعد — كن أول من يزرع شجرته!",
-      noMatch:"لا يوجد لاعب بهذا الاسم.",
-      cantReach:"تعذّر الوصول إلى لوحة الصدارة.",cantReachSub:"تحقق من اتصال الشبكة. إذا استمرت المشكلة تأكد من صلاحيات القراءة في Firestore.",
+      b1:"In the Lead",b2:"Keep it up!",b3:"Great work!",bN:"Keep going!",
+      actCap:"Today's Actions",actAll:"View all actions",
+      acts:[["scan","Scan a bottle","Scan any plastic bottle","+10"],
+            ["recycle","Recycle 5 bottles","Recycle at any kiosk","+50"],
+            ["water","Care for a tree","Water or nurture a tree","+30"]],
+      rwCap:"Reward Preview",rwPts:"100 pts",rwTitle:"PSAUx Eco Tumbler",rwSub:"Sustainable. Stylish. Yours.",rwBtn:"See all rewards",
+      stTotal:"Total Points",stTrees:"Trees Growing",stBottles:"Bottles Saved",stCo2:"CO₂ Avoided",tons:"t",pts:"pts",
+      earnedT:(n,p)=>`${n}'s tree grew +${p}`,leadT:n=>`${n} takes the lead!`,
+      rank:"Rank",points:"Points",bottlesL:"Bottles",co2L:"kg CO₂",lastActive:"Last active",tierL:"Tier",
+      agoNow:"active now",agoM:m=>`${m}m ago`,agoH:h=>`${h}h ago`,agoD:d=>`${d}d ago`,
+      connecting:"Planting the campus forest…",noPlayers:"No players yet — be the first to plant your tree!",
+      cantReach:"Couldn't reach the leaderboard.",cantReachSub:"Check the network connection. If it persists, confirm Firestore allows reading <b>users</b> for signed-in clients."},
+    ar:{title:"PSAUx",kicker:"غابة الحرم",live:"مباشر",lang:"EN",lbCap:"لوحة الصدارة",
+      heroAway:(n)=>`تفصلك <span class="n">${n} نقطة</span> عن <span class="one">المركز الأول</span>`,
+      heroLead:(n)=>`<span class="n">${n}</span> يتصدّر — <span class="one">المركز الأول</span> في الغابة`,
+      heroTie:`تعادل على <span class="one">المركز الأول</span>!`,
+      heroSolo:`أنت <span class="one">المركز الأول</span> — تتصدّر الغابة!`,
+      heroP:"واصل العمل. كل نقطة تُنمّي غابتنا!",
       updatedNow:"حُدِّثت الآن",updatedS:s=>`حُدِّثت قبل ${s} ث`,updatedM:m=>`حُدِّثت قبل ${m} د`,
-      rank:"المركز",points:"نقاط PSAUx",bottlesL:"عبوات (تقديري)",co2L:"كجم CO₂ (تقديري)",lastActive:"آخر نشاط",strengthL:"يجيد",
-      journey:"رحلة المستويات",insightCap:"تحليل ذكي · تقديري من بيانات الحساب",plotSign:"مكان شجرتك!",adCap:"الرعاة والإعلانات",
-      earnedT:(n,p)=>`نمت شجرة ${n} ‏+${p} نقطة`,leadT:n=>`${n} في الصدارة!`,
-      ticker:x=>["امسح عبوة في أي محطة PSAUx — وستنمو شجرتك.",
-        `أنقذت هذه الغابة ≈ ${x.bt} عبوة من المكب <small>تقديري</small>`,
-        `≈ ${x.kg} كجم CO₂ تم تجنبها <small>تقديري</small>`,
-        `مثل ${x.km} كم لم تُقطع بالسيارة`,
-        "المس أي شجرة لتتعرف على صاحبها."]}};
+      b1:"في الصدارة",b2:"واصل!",b3:"أحسنت!",bN:"استمر!",
+      actCap:"مهام اليوم",actAll:"عرض كل المهام",
+      acts:[["scan","امسح عبوة","امسح أي عبوة بلاستيك","+١٠"],
+            ["recycle","أعد تدوير ٥ عبوات","في أي محطة تدوير","+٥٠"],
+            ["water","اعتنِ بشجرة","اسقِ أو ارعَ شجرة","+٣٠"]],
+      rwCap:"معاينة المكافأة",rwPts:"١٠٠ نقطة",rwTitle:"كوب PSAUx البيئي",rwSub:"مستدام. أنيق. لك.",rwBtn:"شاهد كل المكافآت",
+      stTotal:"مجموع النقاط",stTrees:"أشجار تنمو",stBottles:"عبوات موفَّرة",stCo2:"CO₂ متجنَّب",tons:"طن",pts:"نقطة",
+      earnedT:(n,p)=>`نمت شجرة ${n} ‏+${p}`,leadT:n=>`${n} في الصدارة!`,
+      rank:"المركز",points:"النقاط",bottlesL:"عبوات",co2L:"كجم CO₂",lastActive:"آخر نشاط",tierL:"الفئة",
+      agoNow:"نشط الآن",agoM:m=>`قبل ${m} د`,agoH:h=>`قبل ${h} س`,agoD:d=>`قبل ${d} يوم`,
+      connecting:"جارٍ زراعة غابة الحرم…",noPlayers:"لا يوجد لاعبون بعد — كن أول من يزرع شجرته!",
+      cantReach:"تعذّر الوصول إلى لوحة الصدارة.",cantReachSub:"تحقق من اتصال الشبكة. إذا استمرت المشكلة تأكد من صلاحيات القراءة في Firestore."}};
+
   let lang="en";try{lang=localStorage.getItem("psaux_lang")||"en";}catch(e){}
   const T=()=>I18N[lang];
   const tname=t=>lang==="ar"?t.ar:t.n;
 
-  let prevPoints={},prevRank={},firstLoad=true,booted=false,lastSig="",lastUpdate=0,prevLeader=null,idToken=null,fails=0;
-  let lastRows=[],tickerData=[],tickIdx=0,sheetUid=null,gained=new Set();
+  let prevPoints={},firstLoad=true,booted=false,lastSig="",lastUpdate=0,prevLeader=null,idToken=null,fails=0;
+  let lastRows=[],sheetUid=null,gained=new Set();
 
   const el=id=>document.getElementById(id);
   const first=n=>(n||"?").trim().split(" ")[0];
-  // Person-shape avatars: woman silhouette for female names, man otherwise.
-  // (No gender field in Firestore, so we match common Saudi female names.)
+  const esc=s=>(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const fmt=n=>(n||0).toLocaleString(lang==="ar"?"ar-EG":"en-US");
+  function hash(s){let h=0;s=s||"?";for(let i=0;i<s.length;i++)h=(h*33+s.charCodeAt(i))>>>0;return h;}
+  const color=name=>PAL[hash(name)%PAL.length];
+  function tier(p){let t=TIERS[0];for(const x of TIERS)if(p>=x.min)t=x;return t;}
+  function ago(iso){if(!iso)return"";const s=(Date.now()-Date.parse(iso))/1e3;if(!(s>=0))return"";if(s<90)return T().agoNow;if(s<3600)return T().agoM(Math.floor(s/60));if(s<86400)return T().agoH(Math.floor(s/3600));return T().agoD(Math.floor(s/86400));}
+
   const FEMALE=["lama","لمى","لما","wedad","وداد","sara","سارة","ساره","nora","نورة","نوره","noura","norah","fatima","فاطمة","aisha","عائشة","reem","ريم","maha","مها","hind","هند","dana","دانة","danah","rana","رنا","lina","لينا","mona","منى","amal","أمل","امل","haya","هيا","shahad","شهد","raghad","رغد","layan","ليان","jana","جنى","salma","سلمى","ghada","غادة","abeer","عبير","huda","هدى","maryam","mariam","مريم","zainab","زينب","atheer","أثير","اثير","njoud","نجود","afnan","أفنان","افنان","renad","رناد","remas","ريماس","deem","ديم","jood","جود","wafa","وفاء","asma","أسماء","اسماء","munira","منيرة","latifa","لطيفة","khadija","خديجة","lamia","لمياء","dalal","دلال","hessa","حصة","sheikha","شيخة","noor","نور","joud","rawan","روان","lujain","لجين","albandari","البندري","bashayer","بشاير","waad","وعد","razan","رزان"];
   function isFemale(n){const s=(n||"").trim().toLowerCase();if(!s)return false;const w=s.split(/\s+/)[0];return FEMALE.some(t=>w===t||s.startsWith(t));}
   function avatar(n){return isFemale(n)
     ?'<svg class="pico" viewBox="0 0 24 24" fill="#fff"><circle cx="12" cy="6" r="3.8"/><path d="M12 10.4c-1.1 0-2.1.7-2.4 1.8l-2.4 6.9c-.1.4.2.8.6.8h2.3v2.6c0 .5.4.9.9.9h2c.5 0 .9-.4.9-.9v-2.6h2.3c.4 0 .7-.4.6-.8l-2.4-6.9c-.3-1.1-1.3-1.8-2.4-1.8z"/></svg>'
     :'<svg class="pico" viewBox="0 0 24 24" fill="#fff"><circle cx="12" cy="6" r="3.8"/><path d="M12 10.4c-3.3 0-5.4 2.1-5.4 5v6c0 .5.4.9.9.9h9c.5 0 .9-.4.9-.9v-6c0-2.9-2.1-5-5.4-5z"/></svg>';}
-  const esc=s=>(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-  const fmt=n=>(n||0).toLocaleString("en-US");
-  function hash(s){let h=0;s=s||"?";for(let i=0;i<s.length;i++)h=(h*33+s.charCodeAt(i))>>>0;return h;}
-  const color=name=>PAL[hash(name)%PAL.length];
-  function tier(p){let t=TIERS[0];for(const x of TIERS)if(p>=x.min)t=x;return t;}
-  function tierPill(p){const t=tier(p);return `<span class="tier" style="background:${t.c}1A;color:${t.c}">${tname(t)}</span>`;}
-  function progress(p){const i=TIERS.findIndex(t=>p<t.min);if(i<0)return{pct:100};const lo=TIERS[i-1].min,hi=TIERS[i].min;return{pct:Math.max(4,Math.round((p-lo)/(hi-lo)*100))};}
-  function ago(iso){if(!iso)return"";const s=(Date.now()-Date.parse(iso))/1e3;if(!(s>=0))return"";if(s<90)return T().agoNow;if(s<3600)return T().agoM(Math.floor(s/60));if(s<86400)return T().agoH(Math.floor(s/3600));return T().agoD(Math.floor(s/86400));}
 
-  // Per-player insight engine — derived from the account's real fields:
-  // points, createdAt (rate of earning), updatedAt (recency).
   function pstats(r){
     const p=r.points||0;
     const kg=Math.round(p*CO2_PER_POINT);
     const bottles=Math.round(p*BOTTLE_SHARE/POINTS_PER_BOTTLE);
-    const days=r.createdAt&&Date.parse(r.createdAt)?Math.max(1,Math.round((Date.now()-Date.parse(r.createdAt))/864e5)):null;
-    const vel=days?Math.round(p/days):null;
-    const fresh=r.updatedAt&&(Date.now()-Date.parse(r.updatedAt))<1728e5;
-    let s="steady";
-    if(p<100)s="starter";else if(vel!=null&&vel>=300)s="fast";
-    else if(fresh)s="streak";else if(p>=3000)s="power";
-    return {kg,bottles,vel,fresh,strength:s};
+    return {kg,bottles};
   }
-  const chipHtml=s=>`<span class="chip">${T().strengths[s.strength]}</span>`;
 
-  function animateNum(node,to){if(!node)return;const from=parseInt((node.textContent||"0").replace(/,/g,""))||0;if(from===to){node.textContent=fmt(to);return;}const t0=performance.now();(function s(t){const k=Math.min(1,(t-t0)/650);node.textContent=fmt(Math.round(from+(to-from)*(1-Math.pow(1-k,3))));if(k<1)requestAnimationFrame(s);})(t0);}
+  function animateNum(node,to,suffix){if(!node)return;const from=parseFloat((node.dataset.v||"0"))||0;node.dataset.v=to;const t0=performance.now();const dec=to%1!==0;(function s(t){const k=Math.min(1,(t-t0)/700);const val=from+(to-from)*(1-Math.pow(1-k,3));node.textContent=(dec?val.toFixed(2):fmt(Math.round(val)))+(suffix||"");if(k<1)requestAnimationFrame(s);})(t0);}
   function toast(m){const d=document.createElement("div");d.className="toast";d.textContent=m;el("toasts").appendChild(d);setTimeout(()=>d.remove(),4000);}
-  function moveBadge(uid,rank){const p=prevRank[uid];if(p==null)return firstLoad?'<span class="same">·</span>':'<span class="newp">NEW</span>';if(p>rank)return `<span class="up">▲${p-rank}</span>`;if(p<rank)return `<span class="down">▼${rank-p}</span>`;return '<span class="same">·</span>';}
+
+  // sparkline — deterministic gentle upward trend, seeded by label
+  function spark(seed){
+    const h=hash(seed),n=12,pts=[];let v=.35;
+    for(let i=0;i<n;i++){v+=((h>>(i%20))&7)/40-.03;v=Math.max(.08,Math.min(.95,v+i*.03));pts.push(v);}
+    const W=76,H=34,step=W/(n-1);
+    const path=pts.map((p,i)=>`${(i*step).toFixed(1)},${(H-4-p*(H-8)).toFixed(1)}`).join(" ");
+    return `<svg class="spark" viewBox="0 0 ${W} ${H}"><defs><linearGradient id="sg${h%97}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7DB24A" stop-opacity=".28"/><stop offset="1" stop-color="#7DB24A" stop-opacity="0"/></linearGradient></defs>
+      <polyline points="0,${H} ${path} ${W},${H}" fill="url(#sg${h%97})" stroke="none"/>
+      <polyline points="${path}" fill="none" stroke="#5C8A38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  }
 
   // ── confetti ──
   const cvs=el("confetti"),ctx=cvs.getContext("2d");let parts=[],raf=null;
   function rz(){cvs.width=innerWidth;cvs.height=innerHeight;}rz();addEventListener("resize",rz);
-  function burst(n=100){const cols=["#0F5A3E","#C5A35A","#E9C349","#083525","#CBA24C","#1A5C3A"];for(let i=0;i<n;i++)parts.push({x:innerWidth*(.3+Math.random()*.4),y:-20,vx:(Math.random()-.5)*9,vy:Math.random()*4+2,g:.16,s:6+Math.random()*7,rot:Math.random()*6,vr:(Math.random()-.5)*.35,c:cols[i%cols.length]});if(!raf)loop();}
+  function burst(n=100){const cols=["#5C8A38","#E0A52B","#F2CE55","#3E6624","#7DB24A","#D69E1E"];for(let i=0;i<n;i++)parts.push({x:innerWidth*(.3+Math.random()*.4),y:-20,vx:(Math.random()-.5)*9,vy:Math.random()*4+2,g:.16,s:6+Math.random()*7,rot:Math.random()*6,vr:(Math.random()-.5)*.35,c:cols[i%cols.length]});if(!raf)loop();}
   function loop(){ctx.clearRect(0,0,cvs.width,cvs.height);parts.forEach(p=>{p.vy+=p.g;p.x+=p.vx;p.y+=p.vy;p.rot+=p.vr;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot);ctx.fillStyle=p.c;ctx.fillRect(-p.s/2,-p.s/2,p.s,p.s*.62);ctx.restore();});parts=parts.filter(p=>p.y<cvs.height+30);if(parts.length)raf=requestAnimationFrame(loop);else{raf=null;ctx.clearRect(0,0,cvs.width,cvs.height);}}
 
-  // ── static chrome (re-applied on language switch) ──
-  // The message card is bilingual: current language big, the other beneath.
-  function tickHtml(pair){
-    const pri=lang==="ar"?pair.ar:pair.en,sec=lang==="ar"?pair.en:pair.ar;
-    return `<div><div>${pri}</div><div class="alt" dir="${lang==="ar"?"ltr":"rtl"}">${sec}</div></div>`;
-  }
-  function chrome(){
-    document.documentElement.lang=lang;document.documentElement.dir=lang==="ar"?"rtl":"ltr";
-    el("h-kicker").textContent=T().kicker;el("h-title").textContent=T().title;el("h-live").textContent=T().live;
-    el("lang").textContent=lang==="ar"?"English":"العربية";
-    el("l-cap").textContent=T().cap;el("f-cap").textContent=T().fcap;el("ad-cap").textContent=T().adCap;
-    if(!booted){el("state").textContent=T().connecting;
-      const z={bt:"0",kg:"0",ph:"0",km:"0"};
-      el("ticker").innerHTML=tickHtml({en:I18N.en.ticker(z)[0],ar:I18N.ar.ticker(z)[0]});}
-  }
-
-  // ══ THE FOREST SCENE ══
-  // Each player is a tree: height grows with points, species richens with tier.
-  // Sky follows the real local time; flowers on the grass = campus bottles saved.
-  const SKY={
-    day:{top:"#CDE9DB",bot:"#EEF6EC",hillB:"#CBE0CD",hillF:"#B7D6BD",grass:"#A9CFAF",mound:"#B6D8BC",dune:"#E6D8B4",sil:"#8FB99A",tuft:"#8FBF98",bush:"#7FAF89",mon:"#9FBFA4",water:"#9CCBDD",waterR:"#C4E2EC",turb:"#F2F5F1",overlay:0},
-    dawn:{top:"#F2DFC3",bot:"#EAF0E2",hillB:"#CBDECB",hillF:"#B4D2B8",grass:"#A5C9A9",mound:"#B2D2B6",dune:"#ECDAB9",sil:"#93B99B",tuft:"#8CBB94",bush:"#7CA986",mon:"#A3BFA6",water:"#A6CBD8",waterR:"#CDE3EA",turb:"#F3F0E6",overlay:0},
-    dusk:{top:"#E8CBA9",bot:"#DDE7DB",hillB:"#B9D1BC",hillF:"#A3C4A8",grass:"#94B899",mound:"#A1C4A6",dune:"#DCC49E",sil:"#7FA98B",tuft:"#7FAA88",bush:"#6E9A79",mon:"#8FAE94",water:"#8FB3C4",waterR:"#B9D2DC",turb:"#E4E3D5",overlay:.04},
-    night:{top:"#0E2433",bot:"#14342C",hillB:"#123A2D",hillF:"#0E2F25",grass:"#0B281F",mound:"#0F2E24",dune:"#123129",sil:"#0E2E25",tuft:"#0E2C22",bush:"#071E16",mon:"#0D2B23",water:"#143540",waterR:"#0F2A32",turb:"#3A5A50",overlay:.10}};
-  function skyMode(){const h=new Date().getHours();return h>=19||h<5?"night":h<7?"dawn":h>=17?"dusk":"day";}
-  const CANOPY=["#1C6B4C","#15654A","#0F5A3E","#2E7D5B","#247253"];
-
-  // tiny silhouette palm for the horizon grove
-  function farPalm(fx,fy,fs,col){
-    let s=`<path d="M${fx} ${fy} L${fx} ${(fy-26*fs).toFixed(1)}" stroke="${col}" stroke-width="${(2.6*fs).toFixed(1)}" stroke-linecap="round"/>`;
-    [[-1,-.05],[-.5,-.3],[0,-.42],[.5,-.3],[1,-.05]].forEach(d=>{
-      s+=`<path d="M${fx} ${(fy-26*fs).toFixed(1)} Q${(fx+d[0]*9*fs).toFixed(1)} ${(fy-26*fs-9*fs).toFixed(1)} ${(fx+d[0]*17*fs).toFixed(1)} ${(fy-26*fs+d[1]*20*fs).toFixed(1)}" stroke="${col}" stroke-width="${(2*fs).toFixed(1)}" fill="none" stroke-linecap="round"/>`;});
-    return s;
-  }
-
-  function treeSvg(r,rank,x,baseY,crowned){
-    const p=r.points||0,h0=hash(r.uid+(r.name||"")),ti=TIERS.indexOf(tier(p));
-    const H=Math.min(128,30+Math.sqrt(p)*1.55);           // palm height from points
-    const FL=Math.max(24,H*.5);                           // frond length (palm crown)
-    const cA=CANOPY[h0%CANOPY.length],cB=CANOPY[(h0+2)%CANOPY.length];
-    const sway=(3.2+h0%3)+"s";
-    const nm=esc((r.name||"—").slice(0,10));
-    const grewNow=gained.has(r.uid)?" cheer":"";
-    const growIn=!booted?" grow":"";
-    let body;
-    if(p<100){ // young palm sprout — a small fan of five blades
-      body=[[-1,-14],[-.5,-19],[0,-22],[.5,-19],[1,-14]].map((b,i)=>
-        `<path d="M0 0 Q${b[0]*7} ${b[1]*.65} ${b[0]*15} ${b[1]}" stroke="${i%2?"#5D8A3C":"#4C8A3F"}" stroke-width="3.2" fill="none" stroke-linecap="round"/>`).join("");
-    }else{
-      // date palm: tapered trunk with diamond texture + a dense crown of
-      // filled, arching blades in three layers, like a flat-style illustration
-      const tw=Math.max(5.5,H*.09),bend=((h0%2)?1:-1)*H*.06,ax=bend,ay=-H;
-      const blade=(dx,dy,sc,col)=>{
-        const tx=ax+dx*FL*sc,ty=ay+(dy+Math.abs(dx)*.18)*FL*sc;
-        const ux=ax+dx*FL*.32*sc,uy=ay-FL*.50*sc;
-        const lx=ax+dx*FL*.62*sc,ly=ay-FL*.08*sc;
-        return `<path d="M${ax.toFixed(1)} ${ay.toFixed(1)} Q${ux.toFixed(1)} ${uy.toFixed(1)} ${tx.toFixed(1)} ${ty.toFixed(1)} Q${lx.toFixed(1)} ${ly.toFixed(1)} ${ax.toFixed(1)} ${ay.toFixed(1)} Z" fill="${col}"/>`;
-      };
-      body=`<path d="M${(-tw/2).toFixed(1)} 0 Q${(bend*1.5).toFixed(1)} ${(-H*.55).toFixed(1)} ${(bend-tw*.30).toFixed(1)} ${-H} L${(bend+tw*.30).toFixed(1)} ${-H} Q${(bend*1.5+tw).toFixed(1)} ${(-H*.55).toFixed(1)} ${(tw/2).toFixed(1)} 0 Z" fill="#8A6A45"/>`;
-      [.16,.30,.44,.58,.72,.86].forEach(f=>{const w=tw*(1.15-f*.5),x=bend*f*1.3;
-        body+=`<path d="M${(x-w*.55).toFixed(1)} ${(-H*f).toFixed(1)} L${x.toFixed(1)} ${(-H*f+3.5).toFixed(1)} L${(x+w*.55).toFixed(1)} ${(-H*f).toFixed(1)}" stroke="#6B4E32" stroke-width="1.4" fill="none" opacity=".6"/>`;});
-      // back layer (darker), main layer (alternating), top highlights (lighter, shorter)
-      [[-.92,-.02],[-.4,-.3],[.4,-.3],[.92,-.02]].forEach(d=>{body+=blade(d[0],d[1]+.05,1.02,"#0B4634");});
-      [[-1,.06],[-.78,-.14],[-.5,-.3],[-.2,-.42],[.2,-.42],[.5,-.3],[.78,-.14],[1,.06]].forEach((d,i)=>{body+=blade(d[0],d[1],1,i%2?cA:cB);});
-      [[-.6,-.26],[.14,-.46],[.6,-.26]].forEach(d=>{body+=blade(d[0],d[1],.55,"#3E8E63");});
-      body+=`<ellipse cx="${bend.toFixed(1)}" cy="${-H}" rx="${(tw*.95).toFixed(1)}" ry="${(tw*.55).toFixed(1)}" fill="#155C41"/>`;
-      if(ti>=4){ // champion+: hanging gold date bunches on short stems
-        [[-1,.16],[1,.19]].forEach(c=>{const bx=bend+c[0]*FL*.20,by=-H+FL*c[1];
-          body+=`<path d="M${bend.toFixed(1)} ${-H} Q${bx.toFixed(1)} ${(by-8).toFixed(1)} ${bx.toFixed(1)} ${(by-2).toFixed(1)}" stroke="#A9832F" stroke-width="1.6" fill="none"/>`;
-          [[0,0],[4.4,3.2],[-4.4,3.2],[2.2,7],[-2.2,7],[0,10.5]].forEach(o=>{body+=`<circle cx="${(bx+o[0]).toFixed(1)}" cy="${(by+o[1]).toFixed(1)}" r="3.3" fill="#E9C349" stroke="#A9832F" stroke-width=".8"/>`;});});
-      }
-      if(ti>=5){ // legend: halo
-        body+=`<circle cx="${bend.toFixed(1)}" cy="${(-H-FL*.05).toFixed(1)}" r="${(FL*1.05).toFixed(1)}" fill="none" stroke="#E9C349" stroke-width="1.4" opacity=".5" stroke-dasharray="3 6"/>`;
-      }
+  // ══ podium scene — Saudi date-palm oasis ══
+  // Each podium tree is a نخلة (date palm), the national tree; the champion's
+  // palm carries hanging gold date bunches and a warm glow.
+  const FROND=["#2E7D5B","#1C6B4C","#3E8E63","#247253","#15654A"];
+  function palmTree(cx,baseY,s,seed,crowned){
+    const h=hash(seed);
+    const H=72*s;                                   // trunk height
+    const bend=((h%2)?1:-1)*H*.05;
+    const topX=cx+bend, topY=baseY-H;
+    const tw=Math.max(7,H*.11);                     // trunk width at base
+    // tapered trunk with date-palm diamond segments
+    let trunk=`<path d="M${(cx-tw/2).toFixed(1)} ${baseY} Q${(cx+bend*1.4).toFixed(1)} ${(baseY-H*.55).toFixed(1)} ${(topX-tw*.28).toFixed(1)} ${topY.toFixed(1)} L${(topX+tw*.28).toFixed(1)} ${topY.toFixed(1)} Q${(cx+bend*1.4+tw).toFixed(1)} ${(baseY-H*.55).toFixed(1)} ${(cx+tw/2).toFixed(1)} ${baseY} Z" fill="#9A7549"/>`;
+    [.18,.32,.46,.60,.74,.86].forEach(f=>{const yy=baseY-H*f,xx=cx+bend*f*1.2,ww=tw*(1.12-f*.5);
+      trunk+=`<path d="M${(xx-ww*.5).toFixed(1)} ${yy.toFixed(1)} q${(ww*.5).toFixed(1)} 4.5 ${ww.toFixed(1)} 0" stroke="#79582F" stroke-width="1.3" fill="none" opacity=".55"/>`;});
+    const FL=46*s;
+    const cA=FROND[h%FROND.length],cB=FROND[(h+2)%FROND.length],cC=FROND[(h+4)%FROND.length];
+    const blade=(dx,dy,sc,col)=>{
+      const ax=topX,ay=topY;
+      const tx=ax+dx*FL*sc,ty=ay+(dy+Math.abs(dx)*.2)*FL*sc;
+      const ux=ax+dx*FL*.3*sc,uy=ay-FL*.5*sc;
+      const lx=ax+dx*FL*.6*sc,ly=ay-FL*.05*sc;
+      return `<path d="M${ax.toFixed(1)} ${ay.toFixed(1)} Q${ux.toFixed(1)} ${uy.toFixed(1)} ${tx.toFixed(1)} ${ty.toFixed(1)} Q${lx.toFixed(1)} ${ly.toFixed(1)} ${ax.toFixed(1)} ${ay.toFixed(1)} Z" fill="${col}"/>`;
+    };
+    let crown="";
+    [[-.95,0],[-.4,-.32],[.4,-.32],[.95,0]].forEach(d=>{crown+=blade(d[0],d[1]+.05,1.05,cB);});
+    [[-1,.08],[-.75,-.15],[-.45,-.32],[-.15,-.44],[.15,-.44],[.45,-.32],[.75,-.15],[1,.08]].forEach((d,i)=>{crown+=blade(d[0],d[1],1,i%2?cA:cC);});
+    [[-.55,-.28],[.12,-.46],[.55,-.28]].forEach(d=>{crown+=blade(d[0],d[1],.55,"#4EA47A");});
+    crown+=`<ellipse cx="${topX.toFixed(1)}" cy="${topY.toFixed(1)}" rx="${(tw*.9).toFixed(1)}" ry="${(tw*.5).toFixed(1)}" fill="#155C41"/>`;
+    let dates="";
+    if(crowned){ // champion palm: hanging gold date bunches
+      [[-1,.16],[1,.19]].forEach(c=>{const bx=topX+c[0]*FL*.22,by=topY+FL*c[1];
+        dates+=`<path d="M${topX.toFixed(1)} ${topY.toFixed(1)} Q${bx.toFixed(1)} ${(by-8).toFixed(1)} ${bx.toFixed(1)} ${(by-2).toFixed(1)}" stroke="#A9832F" stroke-width="1.6" fill="none"/>`;
+        [[0,0],[4,3],[-4,3],[2,6.5],[-2,6.5],[0,10]].forEach(o=>{dates+=`<circle cx="${(bx+o[0]).toFixed(1)}" cy="${(by+o[1]).toFixed(1)}" r="3" fill="#E9C349" stroke="#A9832F" stroke-width=".7"/>`;});});
     }
-    const BT=H+FL*.48;
-    const badge=rank<=3?`${crowned?`<path class="crown" d="M-13 ${(-(BT+36)).toFixed(1)} L-7.5 ${(-(BT+50)).toFixed(1)} L0 ${(-(BT+40.5)).toFixed(1)} L7.5 ${(-(BT+50)).toFixed(1)} L13 ${(-(BT+36)).toFixed(1)} Z" fill="#E9C349" stroke="#A9832F" stroke-width="1"/>`:""}
-      <circle cx="0" cy="${(-(BT+18)).toFixed(1)}" r="14.5" fill="${rank===1?"#E9C349":rank===2?"#B4BDC6":"#CBA24C"}" stroke="${rank===1?"#A9832F":rank===2?"#8D97A3":"#A9832F"}" stroke-width="1.3"/>
-      <text x="0" y="${(-(BT+12.5)).toFixed(1)}" text-anchor="middle" font-size="15.5" font-weight="800" fill="#fff">${rank}</text>`:"";
-    return `<g class="tree${growIn}${grewNow}" data-uid="${esc(r.uid)}" transform="translate(${x.toFixed(1)},${baseY})" style="--sw:${sway}">
-      <ellipse cx="0" cy="3" rx="${Math.max(14,FL*.85).toFixed(1)}" ry="5" fill="rgba(10,40,28,.16)"/>
-      <g class="body">${body}${badge}</g>
-      <rect x="-52" y="11" width="104" height="40" rx="7" fill="#8A6A45" stroke="#6B4E32" stroke-width="1"/>
-      <text x="0" y="27" text-anchor="middle" font-size="14" font-weight="700" fill="#F6EFDF">${nm}</text>
-      <text x="0" y="45" text-anchor="middle" font-size="15.5" font-weight="800" fill="#EBD498">${fmt(r.points)}</text>
+    const glow=crowned?`<circle class="glow" cx="${topX.toFixed(1)}" cy="${(topY-FL*.2).toFixed(1)}" r="${(FL*1.2).toFixed(1)}" fill="#F7DE7E" opacity=".5"/>`:"";
+    return `${glow}<g class="swy">${trunk}${crown}${dates}</g>`;
+  }
+  function podium(cx,topY,w,botY,tone){
+    const rx=w/2;
+    return `<g>
+      <ellipse cx="${cx}" cy="${botY}" rx="${rx}" ry="${(rx*.2).toFixed(1)}" fill="rgba(30,40,25,.12)"/>
+      <rect x="${cx-rx}" y="${topY}" width="${w}" height="${botY-topY}" fill="${tone[1]}"/>
+      <path d="M${cx-rx} ${topY} v${botY-topY} a${rx} ${(rx*.2).toFixed(1)} 0 0 0 ${w} 0 v${-(botY-topY)}" fill="none"/>
+      <ellipse cx="${cx}" cy="${botY}" rx="${rx}" ry="${(rx*.2).toFixed(1)}" fill="${tone[2]}"/>
+      <rect x="${cx-rx}" y="${topY}" width="${w}" height="${botY-topY}" fill="url(#pshade)"/>
+      <ellipse cx="${cx}" cy="${topY}" rx="${rx}" ry="${(rx*.2).toFixed(1)}" fill="${tone[0]}"/>
     </g>`;
   }
+  function medal(cx,cy,rank,crowned){
+    const col=rank===1?["#F2CE55","#D69E1E"]:rank===2?["#CDD4DA","#9AA6B0"]:["#DBA35C","#B87A34"];
+    const crown=crowned?`<path d="M${cx-16} ${cy-24} l6 -15 l10 9 l0 -14 l0 14 l10 -9 l6 15 Z" fill="#F2CE55" stroke="#C79415" stroke-width="1.4" stroke-linejoin="round"/>`:"";
+    return `${crown}<circle cx="${cx}" cy="${cy}" r="17" fill="${col[0]}" stroke="${col[1]}" stroke-width="2.2"/>
+      <text x="${cx}" y="${cy+6}" text-anchor="middle" font-size="18" font-weight="800" fill="#fff" font-family="Poppins,sans-serif">${rank}</text>`;
+  }
+  function ptsPill(cx,cy,txt){
+    const label=lang==="en"?`${txt} pts`:txt;
+    const w=Math.max(58,label.length*11+26);
+    return `<g><rect x="${cx-w/2}" y="${cy-15}" width="${w}" height="30" rx="15" fill="#FFFFFF" opacity=".92"/>
+      <text x="${cx}" y="${cy+5.5}" text-anchor="middle" font-size="15" font-weight="800" fill="#3E6624" font-family="Poppins,sans-serif">${label}</text></g>`;
+  }
+
+  // desert palm silhouette for the horizon grove
+  function farPalm(x,y,s,col){
+    let p=`<path d="M${x} ${y} q${2.5*s} -${30*s} 0 -${46*s}" stroke="${col}" stroke-width="${3.4*s}" fill="none" stroke-linecap="round"/>`;
+    [[-1,-.05],[-.5,-.4],[.5,-.4],[1,-.05],[0,-.6]].forEach(d=>{p+=`<path d="M${x} ${(y-46*s).toFixed(1)} q${d[0]*15*s} ${d[1]*10*s} ${d[0]*26*s} ${(d[1]*16*s+11*s).toFixed(1)}" stroke="${col}" stroke-width="${2.6*s}" fill="none" stroke-linecap="round"/>`;});
+    return p;
+  }
+  // Najdi mud-brick building with triangular merlons (matches the PSAU emblem)
+  function merlons(x,w,y,tw,col){let s="";const n=Math.floor(w/tw);for(let i=0;i<n;i++){const mx=x+i*tw+(w-n*tw)/2;s+=`<path d="M${mx.toFixed(1)} ${y} l${(tw/2).toFixed(1)} -${(tw*.85).toFixed(1)} l${(tw/2).toFixed(1)} ${(tw*.85).toFixed(1)} Z" fill="${col}"/>`;}return s;}
 
   function sceneSvg(rows){
-    const mode=skyMode(),S=SKY[mode],W=1600;
-    const shown=rows.slice(0,12);
-    const n=shown.length,spacing=Math.min(200,(W-180)/Math.max(1,n));
-    // rank 1 in the middle, others fanning outwards; top 3 stand on podium mounds.
-    // A tie at the top crowns (and lifts) both leaders equally.
-    const tiedTop=shown[1]&&shown[0]&&shown[1].points===shown[0].points;
-    const moundLift=r=>r===1?20:r===2?(tiedTop?20:13):r===3?8:0;
-    const placed=shown.map((r,i)=>{
-      const off=Math.ceil(i/2)*(i%2?-1:1);
-      const jitter=(hash(r.uid)%25)-12;
-      return {r,rank:i+1,x:W/2+off*spacing+jitter};
+    const W=1200,Hh=520,ground=470;
+    const top=rows.slice(0,3);
+    // podium slots: [left #2, center #1, right #3] — sandstone tones
+    const slots=[
+      {cx:300,w:180,topY:398,botY:ground,tree:.9,tone:["#E7DCC4","#CDBE9C","#BBAB86"]},
+      {cx:600,w:214,topY:360,botY:ground,tree:1.14,tone:["#F0E4BF","#E0CE9A","#CFBB84"]},
+      {cx:900,w:170,topY:412,botY:ground,tree:.82,tone:["#EADCC6","#D3BD9C","#C2A886"]}
+    ];
+    const order=[1,0,2]; // rows index → slot index (row0=#1→center, row1=#2→left, row2=#3→right)
+    let podiums="",trees="",medals="",labels="";
+    top.forEach((r,ri)=>{
+      const si=order[ri],s=slots[si];
+      podiums+=podium(s.cx,s.topY,s.w,s.botY,s.tone);
+      const crowned=ri===0;
+      trees+=`<g class="tree" data-uid="${esc(r.uid)}" style="--sw:${(3.4+hash(r.uid)%3)}s">${palmTree(s.cx,s.topY+3,s.tree,r.uid+(r.name||""),crowned)}</g>`;
+      const H=72*s.tree,topY=s.topY+3-H,frondTop=topY-46*s.tree*.5;
+      medals+=medal(s.cx,frondTop-18,ri+1,crowned);
+      labels+=ptsPill(s.cx,(s.topY+s.botY)/2,fmt(r.points));
+      // name under podium
+      labels+=`<text x="${s.cx}" y="${s.botY+26}" text-anchor="middle" font-size="15" font-weight="700" fill="#3E6624" font-family="Poppins,sans-serif">${esc((r.name||"—").slice(0,14))}</text>`;
     });
-    const mounds=placed.filter(t=>t.rank<=3).map(t=>{
-      const rx=t.rank===1||(t.rank===2&&tiedTop)?88:t.rank===2?72:60,ry=moundLift(t.rank)+10;
-      return `<ellipse class="mound" cx="${t.x.toFixed(1)}" cy="412" rx="${rx}" ry="${ry}" fill="${S.mound}"/>`;
-    }).join("");
-    const trees=placed.sort((a,b)=>a.x-b.x).map(t=>treeSvg(t.r,t.rank,t.x,408-moundLift(t.rank),t.rank===1||(t.rank===2&&tiedTop))).join("");
 
-    // empty reserved plots just beyond the grove — "your tree here!"
-    let plots="";
-    for(let k=0;k<2&&shown.length+k<12;k++){
-      const i=shown.length+k,off=Math.ceil(i/2)*(i%2?-1:1),px=W/2+off*spacing;
-      if(px<80||px>W-80)break;
-      if(px>1270&&px<1510)continue; // keep the pond clear
-      plots+=`<g opacity=".9">
-        <ellipse cx="${px.toFixed(1)}" cy="410" rx="34" ry="8" fill="none" stroke="${S.tuft}" stroke-width="1.6" stroke-dasharray="5 5"/>
-        <path d="M${px} 408 Q${px} 401 ${px} 396 M${px} 401 Q${(px-5).toFixed(1)} 397 ${(px-8).toFixed(1)} 396 M${px} 401 Q${(px+5).toFixed(1)} 397 ${(px+8).toFixed(1)} 396" stroke="${S.tuft}" stroke-width="2" fill="none" stroke-linecap="round"/>
-        <rect x="${(px-52).toFixed(1)}" y="419" width="104" height="26" rx="7" fill="none" stroke="#8A6A45" stroke-width="1.7" stroke-dasharray="6 4"/>
-        <text x="${px.toFixed(1)}" y="437" text-anchor="middle" font-size="12.5" font-weight="700" fill="#8A6A45">${T().plotSign}</text>
-      </g>`;
-    }
+    // ── desert-oasis backdrop ──
+    const clouds=`<g class="cloud" style="animation-duration:100s"><ellipse cx="0" cy="72" rx="46" ry="14" fill="#fff" opacity=".65"/><ellipse cx="34" cy="64" rx="28" ry="11" fill="#fff" opacity=".65"/></g>
+      <g class="cloud" style="animation-duration:140s;animation-delay:-70s"><ellipse cx="0" cy="128" rx="52" ry="14" fill="#fff" opacity=".5"/><ellipse cx="36" cy="120" rx="28" ry="10" fill="#fff" opacity=".5"/></g>`;
+    const sun=`<circle cx="990" cy="115" r="50" fill="#F6CE6A" opacity=".3"/><circle cx="990" cy="115" r="32" fill="#F7C95C"/>`;
+    // Najdi citadel: mud-brick tower + block with triangular merlons + arched gate
+    const B="#C9A876",Bd="#B4915F",Bt="#D8BB90";
+    const building=`<g opacity=".92">
+      <rect x="1024" y="300" width="132" height="150" fill="${B}"/>
+      <rect x="1024" y="300" width="132" height="150" fill="url(#bshade)"/>
+      ${merlons(1024,132,300,15,Bt)}
+      <rect x="1058" y="242" width="58" height="62" fill="${Bd}"/>
+      ${merlons(1058,58,242,13,Bt)}
+      <path d="M1074 450 v-30 a13 13 0 0 1 26 0 v30 Z" fill="#7A5C38"/>
+      <g fill="#8A6B44"><rect x="1040" y="330" width="12" height="16" rx="2"/><rect x="1128" y="330" width="12" height="16" rx="2"/><rect x="1070" y="268" width="9" height="13" rx="2"/><rect x="1096" y="268" width="9" height="13" rx="2"/></g>
+      <circle cx="1090" cy="238" r="3" fill="${Bt}"/></g>`;
+    // horizon palm grove
+    let grove="";for(let i=0;i<7;i++){const x=90+i*150,y=352+(i*17)%12,s=.55+(i%3)*.16;grove+=farPalm(x,y,s,"#A7B98C");}
+    // oasis pond bottom-left
+    const pond=`<g><ellipse cx="150" cy="452" rx="86" ry="15" fill="#BFE0EC"/><ellipse cx="150" cy="450" rx="72" ry="11" fill="#9CCBDD"/><path d="M110 448 h22 M170 454 h16" stroke="#fff" stroke-width="1.6" opacity=".55" stroke-linecap="round"/></g>`;
+    // sand dune band + a few grass tufts on the oasis
+    let tufts="";for(let i=0;i<10;i++){const tx=260+(i*211)%(W-320),ty=452+(i*37)%14;tufts+=`<path d="M${tx} ${ty} q-2 -6 -4 -8 M${tx} ${ty} q0 -7 0 -9 M${tx} ${ty} q2 -6 4 -8" stroke="#7FB088" stroke-width="1.5" fill="none" stroke-linecap="round"/>`;}
 
-    const total=rows.reduce((a,r)=>a+(r.points||0),0);
-    const flowers=Math.min(34,Math.round(total*BOTTLE_SHARE/POINTS_PER_BOTTLE/120));
-    let flora="";
-    for(let i=0;i<flowers;i++){
-      const fx=30+(i*211)%(W-60),fy=436+(i*53)%22,fc=["#E9C349","#F6EFDF","#CBA24C"][i%3];
-      if(fx>1280&&fx<1500)continue; // keep the pond clear
-      flora+=`<g><line x1="${fx}" y1="${fy+6}" x2="${fx}" y2="${fy}" stroke="#4C8A3F" stroke-width="1.4"/>
-        <g fill="${fc}"><circle cx="${fx-2.2}" cy="${fy-2}" r="1.6"/><circle cx="${fx+2.2}" cy="${fy-2}" r="1.6"/><circle cx="${fx}" cy="${fy-4.2}" r="1.6"/><circle cx="${fx}" cy="${fy+.2}" r="1.6"/></g>
-        <circle cx="${fx}" cy="${fy-2}" r="1.7" fill="${fc==="#F6EFDF"?"#E9C349":"#F6EFDF"}"/></g>`;
-    }
-
-    // sustainability landmarks: wind turbine on the ridge, oasis pond,
-    // and a PSAUx recycling station in the meadow
-    const hub=256;
-    const turbine=`<g opacity="${mode==="night"?".6":".92"}">
-      <path d="M229.4 318 L231 ${hub} L233 ${hub} L234.6 318 Z" fill="${S.turb}"/>
-      <g transform="translate(232,${hub})"><g class="turb">
-        <path d="M0 0 L3 -27 L-3 -27 Z" fill="${S.turb}"/>
-        <path d="M0 0 L3 -27 L-3 -27 Z" fill="${S.turb}" transform="rotate(120)"/>
-        <path d="M0 0 L3 -27 L-3 -27 Z" fill="${S.turb}" transform="rotate(240)"/>
-      </g></g>
-      <circle cx="232" cy="${hub}" r="3.2" fill="${S.turb}"/></g>`;
-    const pond=`<g><ellipse cx="1385" cy="437" rx="94" ry="17" fill="${S.waterR}"/>
-      <ellipse cx="1385" cy="437" rx="80" ry="13" fill="${S.water}"/>
-      <path d="M1352 434 h 20 M1396 441 h 15" stroke="#FFFFFF" stroke-width="1.6" opacity="${mode==="night"?".15":".5"}" stroke-linecap="round"/></g>`;
-    const station=`<g>
-      <rect x="101" y="391" width="40" height="7" rx="3" fill="#14563A"/>
-      <rect x="104" y="396" width="34" height="27" rx="4" fill="#1F7A4D" stroke="#14563A" stroke-width="1"/>
-      <g transform="translate(121,410)" stroke="#FFFFFF" fill="none" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M-2.6 -7 h 5.2 M-2.6 -7 v 2.1 c 0 .5 -1.7 1.2 -1.7 2.6 V 4 a 1.7 1.7 0 0 0 1.7 1.7 h 5.2 A 1.7 1.7 0 0 0 4.3 4 V -2.3 c 0 -1.4 -1.7 -2.1 -1.7 -2.6 V -7"/>
-      </g>
-      <text x="121" y="437" text-anchor="middle" font-size="9.5" font-weight="700" fill="${S.tuft}">PSAUx</text></g>`;
-
-    // the sun / moon travel across the sky with the real local time
-    const nowM=new Date().getHours()*60+new Date().getMinutes();
-    let sky="";
-    if(mode==="night"){
-      const nf=Math.min(1,Math.max(0,((nowM>=1140?nowM-1140:nowM+300))/660));
-      const mx=140+nf*(W-280),my=115-Math.sin(nf*Math.PI)*55;
-      sky+=`<circle cx="${mx.toFixed(0)}" cy="${my.toFixed(0)}" r="26" fill="#EAF0E2"/><circle cx="${(mx+12).toFixed(0)}" cy="${(my-8).toFixed(0)}" r="24" fill="${S.top}"/>`;
-      for(let i=0;i<20;i++){const sx=(i*311)%W,sy=18+(i*67)%120;
-        sky+=`<circle class="tw" cx="${sx}" cy="${sy}" r="${1+(i%3)*.5}" fill="#EAF0DC" style="animation-duration:${2+(i%4)}s;animation-delay:${(i%5)*.6}s"/>`;}
-      for(let i=0;i<10;i++){const fx=140+(i*181)%(W-280),fy=330+(i*37)%70;
-        sky+=`<circle class="fw" cx="${fx}" cy="${fy}" r="2" fill="#E9C349" style="animation-duration:${2.4+(i%3)}s;animation-delay:${(i%4)*.7}s"/>`;}
-    }else{
-      const sf=Math.min(1,Math.max(0,(nowM-330)/840));
-      const sx=110+sf*(W-220),sy=205-Math.sin(sf*Math.PI)*140;
-      sky+=`<circle cx="${sx.toFixed(0)}" cy="${sy.toFixed(0)}" r="52" fill="#F7D774" opacity=".28"/><circle cx="${sx.toFixed(0)}" cy="${sy.toFixed(0)}" r="32" fill="${mode==="day"?"#F7D774":"#F2B95C"}"/>`;
-      sky+=`<g class="cloud" style="animation-duration:85s"><ellipse cx="0" cy="70" rx="46" ry="15" fill="#fff" opacity=".65"/><ellipse cx="34" cy="62" rx="30" ry="12" fill="#fff" opacity=".65"/></g>
-        <g class="cloud" style="animation-duration:120s;animation-delay:-50s"><ellipse cx="0" cy="130" rx="56" ry="16" fill="#fff" opacity=".5"/><ellipse cx="40" cy="122" rx="32" ry="12" fill="#fff" opacity=".5"/></g>
-        <g class="cloud" style="animation-duration:150s;animation-delay:-95s"><ellipse cx="0" cy="42" rx="34" ry="10" fill="#fff" opacity=".4"/></g>
-        <g class="fly" style="animation-duration:42s"><g class="flut"><ellipse cx="-4" cy="150" rx="5" ry="3.4" fill="#C5A35A"/><ellipse cx="4" cy="150" rx="5" ry="3.4" fill="#E9C349"/></g></g>
-        <g class="fly" style="animation-duration:60s;animation-delay:-25s">
-          <path d="M0 100 q7 -8 14 0 q7 -8 14 0" stroke="#5A6B5E" stroke-width="2" fill="none" stroke-linecap="round"/>
-          <path d="M26 114 q6 -7 12 0 q6 -7 12 0" stroke="#5A6B5E" stroke-width="1.7" fill="none" stroke-linecap="round"/>
-          <path d="M-20 124 q5 -6 10 0 q5 -6 10 0" stroke="#5A6B5E" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-        </g>`;
-    }
-
-    // horizon depth: distant palm grove, desert dune band, arch monument,
-    // grass tufts, and corner bushes framing the composition
-    let farGrove="";
-    for(let i=0;i<9;i++){const fx=(80+i*181)%W,fy=340+(i*29)%14,fs=.5+(i%3)*.18;farGrove+=farPalm(fx,fy,fs,S.sil);}
-    const ax=W*.86;
-    const arch=`<g fill="${S.mon}" opacity=".55"><path d="M${ax-30} 350 v-34 a30 30 0 0 1 60 0 v34 h-11 v-32 a19 19 0 0 0 -38 0 v32 Z"/></g>`;
-    const dune=`<path d="M0 354 Q400 338 820 352 T1600 346 L1600 470 L0 470 Z" fill="${S.dune}"/>`;
-    let tufts="";
-    for(let i=0;i<12;i++){const tx=40+(i*233)%(W-80),ty=424+(i*61)%36;
-      tufts+=`<path d="M${tx} ${ty} q-2 -6 -4.5 -8 M${tx} ${ty} q0 -7 0 -9.5 M${tx} ${ty} q2 -6 4.5 -8" stroke="${S.tuft}" stroke-width="1.6" fill="none" stroke-linecap="round"/>`;}
-    const bushes=`<g fill="${S.bush}"><circle cx="-14" cy="474" r="62"/><circle cx="46" cy="482" r="44"/><circle cx="${W+14}" cy="474" r="62"/><circle cx="${W-46}" cy="482" r="44"/></g>`;
-
-    return `<svg viewBox="0 0 ${W} 470" preserveAspectRatio="xMidYMax meet" role="img">
-      <defs><linearGradient id="skyg" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="${S.top}"/><stop offset="1" stop-color="${S.bot}"/></linearGradient></defs>
-      <rect width="${W}" height="470" fill="url(#skyg)"/>
-      ${sky}
-      <path d="M0 330 Q270 268 570 314 T1150 304 T1600 320 L1600 470 L0 470 Z" fill="${S.hillB}"/>
-      ${arch}
-      ${dune}
-      ${farGrove}
-      ${turbine}
-      <path d="M0 372 Q350 328 770 360 T1600 356 L1600 470 L0 470 Z" fill="${S.hillF}"/>
-      <rect y="408" width="${W}" height="62" fill="${S.grass}"/>
+    return `<svg viewBox="0 0 ${W} ${Hh}" preserveAspectRatio="xMidYMax meet" role="img">
+      <defs>
+        <linearGradient id="skyg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#CFE6EC"/><stop offset=".5" stop-color="#E8EFDE"/><stop offset="1" stop-color="#F3EAD2"/></linearGradient>
+        <linearGradient id="pshade" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#000" stop-opacity=".14"/><stop offset=".18" stop-color="#000" stop-opacity="0"/><stop offset=".82" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".12"/></linearGradient>
+        <linearGradient id="bshade" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity=".12"/><stop offset="1" stop-color="#000" stop-opacity=".14"/></linearGradient>
+      </defs>
+      <rect width="${W}" height="${Hh}" fill="url(#skyg)"/>
+      ${sun}${clouds}
+      <path d="M0 322 Q320 292 700 314 T1200 308 L1200 ${Hh} L0 ${Hh} Z" fill="#E3D4AE"/>
+      ${grove}
+      ${building}
+      <path d="M0 360 Q380 330 800 356 T1200 350 L1200 ${Hh} L0 ${Hh} Z" fill="#DEC9A0"/>
+      <path d="M0 402 Q300 384 640 400 T1200 396 L1200 ${Hh} L0 ${Hh} Z" fill="#B6D3B0"/>
+      <rect y="${ground-2}" width="${W}" height="${Hh-ground+2}" fill="#A9CFAE"/>
       ${pond}
-      ${station}
-      ${mounds}
-      ${flora}
       ${tufts}
-      ${plots}
+      ${podiums}
       ${trees}
-      ${bushes}
-      ${S.overlay?`<rect width="${W}" height="470" fill="#04140D" opacity="${S.overlay}"/>`:""}
+      ${medals}
+      ${labels}
     </svg>`;
   }
 
   // ── render ──
+  function badgeFor(rank){
+    if(rank===1)return `<span class="badge b1">🏆 ${T().b1}</span>`;
+    if(rank===2)return `<span class="badge b2">📈 ${T().b2}</span>`;
+    if(rank===3)return `<span class="badge b3">⭐ ${T().b3}</span>`;
+    return `<span class="badge bN">${T().bN}</span>`;
+  }
   function rowHtml(r,rank){
     const grew=!firstLoad&&prevPoints[r.uid]!=null&&r.points>prevPoints[r.uid];
     const t=tier(r.points||0),lead=lastRows[0]?lastRows[0].points||0:0;
-    const pct=lead>0?Math.max(2,Math.round((r.points||0)/lead*100)):(rank===1?100:2);
-    const above=rank>1?lastRows[rank-2]:null,gap=above?above.points-r.points:0;
-    const gapHtml=above?(gap===0?`<div class="r-gap tie">${T().tie}</div>`:`<div class="r-gap">▲ ${fmt(gap)}</div>`):"";
-    const hot=r.updatedAt&&(Date.now()-Date.parse(r.updatedAt))<1728e5?`<span class="hot" title="${T().hotT}"><svg width="14" height="14" viewBox="0 0 24 24" fill="#D97E2B"><path d="M12 2C14.2 6.2 8.5 8 8.5 12.6a3.5 3.5 0 0 0 7 .3C17.8 9 14.2 6.8 12 2z"/></svg></span>`:"";
-    return `<div class="row ${grew?'flash':''} ${booted?'':'in'}" style="animation-delay:${booted?0:Math.min(rank*45,500)}ms" data-uid="${esc(r.uid)}">
-      <div class="r-rank">${rank<=3?`<span class="disc d${rank}">${rank}</span>`:rank}</div>
-      <div class="r-move">${moveBadge(r.uid,rank)}</div>
+    const pct=lead>0?Math.max(3,Math.round((r.points||0)/lead*100)):(rank===1?100:3);
+    const mcls=rank<=3?("m"+rank):"mN";
+    return `<div class="row ${grew?'flash':''}" data-uid="${esc(r.uid)}">
+      <div class="r-medal ${mcls}">${rank}</div>
       <div class="r-ava" style="background:${color(r.name)}">${avatar(r.name)}</div>
       <div class="r-main">
-        <div class="r-top"><b>${esc(r.name||"—")}</b>${tierPill(r.points||0)}${hot}</div>
-        <div class="pbar"><i style="width:${pct}%;background:${t.c}"></i></div>
+        <div class="r-name">${esc(r.name||"—")}</div>
+        <div class="r-role">${ICONS.leafSm} ${tname(t)}</div>
+        <div class="pbar"><i style="width:${pct}%"></i></div>
       </div>
-      <div class="r-col"><div class="r-pts">${fmt(r.points)}<small>${T().pts}</small></div>${gapHtml}</div>
+      <div class="r-col">
+        <div class="r-pts">${fmt(r.points)}<small>${T().pts}</small></div>
+        ${badgeFor(rank)}
+      </div>
     </div>`;
   }
-  // The duel card cycles through ALL adjacent pairs (with the spotlight), so
-  // every student appears on screen with a personal push — not just the top 2.
-  function renderDuel(i){
-    const rows=lastRows;if(!rows[1])return;
-    if(i<1||i>=rows.length)i=0;
-    const A=i===0?rows[0]:rows[i-1],B=i===0?rows[1]:rows[i];
-    const gap=A.points-B.points,a=esc(first(A.name)),b=esc(first(B.name));
-    const share=(A.points+B.points)>0?Math.round(A.points/(A.points+B.points)*100):50;
-    const note=i===0
-      ?(gap===0?T().raceTied(a,b,fmt(A.points)):T().defend(a,fmt(A.points)))
-      :`${b} — ${gap===0?T().tiedWith(a):T().catchUp(fmt(gap),a)} · ${T().cheer[i%T().cheer.length]}`;
-    el("race").innerHTML=`
-      <div class="duel-top">
-        <div class="duel-side"><div class="duel-ava" style="background:${color(A.name)}">${avatar(A.name)}</div><div class="duel-nm"><b>${esc(A.name||"—")}</b><span>${fmt(A.points)}</span></div></div>
-        <div class="duel-vs ${gap===0?'tie':''}">${T().vs}</div>
-        <div class="duel-side b"><div class="duel-ava" style="background:${color(B.name)}">${avatar(B.name)}</div><div class="duel-nm"><b>${esc(B.name||"—")}</b><span>${fmt(B.points)}</span></div></div>
-      </div>
-      <div class="duel-bar"><i style="width:${share}%"></i></div>
-      <div class="duel-note">${note}</div>`;
+
+  function renderHero(rows){
+    let h;
+    if(rows.length<=1)h=T().heroSolo;
+    else{const gap=(rows[0].points||0)-(rows[1].points||0);
+      h=gap===0?T().heroTie:T().heroAway(fmt(gap));}
+    el("hero-h").innerHTML=h;el("hero-p").textContent=T().heroP;
   }
-  function renderRows(){
-    const cont=el("rows");
-    cont.innerHTML=lastRows.map((r,i)=>rowHtml(r,i+1)).join("");
-    // FLIP: rows that changed rank glide from their old position to the new one
-    if(firstLoad||!cont.querySelectorAll)return;
-    const kids=cont.querySelectorAll(".row");
-    let rowH=0;
-    kids.forEach((k,i)=>{
-      if(!rowH&&k.offsetHeight)rowH=k.offsetHeight+3;
-      const r0=prevRank[k.dataset.uid],r1=i+1;
-      if(r0&&r0!==r1&&rowH){
-        k.style.transition="none";k.style.transform=`translateY(${(r0-r1)*rowH}px)`;
-        requestAnimationFrame(()=>{requestAnimationFrame(()=>{
-          k.style.transition="transform .7s cubic-bezier(.2,.9,.3,1)";k.style.transform="";});});
-      }
-    });
-  }
+
   function render(rows){
     if(!rows.length){el("state").style.display="block";el("main").style.display="none";el("state").textContent=T().noPlayers;return;}
     const sig=JSON.stringify(rows.map(r=>[r.uid,r.name,r.points,r.updatedAt]))+lang;
     if(sig===lastSig&&booted){lastUpdate=Date.now();return;}
-    el("state").style.display="none";el("main").style.display="grid";
+    el("state").style.display="none";el("main").style.display="block";
 
     gained=new Set();
     if(!firstLoad){
@@ -704,77 +589,59 @@
     }
 
     lastRows=rows;
+    renderHero(rows);
     el("scene").innerHTML=sceneSvg(rows);
+    el("rows").innerHTML=rows.map((r,i)=>rowHtml(r,i+1)).join("");
 
-    const total=rows.reduce((a,r)=>a+(r.points||0),0),kg=Math.round(total*CO2_PER_POINT),bt=Math.round(total*BOTTLE_SHARE/POINTS_PER_BOTTLE);
+    // stats
+    const total=rows.reduce((a,r)=>a+(r.points||0),0),kg=Math.round(total*CO2_PER_POINT),bt=Math.round(total*BOTTLE_SHARE/POINTS_PER_BOTTLE),tons=kg/1000;
     el("stats").innerHTML=`
-      <div class="stat card"><div class="ic">${ICONS.users}</div><div style="min-width:0"><div class="v" id="s1">0</div><div class="l">${T().competing}</div></div></div>
-      <div class="stat card"><div class="ic">${ICONS.bolt}</div><div style="min-width:0"><div class="v" id="s2">0</div><div class="l">${T().totalPts}</div></div></div>
-      <div class="stat card"><div class="ic">${ICONS.bottle}</div><div style="min-width:0"><div class="v" id="s3">0</div><div class="l">${T().bottlesT}</div></div></div>
-      <div class="stat card"><div class="ic">${ICONS.globe}</div><div style="min-width:0"><div class="v" id="s4">0</div><div class="l">${T().co2}</div></div></div>`;
-    animateNum(el("s1"),rows.length);animateNum(el("s2"),total);animateNum(el("s3"),bt);animateNum(el("s4"),kg);
-    const z={bt:fmt(bt),kg:fmt(kg),ph:fmt(kg*120),km:fmt(kg*6)};
-    const tEn=I18N.en.ticker(z),tAr=I18N.ar.ticker(z);
-    tickerData=tEn.map((m,i)=>({en:m,ar:tAr[i]}));
+      <div class="stat"><div class="stat-ic">${ICONS.users}</div><div class="stat-tx"><div class="l">${T().stTotal}</div><div class="v" id="s1">0</div></div>${spark("total"+total)}</div>
+      <div class="stat"><div class="stat-ic">${ICONS.tree}</div><div class="stat-tx"><div class="l">${T().stTrees}</div><div class="v" id="s2">0</div></div>${spark("trees"+rows.length)}</div>
+      <div class="stat"><div class="stat-ic">${ICONS.bottle}</div><div class="stat-tx"><div class="l">${T().stBottles}</div><div class="v" id="s3">0</div></div>${spark("bottles"+bt)}</div>
+      <div class="stat"><div class="stat-ic">${ICONS.cloud}</div><div class="stat-tx"><div class="l">${T().stCo2}</div><div class="v" id="s4">0</div></div>${spark("co2"+kg)}</div>`;
+    animateNum(el("s1"),total);
+    animateNum(el("s2"),rows.length);
+    animateNum(el("s3"),bt);
+    animateNum(el("s4"),tons," "+T().tons);
 
-    // rotating duel: everyone gets featured vs the player just above them
-    if(rows[1]){
-      el("race").style.display="flex";
-      renderDuel(spotIdx>0&&spotIdx<rows.length?spotIdx:0);
-      let bi=1,bg=Infinity;
-      for(let i=1;i<rows.length;i++){const g=rows[i-1].points-rows[i].points;if(g<bg){bg=g;bi=i;}}
-      const x=esc(first(rows[bi-1].name)),y=esc(first(rows[bi].name));
-      tickerData.push({
-        en:bg===0?I18N.en.battleTied(x,y):I18N.en.battle(x,y,fmt(bg)),
-        ar:bg===0?I18N.ar.battleTied(x,y):I18N.ar.battle(x,y,fmt(bg))});
-    }else{el("race").style.display="none";}
-
-    renderRows();
     if(sheetUid)fillSheet();
 
-    prevPoints={};prevRank={};rows.forEach((r,i)=>{prevPoints[r.uid]=r.points;prevRank[r.uid]=i+1;});
-    prevLeader=rows[0]?rows[0].uid:null;firstLoad=false;booted=true;lastSig=sig;lastUpdate=Date.now();el("updated").textContent=T().updatedNow;
+    prevPoints={};rows.forEach(r=>{prevPoints[r.uid]=r.points;});
+    prevLeader=rows[0]?rows[0].uid:null;firstLoad=false;booted=true;lastSig=sig;lastUpdate=Date.now();
+    el("lb-updated").textContent=T().updatedNow;
+  }
+
+  // ── static chrome (bilingual) ──
+  function chrome(){
+    document.documentElement.lang=lang;document.documentElement.dir=lang==="ar"?"rtl":"ltr";
+    el("h-title").textContent=T().title;el("h-kicker").textContent=T().kicker;el("h-live").textContent=T().live;
+    el("lang-t").textContent=T().lang;el("lb-cap").textContent=T().lbCap;
+    el("act-cap").textContent=T().actCap;el("act-all").innerHTML=`${T().actAll} ${ICONS.chev}`;
+    el("rw-cap").textContent=T().rwCap;el("rw-badge").textContent=T().rwPts;el("rw-title").textContent=T().rwTitle;el("rw-sub").textContent=T().rwSub;el("rw-btn").innerHTML=`${T().rwBtn} ${ICONS.chev}`;
+    el("act-list").innerHTML=T().acts.map(a=>`<div class="act"><div class="act-ic">${ICONS[a[0]]}</div><div class="act-tx"><b>${a[1]}</b><span>${a[2]}</span></div><div class="act-pts">${a[3]} ${T().pts} ${ICONS.chev}</div></div>`).join("");
+    if(!booted)el("state").textContent=T().connecting;
   }
 
   // ── player sheet ──
   function fillSheet(){
     const i=lastRows.findIndex(r=>r.uid===sheetUid);
     if(i<0){closeSheet();return;}
-    const r=lastRows[i],rank=i+1,t=tier(r.points||0),pr=progress(r.points||0),act=ago(r.updatedAt);
-    const st=pstats(r);
-    const ladder=TIERS.map((x,xi)=>{
-      const done=r.points>=(TIERS[xi+1]?TIERS[xi+1].min:Infinity);
-      const cur=t===x;
-      const fill=done?100:(cur?Math.max(6,pr.pct):0);
-      return `<div class="lad-seg ${done?'done':''} ${cur?'cur':''}" title="${tname(x)}">
-        <div class="bar"><i style="width:${fill}%;background:${x.c}"></i></div><span class="dot2" style="background:${x.c}"></span></div>`;
-    }).join("");
+    const r=lastRows[i],rank=i+1,t=tier(r.points||0),st=pstats(r),act=ago(r.updatedAt);
     el("sheet").innerHTML=`
       <div class="sh-top">
         <div class="sh-ava" style="background:${color(r.name)}">${avatar(r.name)}</div>
-        <div class="sh-id"><b>${esc(r.name||"—")}</b><div style="margin-top:4px">${tierPill(r.points||0)} ${chipHtml(st)}</div></div>
+        <div class="sh-id"><b>${esc(r.name||"—")}</b><div class="r-role" style="margin-top:4px">${ICONS.leafSm} ${tname(t)}</div></div>
         <button class="sh-x" id="sh-x">✕</button>
       </div>
       <div class="sh-grid">
         <div class="sh-cell"><div class="v">#${rank}</div><div class="l">${T().rank}</div></div>
         <div class="sh-cell"><div class="v" style="color:var(--green)">${fmt(r.points)}</div><div class="l">${T().points}</div></div>
-        <div class="sh-cell"><div class="v" style="font-size:13px;line-height:2.1">${act||"—"}</div><div class="l">${T().lastActive}</div></div>
+        <div class="sh-cell"><div class="v" style="font-size:13px">${act||"—"}</div><div class="l">${T().lastActive}</div></div>
         <div class="sh-cell"><div class="v">${fmt(st.bottles)}</div><div class="l">${T().bottlesL}</div></div>
         <div class="sh-cell"><div class="v">${fmt(st.kg)}</div><div class="l">${T().co2L}</div></div>
-        <div class="sh-cell"><div class="v" style="font-size:13px;line-height:2.1">${T().strengths[st.strength]}</div><div class="l">${T().strengthL}</div></div>
-      </div>
-      <div class="sh-cap">${T().journey}</div><div class="lad">${ladder}</div>
-      <div class="sh-cap" style="margin-top:16px">${T().insightCap}</div>
-      <div class="sh-insight">${T().insight(esc(first(r.name)),{vel:st.vel!=null?fmt(st.vel):null,bottles:fmt(st.bottles),kg:fmt(st.kg),km:fmt(st.kg*6)})}</div>
-      <div class="sh-cap" style="margin-top:16px">${T().raceCap}</div>
-      <div class="sh-insight" style="background:var(--amber-t);border-color:var(--amber-b);color:var(--amber-d)">${(()=>{
-        const parts=[];
-        const above=rank>1?lastRows[rank-2]:null;
-        parts.push(above?(above.points===r.points?T().tiedWith(esc(first(above.name))):T().catchUp(fmt(above.points-r.points),esc(first(above.name)))):T().front);
-        const below=lastRows[rank];
-        if(below)parts.push(T().behindYou(esc(first(below.name)),fmt(r.points-below.points)));
-        return parts.join(" · ");
-      })()}</div>`;
+        <div class="sh-cell"><div class="v" style="font-size:12.5px">${tname(t)}</div><div class="l">${T().tierL}</div></div>
+      </div>`;
     el("sh-x").onclick=closeSheet;
   }
   function openSheet(uid){sheetUid=uid;fillSheet();el("ov").classList.add("open");}
@@ -785,49 +652,25 @@
   el("rows").addEventListener("click",e=>{const u=findUid(e.target,el("rows"));if(u)openSheet(u);});
   el("scene").addEventListener("click",e=>{const u=findUid(e.target,el("scene"));if(u)openSheet(u);else burst(24);});
 
-  // hover sync: list row <-> its tree in the forest (both directions)
-  el("rows").addEventListener("mouseover",e=>{const u=findUid(e.target,el("rows"));if(!u)return;const t=el("scene").querySelector(`[data-uid="${u}"]`);if(t)t.classList.add("lit");});
-  el("rows").addEventListener("mouseout",e=>{const u=findUid(e.target,el("rows"));if(!u)return;const t=el("scene").querySelector(`[data-uid="${u}"]`);if(t)t.classList.remove("lit");});
-  el("scene").addEventListener("mouseover",e=>{const u=findUid(e.target,el("scene"));if(!u)return;const r=el("rows").querySelector(`[data-uid="${u}"]`);if(r)r.classList.add("spot");});
-  el("scene").addEventListener("mouseout",e=>{const u=findUid(e.target,el("scene"));if(!u)return;const r=el("rows").querySelector(`[data-uid="${u}"]`);if(r)r.classList.remove("spot");});
-
-  // kiosk spotlight: every 8s, softly feature the next player (tree + row),
-  // pausing while the sheet is open or right after someone touches the screen
-  let spotIdx=-1,spotUid=null,lastTouch=0;
-  function clearSpot(){
-    if(!spotUid)return;
-    const r=el("rows").querySelector(`[data-uid="${spotUid}"]`);if(r)r.classList.remove("spot");
-    const t=el("scene").querySelector(`[data-uid="${spotUid}"]`);if(t)t.classList.remove("lit");
-    spotUid=null;
-  }
-  setInterval(()=>{
-    if(!booted||!lastRows.length||sheetUid)return;
-    if(Date.now()-lastTouch<15e3)return;
-    clearSpot();
-    spotIdx=(spotIdx+1)%lastRows.length;
-    spotUid=lastRows[spotIdx].uid;
-    const r=el("rows").querySelector(`[data-uid="${spotUid}"]`);
-    if(r){r.classList.add("spot");if(r.scrollIntoView)r.scrollIntoView({block:"nearest",behavior:"smooth"});}
-    const t=el("scene").querySelector(`[data-uid="${spotUid}"]`);if(t)t.classList.add("lit");
-    renderDuel(spotIdx);
-  },8000);
-  addEventListener("pointerdown",()=>{lastTouch=Date.now();clearSpot();},true);
+  // hover sync: row <-> tree
+  el("rows").addEventListener("mouseover",e=>{const u=findUid(e.target,el("rows"));if(!u)return;const t=el("scene").querySelector(`[data-uid="${u}"]`);if(t)t.style.filter="brightness(1.08)";});
+  el("rows").addEventListener("mouseout",e=>{const u=findUid(e.target,el("rows"));if(!u)return;const t=el("scene").querySelector(`[data-uid="${u}"]`);if(t)t.style.filter="";});
 
   // ── language toggle ──
   el("lang").onclick=()=>{lang=lang==="ar"?"en":"ar";try{localStorage.setItem("psaux_lang",lang);}catch(e){}chrome();lastSig="";if(lastRows.length)render(lastRows);};
 
   // ── data: anonymous auth + Firestore REST (polled) ──
-  async function auth(){
+  async function authFn(){
     const r=await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${KEY}`,{method:"POST",headers:{"Content-Type":"application/json"},body:'{"returnSecureToken":true}'});
     if(!r.ok) throw new Error("auth "+r.status);
     idToken=(await r.json()).idToken;
   }
   function parseDoc(d){const f=d.fields||{};const S=k=>(f[k]&&f[k].stringValue)||"";const N=k=>f[k]?parseInt(f[k].integerValue||Math.round(f[k].doubleValue||0)):0;const TS=k=>S(k)||(f[k]&&f[k].timestampValue)||"";return{uid:(d.name||"").split("/").pop(),name:S("name"),points:N("points"),level:S("level"),updatedAt:TS("updatedAt"),createdAt:TS("createdAt")};}
   async function fetchUsers(){
-    if(!idToken) await auth();
+    if(!idToken) await authFn();
     const url=`https://firestore.googleapis.com/v1/projects/${PROJECT}/databases/(default)/documents/users?pageSize=100`;
     let r=await fetch(url,{headers:{Authorization:"Bearer "+idToken}});
-    if(r.status===401){await auth();r=await fetch(url,{headers:{Authorization:"Bearer "+idToken}});}
+    if(r.status===401){await authFn();r=await fetch(url,{headers:{Authorization:"Bearer "+idToken}});}
     if(!r.ok) throw new Error("read "+r.status);
     const rows=((await r.json()).documents||[]).map(parseDoc);
     rows.sort((a,b)=>(b.points||0)-(a.points||0));
@@ -841,32 +684,11 @@
     }
   }
 
-  // ── ad slot: drop images into public/ads/ named 1.png, 2.jpg, 3.png …
-  //    the page auto-discovers them and rotates; hidden when none exist ──
-  const ADS=[];let adIdx=0;
-  function showAd(k){adIdx=((k%ADS.length)+ADS.length)%ADS.length;const im=el("adimg");
-    im.classList.remove("show");setTimeout(()=>{im.onload=()=>im.classList.add("show");im.src=ADS[adIdx].src;},260);}
-  if(typeof Image!=="undefined"){
-    let pending=0;
-    for(let i=1;i<=8;i++)["png","jpg","jpeg","webp"].forEach(ext=>{
-      pending++;
-      const im=new Image();
-      im.onload=()=>{ADS.push({i,src:`/ads/${i}.${ext}`});done();};
-      im.onerror=done;
-      im.src=`/ads/${i}.${ext}`;
-    });
-    function done(){if(--pending===0&&ADS.length){ADS.sort((a,b)=>a.i-b.i);el("adbox").style.display="block";showAd(0);}}
-    setInterval(()=>{if(ADS.length>1)showAd(adIdx+1);},10000);
-  }
-
-  // ── chrome: clock, updated-ago, ticker, fullscreen, hourly sky refresh ──
+  // ── chrome: clock, updated-ago ──
   function clockTick(){el("clock").textContent=new Date().toLocaleTimeString(lang==="ar"?"ar-SA":[],{hour:"2-digit",minute:"2-digit"});}
   chrome();clockTick();tick();
   setInterval(tick,POLL_MS);setInterval(clockTick,15e3);
-  setInterval(()=>{if(booted&&lastRows.length)el("scene").innerHTML=sceneSvg(lastRows);},18e5); // sky follows the clock
-  setInterval(()=>{if(!lastUpdate)return;const s=Math.floor((Date.now()-lastUpdate)/1000);el("updated").textContent=s<3?T().updatedNow:(s<60?T().updatedS(s):T().updatedM(Math.floor(s/60)));},1000);
-  setInterval(()=>{if(!tickerData.length)return;tickIdx=(tickIdx+1)%tickerData.length;const t=el("ticker");t.classList.remove("show");setTimeout(()=>{t.innerHTML=tickHtml(tickerData[tickIdx]);t.classList.add("show");},380);},6500);
-  el("fs").onclick=()=>{const d=document.documentElement;if(document.fullscreenElement)document.exitFullscreen();else d.requestFullscreen&&d.requestFullscreen();};
+  setInterval(()=>{if(!lastUpdate)return;const s=Math.floor((Date.now()-lastUpdate)/1000);el("lb-updated").textContent=s<3?T().updatedNow:(s<60?T().updatedS(s):T().updatedM(Math.floor(s/60)));},1000);
 </script>
 </body>
 </html>
