@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="theme-color" content="#F4F6EF" />
-<title>PSAUx Campus Forest — Live</title>
+<title>PSAUx — Sustainability Passport · Live</title>
 <link rel="icon" href="/emblem.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -35,8 +35,9 @@
   .brand .logo{width:44px;height:44px;border-radius:13px;background:var(--green-t);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
   .brand img{height:34px}
   .brand .bt{font-size:22px;font-weight:800;line-height:1;color:var(--green-d);letter-spacing:-.3px}
-  .brand .bs{font-size:10px;letter-spacing:2.4px;text-transform:uppercase;color:var(--ink3);font-weight:700;margin-top:3px}
-  [dir=rtl] .brand .bs{letter-spacing:0}
+  .brand .bs{font-size:11px;letter-spacing:.2px;color:var(--green);font-weight:700;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:44vw}
+  .brand .bs2{font-size:9.5px;letter-spacing:.2px;color:var(--ink3);font-weight:600;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:44vw}
+  [dir=rtl] .brand .bs,[dir=rtl] .brand .bs2{letter-spacing:0}
   .hright{display:flex;align-items:center;gap:9px;flex:0 0 auto}
   .pill{display:inline-flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);padding:9px 14px;border-radius:30px;font-weight:600;font-size:13.5px;color:var(--ink)}
   .live{color:var(--green);font-weight:700}
@@ -235,6 +236,7 @@
       <div style="min-width:0">
         <div class="bt" id="h-title"></div>
         <div class="bs" id="h-kicker"></div>
+        <div class="bs2" id="h-tagline"></div>
       </div>
     </div>
     <div class="motiv" id="motiv"></div>
@@ -328,7 +330,7 @@
     leafSm:'<svg width="13" height="13" viewBox="0 0 24 24" fill="#5C8A38"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/></svg>'};
 
   const I18N={
-    en:{title:"PSAUx",kicker:"Sustainability Passport",live:"LIVE",lang:"AR",lbCap:"Leaderboard",
+    en:{title:"PSAUx",kicker:"Passport for Sustainable Actions & User Experience",tagline:"Smart Sustainability Station · Gamified Campus Platform",live:"LIVE",lang:"AR",lbCap:"Leaderboard",
       heroAway:(n)=>`You're <span class="n">${n} points</span> away from <span class="one">#1</span>`,
       heroLead:(n)=>`<span class="n">${n}</span> is leading — <span class="one">#1</span> in the forest`,
       heroTie:`It's a tie for <span class="one">#1</span>!`,
@@ -350,7 +352,7 @@
       agoNow:"active now",agoM:m=>`${m}m ago`,agoH:h=>`${h}h ago`,agoD:d=>`${d}d ago`,
       connecting:"Planting the campus forest…",noPlayers:"No players yet — be the first to plant your tree!",
       cantReach:"Couldn't reach the leaderboard.",cantReachSub:"Check the network connection. If it persists, confirm Firestore allows reading <b>users</b> for signed-in clients."},
-    ar:{title:"PSAUx",kicker:"جواز الاستدامة",live:"مباشر",lang:"EN",lbCap:"لوحة الصدارة",
+    ar:{title:"PSAUx",kicker:"جواز الأعمال المستدامة وتجربة المستخدم",tagline:"محطة استدامة ذكية · منصة جامعية تفاعلية",live:"مباشر",lang:"EN",lbCap:"لوحة الصدارة",
       heroAway:(n)=>`تفصلك <span class="n">${n} نقطة</span> عن <span class="one">المركز الأول</span>`,
       heroLead:(n)=>`<span class="n">${n}</span> يتصدّر — <span class="one">المركز الأول</span> في الغابة`,
       heroTie:`تعادل على <span class="one">المركز الأول</span>!`,
@@ -635,7 +637,7 @@
   // ── static chrome (bilingual) ──
   function chrome(){
     document.documentElement.lang=lang;document.documentElement.dir=lang==="ar"?"rtl":"ltr";
-    el("h-title").textContent=T().title;el("h-kicker").textContent=T().kicker;el("h-live").textContent=T().live;
+    el("h-title").textContent=T().title;el("h-kicker").textContent=T().kicker;el("h-tagline").textContent=T().tagline;el("h-live").textContent=T().live;
     el("lang-t").textContent=T().lang;el("lb-cap").textContent=T().lbCap;
     el("act-cap").textContent=T().actCap;el("act-all").innerHTML=`${T().actAll} ${ICONS.chev}`;
     el("rw-cap").textContent=T().rwCap;el("rw-badge").textContent=T().rwPts;el("rw-title").textContent=T().rwTitle;el("rw-sub").textContent=T().rwSub;el("rw-btn").innerHTML=`${T().rwBtn} ${ICONS.chev}`;
