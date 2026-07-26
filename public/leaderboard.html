@@ -25,7 +25,9 @@
   body{background:var(--paper);color:var(--ink);min-height:100vh;overflow-x:hidden}
   .bg{position:fixed;inset:0;z-index:0;background:radial-gradient(80% 50% at 50% -10%,rgba(92,138,56,.08),transparent 70%)}
   #confetti{position:fixed;inset:0;z-index:60;pointer-events:none}
-  .wrap{position:relative;z-index:1;max-width:1240px;margin:0 auto;padding:22px 26px 26px}
+  /* phones / medium widths: clean centered single column (big-screen kiosk grid
+     kicks in at >=1000px and overrides this) */
+  .wrap{position:relative;z-index:1;max-width:600px;margin:0 auto;padding:18px 16px 24px}
   .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:0 1px 2px rgba(40,51,31,.03),0 12px 30px rgba(40,51,31,.06)}
   svg{display:block}
 
@@ -211,6 +213,24 @@
     .hero-txt h1{font-size:25px}.hero-txt p{font-size:13.5px}
     .brand .bt{font-size:18px}.clock{display:none}
   }
+  /* compact phone sizing */
+  @media (max-width:560px){
+    .lb{padding:12px}
+    .lb-head .t{font-size:14px}
+    .row{padding:10px;gap:10px}
+    .r-medal{width:30px;height:30px;font-size:13px}
+    .r-ava{width:40px;height:40px}
+    .r-name{font-size:16px}
+    .r-pts{font-size:18px}
+    .badge{font-size:10.5px;padding:4px 9px}
+    .panel{padding:14px}
+    .act{padding:8px 6px;gap:11px}
+    .act-ic{width:36px;height:36px}
+    .act-tx b{font-size:14.5px}.act-tx span{font-size:12px}
+    .adcard .ad-offer{font-size:20px}.adcard .ad-logo{width:78px;height:78px}
+    .partners{flex-wrap:wrap}
+  }
+
   /* ══ one-screen KIOSK — leaderboard is the HERO, no page scroll ══ */
   @media (min-width:1000px){
     html,body{height:100%;overflow:hidden}
