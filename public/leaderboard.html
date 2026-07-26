@@ -68,9 +68,18 @@
   .glow{animation:glow 3s ease-in-out infinite alternate}
   @keyframes glow{from{opacity:.35}to{opacity:.7}}
 
-  /* ── trio + KPI (stacked on mobile) ── */
-  .trio{display:flex;flex-direction:column;gap:16px;margin-top:16px}
-  .kpi{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:16px}
+  /* ── stage + rail + partners (stacked on mobile) ── */
+  .stage{display:flex;flex-direction:column;gap:16px;margin-top:16px}
+  .rail{display:flex;flex-direction:column;gap:16px}
+  .podium{background:linear-gradient(180deg,#CFE6EC,#EFE7D0);border-radius:16px;overflow:hidden;margin-bottom:12px}
+  .row.lead{background:linear-gradient(100deg,var(--gold-t),#FFFDF7);border-color:var(--gold-b)}
+  .partners{display:flex;align-items:center;gap:14px;padding:12px 18px;margin-top:16px;overflow:hidden}
+  .pt-label{font-size:11px;letter-spacing:1.4px;text-transform:uppercase;font-weight:700;color:var(--green-d);white-space:nowrap;flex:0 0 auto}
+  [dir=rtl] .pt-label{letter-spacing:0}
+  .pt-list{display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-width:0}
+  .pt-pill{display:inline-flex;align-items:center;gap:6px;background:var(--green-t);color:var(--green-d);font-size:12.5px;font-weight:700;padding:6px 13px;border-radius:20px;white-space:nowrap}
+  .pt-pill .dotc{width:7px;height:7px;border-radius:50%;flex:0 0 auto}
+  .kpi{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px}
   .kpi-tile{display:flex;align-items:center;gap:12px;padding:14px 16px}
   .kpi-tx{flex:1;min-width:0}
   .kpi-tx .l{font-size:10.5px;letter-spacing:.8px;text-transform:uppercase;color:var(--ink3);font-weight:700}
@@ -202,39 +211,61 @@
     .hero-txt h1{font-size:25px}.hero-txt p{font-size:13.5px}
     .brand .bt{font-size:18px}.clock{display:none}
   }
-  /* ══ one-screen KIOSK layout (big screens / lobby TV) — no page scroll ══ */
+  /* ══ one-screen KIOSK — leaderboard is the HERO, no page scroll ══ */
   @media (min-width:1000px){
     html,body{height:100%;overflow:hidden}
-    .wrap{max-width:1640px;height:100vh;display:flex;flex-direction:column;padding:14px 22px 16px;overflow:hidden}
+    .wrap{max-width:1720px;height:100vh;display:flex;flex-direction:column;padding:12px 22px 14px;overflow:hidden}
     header{margin-bottom:10px;flex:0 0 auto}
-    #main{flex:1;min-height:0;display:grid;grid-template-rows:minmax(0,40vh) minmax(0,1fr) auto;gap:12px}
+    #main{flex:1;min-height:0;display:flex;flex-direction:column;gap:12px}
 
-    .scene-card{margin:0;min-height:0;display:flex;align-items:stretch}
-    #scene{flex:1;min-width:0;height:100%;line-height:0}
-    #scene svg{width:100%;height:100%}
+    .stage{flex:1;min-height:0;display:grid;grid-template-columns:1.85fr 1fr;gap:14px;margin:0}
 
-    .trio{flex-direction:row;display:grid;grid-template-columns:1.35fr 1fr 1fr;gap:14px;margin:0;min-height:0}
-    .trio>*{min-height:0}
-    .lb{display:flex;flex-direction:column;padding:14px 16px 10px}
-    #rows{flex:1;min-height:0;overflow:auto;margin-top:4px}
-    .row{padding:10px 12px}.row+.row{margin-top:2px}
+    /* ── HERO leaderboard ── */
+    .hero-lb{display:flex;flex-direction:column;min-height:0;padding:16px 22px 12px}
+    .hero-lb .lb-head{margin-bottom:8px}
+    .hero-lb .t{font-size:17px}
+    .podium{margin:0 0 10px;flex:0 0 auto}
+    .podium #scene{height:22vh;line-height:0}
+    .podium #scene svg{width:100%;height:100%}
+    #rows{flex:1;min-height:0;overflow:auto}
+    .hero-lb .row{padding:13px 16px;gap:16px}.hero-lb .row+.row{margin-top:5px}
+    .hero-lb .r-medal{width:42px;height:42px;font-size:17px}
+    .hero-lb .r-ava{width:54px;height:54px}
+    .hero-lb .r-name{font-size:21px}
+    .hero-lb .r-role{font-size:13px}
+    .hero-lb .r-pts{font-size:25px}
+    .hero-lb .pbar{height:10px;margin-top:9px}
+    .hero-lb .badge{font-size:12px;padding:5px 13px}
 
-    .actions-card,.reward-card{padding:13px 16px;overflow:hidden}
-    .act{padding:6px 8px}
-    .reward-card .adcard{flex:1;min-height:0}
-    .reward-card .ad-logo{width:78px;height:78px}
-    .reward-card .ad-offer{font-size:20px}
-    .reward-card .ad-dots{margin-top:8px}
-    .reward-card .rw-btn{margin-top:8px;padding:9px}
+    /* ── support rail (smaller) ── */
+    .rail{display:flex;flex-direction:column;gap:12px;min-height:0}
+    .rail>*{min-height:0}
+    .actions-card,.reward-card,.stats-card{padding:12px 15px;overflow:hidden}
+    .rail .panel-h{margin-bottom:8px}
+    .rail .act{padding:5px 8px}
+    .rail .act-tx b{font-size:14px}.rail .act-tx span{font-size:11.5px}
+    .rail .act-ic{width:36px;height:36px;border-radius:11px}
+    .act-all{margin-top:4px;padding:7px}
+    .reward-card{flex:1}
+    .reward-card .adcard{flex:1;min-height:0;gap:8px}
+    .reward-card .ad-logo{width:72px;height:72px}
+    .reward-card .ad-offer{font-size:19px}
+    .reward-card .ad-dots{margin-top:6px}
+    .stats-card .kpi{grid-template-columns:repeat(2,1fr);gap:8px;margin:0}
+    .stats-card .kpi-tile{padding:8px 12px}
+    .stats-card .spark{display:none}
+    .stats-card .kpi-tx .v{font-size:19px}
 
-    .kpi{grid-template-columns:repeat(4,1fr);gap:14px;margin:0}
-    .kpi-tile{padding:12px 15px}
+    /* ── partners strip ── */
+    .partners{flex:0 0 auto;margin:0;justify-content:flex-start}
+    .pt-list{flex-wrap:nowrap;overflow:hidden}
   }
   /* larger type on very big lobby displays */
-  @media (min-width:1500px){
+  @media (min-width:1560px){
     .brand .bt{font-size:25px}.motiv{font-size:19px}
-    .r-name{font-size:19px}.r-pts{font-size:23px}
-    .kpi-tx .v{font-size:26px}
+    .hero-lb .r-name{font-size:23px}.hero-lb .r-pts{font-size:28px}
+    .hero-lb .r-ava{width:58px;height:58px}
+    .stats-card .kpi-tx .v{font-size:21px}
   }
   @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
@@ -263,37 +294,43 @@
   </header>
 
   <div id="main" style="display:none">
-    <!-- podium scene (hero) -->
-    <div class="scene-card card"><div id="scene"></div></div>
-
-    <!-- trio: leaderboard | actions | reward -->
-    <div class="trio">
-      <div class="lb card">
+    <div class="stage">
+      <!-- ════ HERO: the leaderboard ════ -->
+      <div class="lb card hero-lb">
         <div class="lb-head">
-          <div class="t"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6"/></svg> <span id="lb-cap"></span></div>
+          <div class="t"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6"/></svg> <span id="lb-cap"></span></div>
           <div class="u"><span id="lb-updated"></span></div>
         </div>
+        <div class="podium"><div id="scene"></div></div>
         <div id="rows"></div>
       </div>
 
-      <!-- today's actions -->
-      <div class="panel card actions-card">
-        <div class="panel-h"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span id="act-cap"></span></div>
-        <div id="act-list"></div>
-        <div class="act-all" id="act-all"></div>
-      </div>
+      <!-- support rail -->
+      <div class="rail">
+        <div class="panel card actions-card">
+          <div class="panel-h"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span id="act-cap"></span></div>
+          <div id="act-list"></div>
+          <div class="act-all" id="act-all"></div>
+        </div>
 
-      <!-- reward preview -->
-      <div class="panel card reward-card">
-        <div class="panel-h"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C11 3 12 8 12 8M16.5 8a2.5 2.5 0 0 0 0-5C13 3 12 8 12 8"/></svg> <span id="rw-cap"></span></div>
-        <div class="adcard" id="adcard"></div>
-        <div class="ad-dots" id="ad-dots"></div>
-        <div class="rw-btn ctrl" id="rw-btn"></div>
+        <div class="panel card reward-card">
+          <div class="panel-h"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C11 3 12 8 12 8M16.5 8a2.5 2.5 0 0 0 0-5C13 3 12 8 12 8"/></svg> <span id="rw-cap"></span></div>
+          <div class="adcard" id="adcard"></div>
+          <div class="ad-dots" id="ad-dots"></div>
+        </div>
+
+        <div class="panel card stats-card">
+          <div class="panel-h"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg> <span id="st-cap"></span></div>
+          <div class="kpi" id="stats"></div>
+        </div>
       </div>
     </div>
 
-    <!-- KPI strip -->
-    <div class="kpi" id="stats"></div>
+    <!-- Key Partners strip (with subtle eco / mobility cues) -->
+    <div class="partners card">
+      <div class="pt-label" id="pt-label"></div>
+      <div class="pt-list" id="pt-list"></div>
+    </div>
   </div>
 
   <div id="state" class="state"></div>
@@ -317,21 +354,39 @@
 
   // Official UN SDG colours + short names — used for reward/ad tags
   const SDG={
+    3:{c:"#4C9F38",en:"Good Health",ar:"الصحة الجيدة"},
+    4:{c:"#C5192D",en:"Quality Education",ar:"تعليم جيد"},
     6:{c:"#26BDE2",en:"Clean Water",ar:"مياه نظيفة"},
     7:{c:"#FCC30B",en:"Clean Energy",ar:"طاقة نظيفة"},
+    8:{c:"#A21942",en:"Decent Work",ar:"عمل لائق"},
+    9:{c:"#FD6925",en:"Industry & Innovation",ar:"الصناعة والابتكار"},
     11:{c:"#FD9D24",en:"Sustainable Cities",ar:"مدن مستدامة"},
     12:{c:"#BF8B2E",en:"Responsible Consumption",ar:"الاستهلاك المسؤول"},
     13:{c:"#3F7E44",en:"Climate Action",ar:"العمل المناخي"},
     15:{c:"#56C02B",en:"Life on Land",ar:"الحياة في البر"}};
-  // Sponsor rewards / ads — add more entries here (or send me the details).
-  // brand logos: use logoImg (a URL under /ads/) OR logoHtml (inline markup).
+  // Sponsor rewards from the PSAUx Key Partners. Add logos: put a PNG in /ads/
+  // and set logoImg:"/ads/<file>", or keep the inline logoHtml text mark.
   const REWARDS=[
     {sdg:12,brand:"PANDA",en:{offer:"10% OFF Groceries",sub:"Bring your own bag bonus"},ar:{offer:"خصم ١٠٪ على البقالة",sub:"مكافأة إحضار كيسك"},
-      logoHtml:'<div style="line-height:1.05"><div style="color:#0A8A3F;font-weight:800;font-size:19px">Panda</div><div style="color:#E23744;font-weight:700;font-size:15px">بنده</div></div>'},
-    {sdg:6,brand:"PSAUx",en:{offer:"Free Reusable Bottle",sub:"Refill free at any station"},ar:{offer:"عبوة قابلة لإعادة الاستخدام",sub:"إعادة تعبئة مجانية بأي محطة"},
-      logoHtml:'<div style="font-size:30px">💧</div>'},
-    {sdg:15,brand:"PSAUx GREEN",en:{offer:"Plant a Tree",sub:"We plant one in your name"},ar:{offer:"ازرع شجرة",sub:"نزرع واحدة باسمك"},
-      logoHtml:'<div style="font-size:30px">🌱</div>'}];
+      logoHtml:'<div style="line-height:1.05"><div style="color:#0A8A3F;font-weight:800;font-size:19px">Panda</div><div style="color:#E23744;font-weight:700;font-size:14px">بنده</div></div>'},
+    {sdg:3,brand:"ALMARAI",en:{offer:"Free Almarai Juice",sub:"For every 10 cartons recycled"},ar:{offer:"عصير المراعي مجاناً",sub:"لكل ١٠ عبوات مُعاد تدويرها"},
+      logoHtml:'<div style="color:#0A7A3C;font-weight:800;font-size:15px;line-height:1.1">Almarai<div style="font-size:12px">المراعي</div></div>'},
+    {sdg:12,brand:"TAMIMI MARKETS",en:{offer:"15% OFF at Tamimi",sub:"Reusable-bag reward"},ar:{offer:"خصم ١٥٪ في التميمي",sub:"مكافأة الكيس المُعاد استخدامه"},
+      logoHtml:'<div style="color:#C5192D;font-weight:800;font-size:14px;line-height:1.1">TAMIMI<div style="font-size:11px">التميمي</div></div>'},
+    {sdg:11,brand:"RIYADH METRO",en:{offer:"Free Metro Ride",sub:"Ride green, earn points"},ar:{offer:"رحلة مترو مجانية",sub:"تنقّل أخضر واكسب نقاطاً"},
+      logoHtml:'<div style="font-size:30px">🚇</div>'},
+    {sdg:9,brand:"stc",en:{offer:"1 GB Data Bonus",sub:"Reward for your eco-actions"},ar:{offer:"١ جيجا بيانات هدية",sub:"مكافأة على أعمالك البيئية"},
+      logoHtml:'<div style="color:#4C1D6E;font-weight:800;font-size:24px">stc</div>'},
+    {sdg:11,brand:"SAUDI TOURISM",en:{offer:"Explore Saudi Discount",sub:"Travel more sustainably"},ar:{offer:"خصم اكتشف السعودية",sub:"سافر بشكل أكثر استدامة"},
+      logoHtml:'<div style="font-size:28px">🇸🇦</div>'},
+    {sdg:12,brand:"SIRC",en:{offer:"Recycling Rewards",sub:"Earn at every drop-off"},ar:{offer:"مكافآت التدوير",sub:"اكسب عند كل تسليم"},
+      logoHtml:'<div style="color:#BF8B2E;font-weight:800;font-size:18px">SIRC ♻️</div>'}];
+  // All PSAUx Key Partners (shown in the bottom strip)
+  const PARTNERS=[
+    {n:"PSAU",c:"#0F5A3E"},{n:"MoE",c:"#00689D"},{n:"MEWA",c:"#3F7E44"},
+    {n:"Almarai",c:"#4C9F38"},{n:"SIRC",c:"#BF8B2E"},{n:"stc",c:"#4C1D6E"},
+    {n:"Panda",c:"#0A8A3F"},{n:"Tamimi",c:"#C5192D"},{n:"Riyadh Metro",c:"#FD9D24"},
+    {n:"Saudi Tourism",c:"#00689D"}];
 
   const ICONS={
     users:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M15.5 3.13a4 4 0 0 1 0 7.75"/></svg>',
@@ -354,9 +409,10 @@
       heroTie:`It's a tie for <span class="one">#1</span>!`,
       heroSolo:`You're <span class="one">#1</span> — leading the forest!`,
       heroP:"Keep taking action. Every point grows our forest!",
-      motiv:(n)=>`<span class="tro">🏆</span> <b>${n} pts</b> to reach <span class="one">#1</span>`,
+      motiv:(n)=>`<span class="tro">🏆</span> Only <b>${n} pts</b> to reach <span class="one">#1</span>`,
       motivTie:`<span class="tro">🏆</span> Neck and neck for <span class="one">#1</span>!`,
-      motivSolo:`<span class="tro">🏆</span> Leading at <span class="one">#1</span>`,
+      motivSolo:`<span class="tro">🏆</span> Leading at <span class="one">#1</span> — keep climbing!`,
+      stCap:"Impact",ptLabel:"Key Partners",
       updatedNow:"Updated just now",updatedS:s=>`Updated ${s}s ago`,updatedM:m=>`Updated ${m}m ago`,
       b1:"In the Lead",b2:"Keep it up!",b3:"Great work!",bN:"Keep going!",
       actCap:"Ways to Take Action",actAll:"View all actions",
@@ -377,9 +433,10 @@
       heroTie:`تعادل على <span class="one">المركز الأول</span>!`,
       heroSolo:`أنت <span class="one">المركز الأول</span> — تتصدّر الغابة!`,
       heroP:"واصل العمل. كل نقطة تُنمّي غابتنا!",
-      motiv:(n)=>`<span class="tro">🏆</span> <b>${n} نقطة</b> للوصول إلى <span class="one">المركز الأول</span>`,
+      motiv:(n)=>`<span class="tro">🏆</span> باقٍ <b>${n} نقطة</b> فقط للوصول إلى <span class="one">المركز الأول</span>`,
       motivTie:`<span class="tro">🏆</span> تعادل على <span class="one">المركز الأول</span>!`,
-      motivSolo:`<span class="tro">🏆</span> متصدّر <span class="one">المركز الأول</span>`,
+      motivSolo:`<span class="tro">🏆</span> متصدّر <span class="one">المركز الأول</span> — واصل التقدّم!`,
+      stCap:"الأثر",ptLabel:"شركاؤنا",
       updatedNow:"حُدِّثت الآن",updatedS:s=>`حُدِّثت قبل ${s} ث`,updatedM:m=>`حُدِّثت قبل ${m} د`,
       b1:"في الصدارة",b2:"واصل!",b3:"أحسنت!",bN:"استمر!",
       actCap:"طرق للمشاركة",actAll:"عرض كل الخطوات",
@@ -594,7 +651,7 @@
     const t=tier(r.points||0),lead=lastRows[0]?lastRows[0].points||0:0;
     const pct=lead>0?Math.max(3,Math.round((r.points||0)/lead*100)):(rank===1?100:3);
     const mcls=rank<=3?("m"+rank):"mN";
-    return `<div class="row ${grew?'flash':''}" data-uid="${esc(r.uid)}">
+    return `<div class="row ${rank===1?'lead':''} ${grew?'flash':''}" data-uid="${esc(r.uid)}">
       <div class="r-medal ${mcls}">${rank}</div>
       <div class="r-ava" style="background:${color(r.name)}">${avatar(r.name)}</div>
       <div class="r-main">
@@ -660,8 +717,9 @@
     el("h-title").textContent=T().title;el("h-kicker").textContent=T().kicker;el("h-tagline").textContent=T().tagline;el("h-live").textContent=T().live;
     el("lang-t").textContent=T().lang;el("lb-cap").textContent=T().lbCap;
     el("act-cap").textContent=T().actCap;el("act-all").innerHTML=`${T().actAll} ${ICONS.chev}`;
-    el("rw-cap").textContent=T().rwCap;el("rw-btn").innerHTML=`${T().rwBtn} ${ICONS.chev}`;
+    el("rw-cap").textContent=T().rwCap;el("st-cap").textContent=T().stCap;el("pt-label").textContent=T().ptLabel;
     el("act-list").innerHTML=T().acts.map(a=>`<div class="act"><div class="act-ic">${ICONS[a[0]]}</div><div class="act-tx"><b>${a[1]}</b><span>${a[2]}</span></div><div class="act-go">${ICONS.chev}</div></div>`).join("");
+    el("pt-list").innerHTML=PARTNERS.map(p=>`<span class="pt-pill"><span class="dotc" style="background:${p.c}"></span>${esc(p.n)}</span>`).join("");
     renderAd();
     if(!booted)el("state").textContent=T().connecting;
   }
