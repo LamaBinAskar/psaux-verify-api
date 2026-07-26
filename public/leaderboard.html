@@ -272,7 +272,7 @@
     .hero-lb .lb-head{margin-bottom:8px}
     .hero-lb .t{font-size:17px}
     .podium{margin:0 0 10px;flex:0 0 auto}
-    .podium #scene{height:172px;line-height:0}
+    .podium #scene{height:200px;line-height:0}
     .podium #scene svg{width:100%;height:100%}
     #rows{flex:1;min-height:0;overflow:auto}
     .hero-lb .row{padding:13px 16px;gap:16px}.hero-lb .row+.row{margin-top:5px}
@@ -438,15 +438,6 @@
     {n:"Almarai",c:"#4C9F38"},{n:"SIRC",c:"#BF8B2E"},{n:"stc",c:"#4C1D6E"},
     {n:"Panda",c:"#0A8A3F"},{n:"Tamimi",c:"#C5192D"},{n:"Riyadh Metro",c:"#FD9D24"},
     {n:"Saudi Tourism",c:"#00689D"}];
-  // Seed competitors — shown only when fewer than 3 real players exist yet, so the
-  // board always looks competitive with close scores. Real players take over as
-  // participation grows. Close point band keeps the race feeling winnable.
-  const DEMO=[
-    {name:"Sara Al-Otaibi",points:5540,mins:4},
-    {name:"Mohammed Al-Harbi",points:5410,mins:12},
-    {name:"Noura Al-Qahtani",points:4980,mins:40},
-    {name:"Faisal Al-Dosari",points:4730,mins:90},
-    {name:"Reem Al-Shehri",points:4510,mins:180}];
 
   const ICONS={
     users:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M15.5 3.13a4 4 0 0 1 0 7.75"/></svg>',
@@ -640,25 +631,24 @@
 
   function sceneSvg(rows){
     const W=1200,Hh=520,ground=470;
-    const top=rows.slice(0,3);
-    // podium slots: [left #2, center #1, right #3] — sandstone tones
-    const slots=[
-      {cx:300,w:180,topY:398,botY:ground,tree:.9,tone:["#E7DCC4","#CDBE9C","#BBAB86"]},
-      {cx:600,w:214,topY:360,botY:ground,tree:1.14,tone:["#F0E4BF","#E0CE9A","#CFBB84"]},
-      {cx:900,w:170,topY:412,botY:ground,tree:.82,tone:["#EADCC6","#D3BD9C","#C2A886"]}
-    ];
-    const order=[1,0,2]; // rows index → slot index (row0=#1→center, row1=#2→left, row2=#3→right)
+    const top=rows.slice(0,3),n=top.length;
+    // spread podiums to fill the width — #1 biggest & central; fewer players fan
+    // out wider so the scene never looks empty. [x per displayed rank]
+    const XS = n<=1 ? [W*0.5]
+             : n===2 ? [W*0.635, W*0.335]
+             : [W*0.5, W*0.215, W*0.785];
+    const SPEC={1:{w:238,topY:346,tree:1.34},2:{w:198,topY:386,tree:1.08},3:{w:178,topY:408,tree:.94}};
+    const TONE={1:["#F0E4BF","#E0CE9A","#CFBB84"],2:["#E7DCC4","#CDBE9C","#BBAB86"],3:["#EADCC6","#D3BD9C","#C2A886"]};
     let podiums="",trees="",medals="",labels="";
     top.forEach((r,ri)=>{
-      const si=order[ri],s=slots[si];
-      podiums+=podium(s.cx,s.topY,s.w,s.botY,s.tone);
+      const rank=ri+1,cx=XS[ri],sp=SPEC[rank],tone=TONE[rank],botY=ground,topY=sp.topY;
+      podiums+=podium(cx,topY,sp.w,botY,tone);
       const crowned=ri===0;
-      trees+=`<g class="tree" data-uid="${esc(r.uid)}" style="--sw:${(3.4+hash(r.uid)%3)}s">${palmTree(s.cx,s.topY+3,s.tree,r.uid+(r.name||""),crowned)}</g>`;
-      const H=72*s.tree,topY=s.topY+3-H,frondTop=topY-46*s.tree*.5;
-      medals+=medal(s.cx,frondTop-18,ri+1,crowned);
-      labels+=ptsPill(s.cx,(s.topY+s.botY)/2,fmt(r.points));
-      // name under podium
-      labels+=`<text x="${s.cx}" y="${s.botY+26}" text-anchor="middle" font-size="15" font-weight="700" fill="#3E6624" font-family="Poppins,sans-serif">${esc((r.name||"—").slice(0,14))}</text>`;
+      trees+=`<g class="tree" data-uid="${esc(r.uid)}" style="--sw:${(3.4+hash(r.uid)%3)}s">${palmTree(cx,topY+3,sp.tree,r.uid+(r.name||""),crowned)}</g>`;
+      const H=72*sp.tree,tY=topY+3-H,frondTop=tY-46*sp.tree*.5;
+      medals+=medal(cx,frondTop-18,rank,crowned);
+      labels+=ptsPill(cx,(topY+botY)/2,fmt(r.points));
+      labels+=`<text x="${cx.toFixed(1)}" y="${botY+26}" text-anchor="middle" font-size="16" font-weight="700" fill="#3E6624" font-family="Poppins,sans-serif">${esc((r.name||"—").slice(0,16))}</text>`;
     });
 
     // ── desert-oasis backdrop ──
@@ -885,17 +875,8 @@
     rows.sort((a,b)=>(b.points||0)-(a.points||0));
     return rows.slice(0,20);
   }
-  // Fill a sparse board with seed competitors so the top always feels contested.
-  function seedRows(rows){
-    if(rows.length>=3) return rows;
-    const have=new Set(rows.map(r=>(r.name||"").trim().toLowerCase()));
-    const seeds=DEMO.filter(d=>!have.has(d.name.toLowerCase())).map(d=>({
-      uid:"seed_"+d.name.replace(/\s+/g,"_"),name:d.name,points:d.points,level:"",
-      updatedAt:new Date(Date.now()-d.mins*60000).toISOString(),createdAt:"",seed:true}));
-    return rows.concat(seeds).sort((a,b)=>(b.points||0)-(a.points||0)).slice(0,20);
-  }
   async function tick(){
-    try{ render(seedRows(await fetchUsers())); fails=0; }
+    try{ render(await fetchUsers()); fails=0; }
     catch(e){ fails++; console.error(e);
       if(firstLoad||fails>=3){ el("main").style.display="none"; const s=el("state"); s.style.display="block";
         s.innerHTML=T().cantReach+"<small>"+T().cantReachSub+" ("+esc(e.message||"error")+")</small>"; }
