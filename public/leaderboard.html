@@ -89,6 +89,7 @@
   .pt-list{display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-width:0}
   .pt-pill{display:inline-flex;align-items:center;gap:6px;background:var(--green-t);color:var(--green-d);font-size:12.5px;font-weight:700;padding:6px 13px;border-radius:20px;white-space:nowrap}
   .pt-pill .dotc{width:7px;height:7px;border-radius:50%;flex:0 0 auto}
+  .pt-pill .pt-logo{width:20px;height:20px;border-radius:5px;object-fit:contain;background:#fff;flex:0 0 auto;box-shadow:0 1px 2px rgba(0,0,0,.12)}
   .kpi{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px}
   .kpi-tile{display:flex;align-items:center;gap:12px;padding:14px 16px}
   .kpi-tx{flex:1;min-width:0}
@@ -433,11 +434,12 @@
     {sdg:12,brand:"SIRC",unlock:4800,en:{offer:"Recycling Rewards",sub:"Earn at every drop-off"},ar:{offer:"مكافآت التدوير",sub:"اكسب عند كل تسليم"},
       logoHtml:'<div style="color:#BF8B2E;font-weight:800;font-size:18px">SIRC ♻️</div>'}];
   // All PSAUx Key Partners (shown in the bottom strip)
+  // logo: drop a PNG at /logos/<slug>.png to show a real logo (falls back to the dot)
   const PARTNERS=[
-    {n:"PSAU",c:"#0F5A3E"},{n:"MoE",c:"#00689D"},{n:"MEWA",c:"#3F7E44"},
-    {n:"Almarai",c:"#4C9F38"},{n:"SIRC",c:"#BF8B2E"},{n:"stc",c:"#4C1D6E"},
-    {n:"Panda",c:"#0A8A3F"},{n:"Tamimi",c:"#C5192D"},{n:"Riyadh Metro",c:"#FD9D24"},
-    {n:"Saudi Tourism",c:"#00689D"}];
+    {n:"PSAU",c:"#0F5A3E",logo:"psau"},{n:"MoE",c:"#00689D",logo:"moe"},{n:"MEWA",c:"#3F7E44",logo:"mewa"},
+    {n:"Almarai",c:"#4C9F38",logo:"almarai"},{n:"SIRC",c:"#BF8B2E",logo:"sirc"},{n:"stc",c:"#4C1D6E",logo:"stc"},
+    {n:"Panda",c:"#0A8A3F",logo:"panda"},{n:"Tamimi",c:"#C5192D",logo:"tamimi"},{n:"Riyadh Metro",c:"#FD9D24",logo:"metro"},
+    {n:"Saudi Tourism",c:"#00689D",logo:"tourism"}];
 
   const ICONS={
     users:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M15.5 3.13a4 4 0 0 1 0 7.75"/></svg>',
@@ -807,7 +809,11 @@
     el("act-cap").textContent=T().actCap;el("act-all").innerHTML=`${T().actAll} ${ICONS.chev}`;
     el("rw-cap").textContent=T().rwCap;el("st-cap").textContent=T().stCap;el("pt-label").textContent=T().ptLabel;el("wk-chip").textContent="🔥 "+T().wkChip;
     el("act-list").innerHTML=T().acts.map(a=>{const sg=SDG[a[3]]||{c:"#5C8A38"};return `<div class="act"><div class="act-ic">${ICONS[a[0]]}</div><div class="act-tx"><b>${a[1]}</b><span>${a[2]}</span></div><span class="act-sdg" style="color:${sg.c};background:${sg.c}1A">SDG ${a[3]}</span></div>`;}).join("");
-    el("pt-list").innerHTML=PARTNERS.map(p=>`<span class="pt-pill"><span class="dotc" style="background:${p.c}"></span>${esc(p.n)}</span>`).join("");
+    el("pt-list").innerHTML=PARTNERS.map(p=>{
+      const badge=p.logo
+        ? `<img class="pt-logo" src="/logos/${p.logo}.png" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block'"/><span class="dotc" style="background:${p.c};display:none"></span>`
+        : `<span class="dotc" style="background:${p.c}"></span>`;
+      return `<span class="pt-pill">${badge}${esc(p.n)}</span>`;}).join("");
     renderAd();
     if(!booted)el("state").textContent=T().connecting;
   }
